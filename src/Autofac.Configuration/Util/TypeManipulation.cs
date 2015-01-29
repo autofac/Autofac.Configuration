@@ -26,27 +26,82 @@
 using System;
 using System.Linq;
 using System.ComponentModel;
-using System.Configuration;
 using System.Globalization;
 using System.Reflection;
 
 namespace Autofac.Configuration.Util
 {
     /// <summary>
-    /// Some handy type conversion routines.
+    /// Utilities for converting string configuration values into strongly-typed objects.
     /// </summary>
     class TypeManipulation
     {
         /// <summary>
-        /// Does its best to convert whatever the value is into the destination
-        /// type. Null in yields null out for value types and the default(T)
-        /// for value types (this may change.)
+        /// Converts an object to a type compatible with a given parameter.
         /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="destinationType">Type of the destination.</param>
-        /// <param name="memberInfo">Reflected property or member info for the destination, if available, for retrieving custom type converter information.</param>
-        /// <returns>An object of the destination type.</returns>
-        public static object ChangeToCompatibleType(object value, Type destinationType, ICustomAttributeProvider memberInfo)
+        /// <param name="value">The object value to convert.</param>
+        /// <param name="destinationType">The destination <see cref="Type"/> to which <paramref name="value"/> should be converted.</param>
+        /// <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
+        /// <returns>
+        /// An <see cref="Object"/> of type <paramref name="destinationType"/>, converted using
+        /// type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
+        /// is <see langword="null"/> then the output will be <see langword="null"/> for reference
+        /// types and the default value for value types.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if conversion of the value fails.
+        /// </exception>
+        public static object ChangeToCompatibleType(object value, Type destinationType, ParameterInfo memberInfo)
+        {
+            TypeConverterAttribute attrib = null;
+            if (memberInfo != null)
+            {
+                attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
+            }
+            return ChangeToCompatibleType(value, destinationType, attrib);
+        }
+
+        /// <summary>
+        /// Converts an object to a type compatible with a given parameter.
+        /// </summary>
+        /// <param name="value">The object value to convert.</param>
+        /// <param name="destinationType">The destination <see cref="Type"/> to which <paramref name="value"/> should be converted.</param>
+        /// <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
+        /// <returns>
+        /// An <see cref="Object"/> of type <paramref name="destinationType"/>, converted using
+        /// type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
+        /// is <see langword="null"/> then the output will be <see langword="null"/> for reference
+        /// types and the default value for value types.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if conversion of the value fails.
+        /// </exception>
+        public static object ChangeToCompatibleType(object value, Type destinationType, MemberInfo memberInfo)
+        {
+            TypeConverterAttribute attrib = null;
+            if (memberInfo != null)
+            {
+                attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
+            }
+            return ChangeToCompatibleType(value, destinationType, attrib);
+        }
+
+        /// <summary>
+        /// Converts an object to a type compatible with a given parameter.
+        /// </summary>
+        /// <param name="value">The object value to convert.</param>
+        /// <param name="destinationType">The destination <see cref="Type"/> to which <paramref name="value"/> should be converted.</param>
+        /// <param name="converterAttribute">A <see cref="TypeConverterAttribute"/>, if available, specifying the type of converter to use.<paramref name="value"/> is being converted.</param>
+        /// <returns>
+        /// An <see cref="Object"/> of type <paramref name="destinationType"/>, converted using
+        /// any type converters specified in <paramref name="converterAttribute"/> if available. If <paramref name="value"/>
+        /// is <see langword="null"/> then the output will be <see langword="null"/> for reference
+        /// types and the default value for value types.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if conversion of the value fails.
+        /// </exception>
+        public static object ChangeToCompatibleType(object value, Type destinationType, TypeConverterAttribute converterAttribute = null)
         {
             if (destinationType == null)
             {
@@ -55,21 +110,24 @@ namespace Autofac.Configuration.Util
 
             if (value == null)
             {
-                return destinationType.IsValueType ? Activator.CreateInstance(destinationType) : null;
+                return destinationType.GetTypeInfo().IsValueType ? Activator.CreateInstance(destinationType) : null;
+            }
+
+            // Try implicit conversion.
+            if (destinationType.IsInstanceOfType(value))
+            {
+                return value;
             }
 
             TypeConverter converter = null;
-            if (memberInfo != null)
+
+            // Try to get custom type converter information.
+            if (converterAttribute != null && !String.IsNullOrEmpty(converterAttribute.ConverterTypeName))
             {
-                // Try to get custom type converter information.
-                var attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
-                if (attrib != null && !String.IsNullOrEmpty(attrib.ConverterTypeName))
+                converter = GetTypeConverterFromName(converterAttribute.ConverterTypeName);
+                if (converter.CanConvertFrom(value.GetType()))
                 {
-                    converter = GetTypeConverterFromName(attrib.ConverterTypeName);
-                    if (converter.CanConvertFrom(value.GetType()))
-                    {
-                        return converter.ConvertFrom(value);
-                    }
+                    return converter.ConvertFrom(value);
                 }
             }
 
@@ -78,12 +136,6 @@ namespace Autofac.Configuration.Util
             if (converter.CanConvertTo(destinationType))
             {
                 return converter.ConvertTo(value, destinationType);
-            }
-
-            // Try implicit conversion.
-            if (destinationType.IsInstanceOfType(value))
-            {
-                return value;
             }
 
             // Try explicit opposite conversion.
@@ -107,16 +159,29 @@ namespace Autofac.Configuration.Util
                 }
             }
 
-            throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, ConfigurationSettingsReaderResources.TypeConversionUnsupported, value.GetType(), destinationType));
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConversionUnsupported, value.GetType(), destinationType));
         }
 
+        /// <summary>
+        /// Instantiates a type converter from its type name.
+        /// </summary>
+        /// <param name="converterTypeName">
+        /// The name of the <see cref="Type"/> of the <see cref="TypeConverter"/>.
+        /// </param>
+        /// <returns>
+        /// The instantiated <see cref="TypeConverter"/>.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <paramref name="converterTypeName"/> does not correspond
+        /// to a <see cref="TypeConverter"/>
+        /// </exception>
         private static TypeConverter GetTypeConverterFromName(string converterTypeName)
         {
             var converterType = Type.GetType(converterTypeName, true);
             var converter = Activator.CreateInstance(converterType) as TypeConverter;
             if (converter == null)
             {
-                throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, ConfigurationSettingsReaderResources.TypeConverterAttributeTypeNotConverter, converterTypeName));
+                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName));
             }
             return converter;
         }

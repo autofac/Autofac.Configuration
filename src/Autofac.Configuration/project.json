@@ -1,0 +1,50 @@
+{
+    "description": "Enables Autofac dependencies to be registered via configuration.",
+    "authors": ["Autofac Contributors"],
+    "version": "4.0.0-*",
+    "compilationOptions": {
+        "warningsAsErrors": true
+    },
+    "code": ["**\\*.cs"],
+    "resources": "**\\*.resx",
+    "dependencies": {
+        "Autofac": "4.0.0.0-alpha1",
+        "Microsoft.Framework.ConfigurationModel": "1.0.0.0-rc1-10693"
+    },
+    "frameworks" : {
+        "net45": {
+            "frameworkAssemblies": {
+                "System.Collections": "",
+                "System.ComponentModel": "",
+                "System.Globalization": "",
+                "System.Linq": "",
+                "System.Reflection": "",
+                "System.Reflection.Extensions": "",
+                "System.Resources.ResourceManager": ""
+            }
+        },
+        "aspnet50": {
+            "frameworkAssemblies": {
+                "System.Collections": "",
+                "System.ComponentModel": "",
+                "System.Globalization": "",
+                "System.Linq": "",
+                "System.Reflection": "",
+                "System.Reflection.Extensions": "",
+                "System.Resources.ResourceManager": ""
+            }
+        },
+        "aspnetcore50": {
+            "dependencies": {
+                "System.Collections": "4.0.10-beta-22231",
+                "System.ComponentModel.TypeConverter": "4.0.0-beta-22231",
+                "System.Globalization": "4.0.10-beta-22231",
+                "System.Linq": "4.0.0-beta-22231",
+                "System.Reflection": "4.0.10-beta-22231",
+                "System.Reflection.Extensions": "4.0.0-beta-22231",
+                "System.Reflection.TypeExtensions": "4.0.0-beta-22231",
+                "System.Resources.ResourceManager": "4.0.0-beta-22231"
+            }
+        }
+    }
+}

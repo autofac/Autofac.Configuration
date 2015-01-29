@@ -1,0 +1,23 @@
+﻿{
+    "description": "Tests for Autofac configuration support.",
+    "authors": ["Autofac Contributors"],
+    "version": "4.0.0-*",
+    "compilationOptions": {
+        "warningsAsErrors": true
+    },
+    "dependencies": {
+        "Autofac.Configuration": "4.0.0-*",
+        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0.0-rc1-10685",
+        "Microsoft.Framework.ConfigurationModel.Xml": "1.0.0.0-rc1-10685",
+        "Moq": "4.2.1312.1622",
+        "xunit.runner.kre": "1.0.0-*"
+    },
+    "code": ["**\\ConfigurationExtensionsFixture.cs","Util\\*.cs"],
+    "resources": ["**\\*.resx","Files\\*.*"],
+    "commands": {
+        "test": "xunit.runner.kre"
+    },
+    "frameworks": {
+        "aspnet50": { }
+    }
+}

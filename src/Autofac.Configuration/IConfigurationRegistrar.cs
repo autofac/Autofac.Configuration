@@ -23,6 +23,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using Microsoft.Framework.ConfigurationModel;
+
 namespace Autofac.Configuration
 {
     /// <summary>
@@ -31,14 +33,14 @@ namespace Autofac.Configuration
     public interface IConfigurationRegistrar
     {
         /// <summary>
-        /// Registers the contents of a configuration section into a container builder.
+        /// Registers the contents of a configuration object into a container builder.
         /// </summary>
         /// <param name="builder">
-        /// The <see cref="Autofac.ContainerBuilder"/> that should receive the configured registrations.
+        /// The <see cref="ContainerBuilder"/> that should receive the configured registrations.
         /// </param>
-        /// <param name="configurationSection">
-        /// The <see cref="Autofac.Configuration.SectionHandler"/> containing the configured registrations.
+        /// <param name="configuration">
+        /// The <see cref="IConfiguration"/> containing the configured registrations.
         /// </param>
-        void RegisterConfigurationSection(ContainerBuilder builder, SectionHandler configurationSection);
+        void RegisterConfiguration(ContainerBuilder builder, IConfiguration configuration);
     }
 }
