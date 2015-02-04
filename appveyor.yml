@@ -11,6 +11,10 @@ configuration: Release
 
 before_build: nuget restore
 
+branches:
+  only:
+  - master
+
 build:
   verbosity: minimal
   publish_nuget: true
