@@ -7,6 +7,7 @@
 *.docstates
 *.cache
 *.userprefs
+project.lock.json
 
 # Build results
 [Dd]ebug/

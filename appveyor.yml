@@ -1,6 +1,20 @@
 version: 4.0.0.{build}
 
+assembly_info:
+  patch: true
+  file: AssemblyInfo.cs
+  assembly_version: "4.0.0.0"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "4.0.0-CI-{build}"
+
 configuration: Release
+
+nuget:
+  disable_publish_on_pr: true
+
+clone_depth: 1
+
+test: off
 
 branches:
   only:
@@ -9,9 +23,14 @@ branches:
 build_script:
 - build.cmd
 
+artifacts:
+- path: artifacts\packages\**\*.nupkg
+  name: MyGet
+
 deploy:
 - provider: NuGet
   server: https://www.myget.org/F/autofac/
   api_key:
     secure: N4KZCRegcmenMoJ0peZfQwDzqq+Wt4oxGzNTgvkrDxgWyZhw7hNwKmd4n2AsNKQX
   symbol_server: https://nuget.symbolsource.org/MyGet/autofac
+  artifact: MyGet
