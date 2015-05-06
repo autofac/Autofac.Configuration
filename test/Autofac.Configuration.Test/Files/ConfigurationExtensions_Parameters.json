@@ -1,0 +1,26 @@
+﻿{
+    "components": [{
+        "type": "Autofac.Tests.Configuration.Core.ConfigurationExtensionsFixture+HasDictionaryProperty",
+        "properties": {
+            "Dictionary": {
+                "a": 1,
+                "b": 2
+            }
+        }
+    }, {
+        "type": "Autofac.Tests.Configuration.Core.ConfigurationExtensionsFixture+HasEnumerableProperty",
+        "properties": {
+            "List": [1, 2]
+        }
+    }, {
+        "type": "Autofac.Tests.Configuration.Core.ConfigurationExtensionsFixture+HasSimpleParametersAndProperties",
+        "parameters": {
+            "number": 1,
+            "ip": "127.0.0.1"
+        },
+        "properties": {
+            "Text": "text",
+            "Url": "http://localhost"
+        }
+    }]
+}

@@ -1,7 +1,13 @@
 {
     "version": "4.0.0-*",
     "authors": ["Autofac Contributors"],
-    "description": "Enables Autofac dependencies to be registered via configuration.",
+    "description": "Configuration support for Autofac",
+    "summary": "Enables Autofac dependencies to be set up using configuration sources.",
+    "projectUrl": "http://autofac.org",
+    "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+    "iconUrl": "http://code.google.com/p/autofac/logo",
+    "requireLicenseAcceptance": false,
+    "tags": [ "Autofac", "DI", "IoC" ],
     "compilationOptions": {
         "warningsAsErrors": true
     },
@@ -10,8 +16,8 @@
         "Autofac.Configuration.ConfigurationResources": "Properties/ConfigurationResources.resx"
     },
     "dependencies": {
-        "Autofac": "4.0.0-alpha2",
-        "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4"
+        "Autofac": "4.0.0-*",
+        "Microsoft.Framework.ConfigurationModel": "1.0.0-*"
     },
     "frameworks": {
         "net45": {
@@ -30,6 +36,7 @@
                 "System.Collections": "",
                 "System.ComponentModel": "",
                 "System.Globalization": "",
+                "System.IO": "",
                 "System.Linq": "",
                 "System.Reflection": "",
                 "System.Reflection.Extensions": "",
@@ -38,15 +45,16 @@
         },
         "dnxcore50": {
             "dependencies": {
-                "System.Collections": "4.0.10-beta-22816",
-                "System.ComponentModel.TypeConverter": "4.0.0-beta-22816",
-                "System.Diagnostics.Tools": "4.0.0-beta-22816",
-                "System.Globalization": "4.0.10-beta-22816",
-                "System.Linq": "4.0.0-beta-22816",
-                "System.Reflection": "4.0.10-beta-22816",
-                "System.Reflection.Extensions": "4.0.0-beta-22816",
-                "System.Reflection.TypeExtensions": "4.0.0-beta-22816",
-                "System.Resources.ResourceManager": "4.0.0-beta-22816"
+                "System.Collections": "4.0.10-beta-*",
+                "System.ComponentModel.TypeConverter": "4.0.0-beta-*",
+                "System.Diagnostics.Tools": "4.0.0-beta-*",
+                "System.Globalization": "4.0.10-beta-*",
+                "System.IO": "4.0.10-beta-*",
+                "System.Linq": "4.0.0-beta-*",
+                "System.Reflection": "4.0.10-beta-*",
+                "System.Reflection.Extensions": "4.0.0-beta-*",
+                "System.Reflection.TypeExtensions": "4.0.0-beta-*",
+                "System.Resources.ResourceManager": "4.0.0-beta-*"
             }
         }
     }

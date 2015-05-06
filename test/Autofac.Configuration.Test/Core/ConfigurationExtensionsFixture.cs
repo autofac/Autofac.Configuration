@@ -84,20 +84,19 @@ namespace Autofac.Tests.Configuration.Core
         [Fact(Skip = "Still working out how config should look.")]
         public void GetParameters_SimpleParameters()
         {
-            var config = LoadEmbeddedXml("ConfigurationExtensions_Parameters.config");
+            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.config");
             Assert.False(true);
         }
 
-        private static IConfiguration LoadEmbeddedXml(string configFile)
+        private static IConfiguration LoadEmbeddedConfig(string configFile)
         {
             var config = new ConfigModel();
-            var xmlSource = new XmlConfigurationSource("fake unit test path");
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Files/" + configFile))
+            var source = new JsonConfigurationSource("path", true);
+            using (var stream = typeof(ConfigurationExtensionsFixture).GetTypeInfo().Assembly.GetManifestResourceStream("Files/" + configFile))
             {
-                typeof(XmlConfigurationSource).GetMethod("Load", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(Stream) }, null).Invoke(xmlSource, new object[] { stream });
+                typeof(JsonConfigurationSource).GetMethod("Load", new Type[] { typeof(Stream) }).Invoke(source, new object[] { stream });
             }
-            var memorySource = new MemoryConfigurationSource(xmlSource.Data);
-            config.Add(memorySource);
+            config.Add(source);
             return config;
         }
 

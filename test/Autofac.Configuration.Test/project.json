@@ -1,27 +1,40 @@
 ﻿{
-    "description": "Tests for Autofac configuration support.",
-    "authors": ["Autofac Contributors"],
     "version": "4.0.0-*",
+    "authors": ["Autofac Contributors"],
+    "description": "Tests for Autofac configuration support.",
     "compilationOptions": {
         "warningsAsErrors": true
     },
-    "dependencies": {
-        "Autofac.Configuration": "4.0.0-*",
-        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
-        "Microsoft.Framework.ConfigurationModel.Xml": "1.0.0-beta4",
-        "Moq": "4.2.1502.911",
-        "xunit": "2.1.0-beta2-build2981",
-        "xunit.runner.dnx": "2.1.0-beta2-build79"
-    },
-    "compile": ["**\\ConfigurationExtensionsFixture.cs", "Util\\*.cs"],
+    "compile": ["**\\*.cs"],
+    "exclude": ["**\\ConfigurationRegistrarFixture.cs", "**\\EnumerableParametersFixture.cs", "**\\DictionaryParametersFixture.cs"],
     "resource": ["**\\*.resx", "Files\\*.*"],
     "commands": {
         "test": "xunit.runner.dnx"
     },
+    "dependencies": {
+        "Autofac.Configuration": "4.0.0-*",
+        "Microsoft.Framework.ConfigurationModel": "1.0.0-*",
+        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-*",
+        "Microsoft.Framework.ConfigurationModel.Xml": "1.0.0-*",
+        "Moq": "4.2.1502.911",
+        "xunit": "2.1.0-beta2-*",
+        "xunit.runner.dnx": "2.1.0-beta2-*"
+    },
     "frameworks": {
         "dnxcore50": {
             "dependencies": {
-                "System.Runtime": "4.0.20-beta-22231"
+                "System.Collections": "4.0.10-beta-*",
+                "System.ComponentModel.TypeConverter": "4.0.0-beta-*",
+                "System.Diagnostics.Tools": "4.0.0-beta-*",
+                "System.Globalization": "4.0.10-beta-*",
+                "System.IO": "4.0.10-beta-*",
+                "System.IO.FileSystem": "4.0.0-beta-*",
+                "System.Linq": "4.0.0-beta-*",
+                "System.Reflection": "4.0.10-beta-*",
+                "System.Reflection.Extensions": "4.0.0-beta-*",
+                "System.Reflection.TypeExtensions": "4.0.0-beta-*",
+                "System.Resources.ResourceManager": "4.0.0-beta-*",
+                "System.Runtime": "4.0.20-beta-*"
             }
         }
     }
