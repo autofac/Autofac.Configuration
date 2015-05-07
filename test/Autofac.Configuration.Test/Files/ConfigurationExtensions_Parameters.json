@@ -19,8 +19,8 @@
             "ip": "127.0.0.1"
         },
         "properties": {
-            "Text": "text",
-            "Url": "http://localhost"
+            "text": "text",
+            "url": "http://localhost"
         }
     }]
 }

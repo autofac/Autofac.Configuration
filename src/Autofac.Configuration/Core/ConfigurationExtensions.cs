@@ -1,12 +1,12 @@
-﻿using Autofac.Configuration.Util;
-using Autofac.Core;
-using Microsoft.Framework.ConfigurationModel;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Autofac.Configuration.Util;
+using Autofac.Core;
+using Microsoft.Framework.ConfigurationModel;
 
 namespace Autofac.Configuration.Core
 {
@@ -15,6 +15,23 @@ namespace Autofac.Configuration.Core
     /// </summary>
     public static class ConfigurationExtensions
     {
+        public static object ConvertToList(IConfiguration listConfiguration, Type destinationType)
+        {
+            var instantiatableType = GetInstantiableListType(destinationType);
+            if (instantiatableType == null)
+            {
+                return null;
+            }
+
+            var genericItemType = instantiatableType.GetGenericArguments()[0];
+            var collection = (IList)Activator.CreateInstance(instantiatableType);
+            foreach (var item in listConfiguration.GetSubKeys("item").Select(kvp => kvp.Value).SelectMany(c => c.Get("value")))
+            {
+                collection.Add(TypeManipulation.ChangeToCompatibleType(item, genericItemType));
+            }
+            return collection;
+        }
+
         /// <summary>
         /// Reads the default assembly information from configuration and
         /// parses the assembly name into an assembly.
@@ -99,56 +116,16 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            foreach (var parameterElement in configuration.GetSubKeys(key).Select(kvp => kvp.Value))
+            foreach (var parameterElement in configuration.GetSubKeys(key))
             {
-                // TODO: Try list, then dictionary, then value - look at CoerceValue in ParameterElement
-                // TODO: Get a copy of the parameter value in the closure.
-                object parameterValue = null;
-                var parameterName = parameterElement.Get("name");
+                var parameterValue = parameterElement.Value.Get(null);
+                var parameterName = parameterElement.Key;
                 yield return new ResolvedParameter(
-                    (pi, c) => pi.Name == parameterName,
+                    (pi, c) => String.Equals(pi.Name, parameterName, StringComparison.OrdinalIgnoreCase),
+                    // TODO: parameterValue.CoerceValue() - Try list, then dictionary, then value - look at CoerceValue in ParameterElement
                     (pi, c) => TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, pi));
             }
         }
-
-        public static object ConvertToList(IConfiguration listConfiguration, Type destinationType)
-        {
-            var instantiatableType = GetInstantiableListType(destinationType);
-            if(instantiatableType == null)
-            {
-                return null;
-            }
-
-            var genericItemType = instantiatableType.GetGenericArguments()[0];
-            var collection = (IList)Activator.CreateInstance(instantiatableType);
-            foreach (var item in listConfiguration.GetSubKeys("item").Select(kvp => kvp.Value).SelectMany(c => c.Get("value")))
-            {
-                collection.Add(TypeManipulation.ChangeToCompatibleType(item, genericItemType));
-            }
-            return collection;
-        }
-
-        private static Type GetInstantiableListType(Type destinationType)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(destinationType))
-            {
-                var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(object) };
-                if (generics.Length != 1)
-                {
-                    return null;
-                }
-
-                var listType = typeof(List<>).MakeGenericType(generics);
-
-                if (destinationType.IsAssignableFrom(listType))
-                {
-                    return listType;
-                }
-            }
-
-            return null;
-        }
-
 
         public static IEnumerable<Parameter> GetProperties(this IConfiguration configuration, string key)
         {
@@ -167,26 +144,46 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            foreach (var propertyElement in configuration.GetSubKeys(key).Select(kvp => kvp.Value))
+            foreach (var propertyElement in configuration.GetSubKeys(key))
             {
-                // TODO: Try list, then dictionary, then value - look at CoerceValue in ParameterElement
-                // TODO: Get a copy of the parameter value in the closure.
-                object parameterValue = null;
-                var parameterName = propertyElement.Get("name");
+                var parameterValue = propertyElement.Value.Get(null);
+                var parameterName = propertyElement.Key;
                 yield return new ResolvedParameter(
                     (pi, c) =>
-                    {
-                        PropertyInfo prop;
-                        return pi.TryGetDeclaringProperty(out prop) &&
-                            prop.Name == parameterName;
-                    },
+                {
+                    PropertyInfo prop;
+                    return pi.TryGetDeclaringProperty(out prop) &&
+                        String.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
+                },
                     (pi, c) =>
-                    {
-                        PropertyInfo prop = null;
-                        pi.TryGetDeclaringProperty(out prop);
-                        return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop);
-                    });
+                {
+                    var prop = (PropertyInfo)null;
+                    pi.TryGetDeclaringProperty(out prop);
+                    // TODO: parameterValue.CoerceValue() - Try list, then dictionary, then value - look at CoerceValue in ParameterElement
+                    return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop);
+                });
             }
+        }
+
+        private static Type GetInstantiableListType(Type destinationType)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(destinationType))
+            {
+                var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new [] { typeof(object) };
+                if (generics.Length != 1)
+                {
+                    return null;
+                }
+
+                var listType = typeof(List<>).MakeGenericType(generics);
+
+                if (destinationType.IsAssignableFrom(listType))
+                {
+                    return listType;
+                }
+            }
+
+            return null;
         }
     }
 }
