@@ -49,7 +49,7 @@ namespace Autofac.Tests.Configuration.Core
         [Fact]
         public void DefaultAssembly_NullConfiguration()
         {
-            IConfiguration config = null;
+            var config = (IConfiguration)null;
             Assert.Throws<ArgumentNullException>(() => config.DefaultAssembly());
         }
 
@@ -73,7 +73,7 @@ namespace Autofac.Tests.Configuration.Core
         [Fact]
         public void GetAssembly_NullConfiguration()
         {
-            IConfiguration config = null;
+            var config = (IConfiguration)null;
             Assert.Throws<ArgumentNullException>(() => config.GetAssembly("defaultAssembly"));
         }
 
@@ -91,11 +91,70 @@ namespace Autofac.Tests.Configuration.Core
             var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
             var objectParameter = typeof(HasSimpleParametersAndProperties).GetConstructors().First().GetParameters().First(pi => pi.Name == parameterName);
-            Func<object> provider = null;
+            var provider = (Func<object>)null;
             var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
             Assert.NotNull(parameter);
             Assert.NotNull(provider);
             Assert.Equal(expectedValue, provider());
+        }
+
+        [Fact]
+        public void GetProperties_DictionaryPropertyEmpty()
+        {
+            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
+            var property = typeof(HasDictionaryProperty).GetProperty("Empty");
+            var provider = (Func<object>)null;
+            var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+
+            // Gotcha in ConfigurationModel - if the list/dictionary is empty
+            // then configuration won't see it or add the key to the list.
+            Assert.Null(parameter);
+        }
+
+        [Fact]
+        public void GetProperties_DictionaryPropertyPopulated()
+        {
+            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
+            var property = typeof(HasDictionaryProperty).GetProperty("Populated");
+            var provider = (Func<object>)null;
+            var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+            Assert.NotNull(parameter);
+            Assert.NotNull(provider);
+            var value = provider();
+            Assert.NotNull(value);
+            Assert.IsType(typeof(Dictionary<string, int>), value);
+            var dict = (Dictionary<string, int>)value;
+            Assert.Equal(1, dict["a"]);
+            Assert.Equal(2, dict["b"]);
+        }
+
+        [Fact]
+        public void GetProperties_ListPropertyEmpty()
+        {
+            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
+            var property = typeof(HasEnumerableProperty).GetProperty("Empty");
+            var provider = (Func<object>)null;
+            var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+
+            // Gotcha in ConfigurationModel - if the list/dictionary is empty
+            // then configuration won't see it or add the key to the list.
+            Assert.Null(parameter);
+        }
+
+        [Fact]
+        public void GetProperties_ListPropertyPopulated()
+        {
+            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
+            var property = typeof(HasEnumerableProperty).GetProperty("Populated");
+            var provider = (Func<object>)null;
+            var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+            Assert.NotNull(parameter);
+            Assert.NotNull(provider);
+            Assert.Equal(new List<int> { 1, 2 }, provider());
         }
 
         [Theory]
@@ -105,20 +164,11 @@ namespace Autofac.Tests.Configuration.Core
             var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
             var property = typeof(HasSimpleParametersAndProperties).GetProperties().First(pi => pi.Name == propertyName);
-            Func<object> provider = null;
+            var provider = (Func<object>)null;
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
             Assert.NotNull(parameter);
             Assert.NotNull(provider);
             Assert.Equal(expectedValue, provider());
-        }
-
-        public static IEnumerable<object[]> GetProperties_SimpleProperties_Source
-        {
-            get
-            {
-                yield return new object[] { "Text", "text" };
-                yield return new object[] { "Url", new Uri("http://localhost") };
-            }
         }
 
         public static IEnumerable<object[]> GetParameters_SimpleParameters_Source
@@ -127,6 +177,15 @@ namespace Autofac.Tests.Configuration.Core
             {
                 yield return new object[] { "number", 1 };
                 yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
+            }
+        }
+
+        public static IEnumerable<object[]> GetProperties_SimpleProperties_Source
+        {
+            get
+            {
+                yield return new object[] { "Text", "text" };
+                yield return new object[] { "Url", new Uri("http://localhost") };
             }
         }
 
@@ -151,6 +210,20 @@ namespace Autofac.Tests.Configuration.Core
             return config;
         }
 
+        public class HasDictionaryProperty
+        {
+            public Dictionary<string, int> Populated { get; set; }
+            public Dictionary<string, int> Empty { get; set; }
+
+        }
+
+        public class HasEnumerableProperty
+        {
+            public IEnumerable<int> Populated { get; set; }
+
+            public IEnumerable<int> Empty { get; set; }
+        }
+
         public class HasSimpleParametersAndProperties
         {
             public HasSimpleParametersAndProperties(int number, IPAddress ip)
@@ -159,9 +232,9 @@ namespace Autofac.Tests.Configuration.Core
                 this.IP = ip;
             }
 
-            public int Number { get; private set; }
-
             public IPAddress IP { get; private set; }
+
+            public int Number { get; private set; }
 
             public string Text { get; set; }
 

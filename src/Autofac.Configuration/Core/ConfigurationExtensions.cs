@@ -15,23 +15,6 @@ namespace Autofac.Configuration.Core
     /// </summary>
     public static class ConfigurationExtensions
     {
-        public static object ConvertToList(IConfiguration listConfiguration, Type destinationType)
-        {
-            var instantiatableType = GetInstantiableListType(destinationType);
-            if (instantiatableType == null)
-            {
-                return null;
-            }
-
-            var genericItemType = instantiatableType.GetGenericArguments()[0];
-            var collection = (IList)Activator.CreateInstance(instantiatableType);
-            foreach (var item in listConfiguration.GetSubKeys("item").Select(kvp => kvp.Value).SelectMany(c => c.Get("value")))
-            {
-                collection.Add(TypeManipulation.ChangeToCompatibleType(item, genericItemType));
-            }
-            return collection;
-        }
-
         /// <summary>
         /// Reads the default assembly information from configuration and
         /// parses the assembly name into an assembly.
@@ -118,11 +101,10 @@ namespace Autofac.Configuration.Core
 
             foreach (var parameterElement in configuration.GetSubKeys(key))
             {
-                var parameterValue = parameterElement.Value.Get(null);
+                var parameterValue = GetConfiguredParameterValue(parameterElement.Value);
                 var parameterName = parameterElement.Key;
                 yield return new ResolvedParameter(
                     (pi, c) => String.Equals(pi.Name, parameterName, StringComparison.OrdinalIgnoreCase),
-                    // TODO: parameterValue.CoerceValue() - Try list, then dictionary, then value - look at CoerceValue in ParameterElement
                     (pi, c) => TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, pi));
             }
         }
@@ -146,7 +128,7 @@ namespace Autofac.Configuration.Core
 
             foreach (var propertyElement in configuration.GetSubKeys(key))
             {
-                var parameterValue = propertyElement.Value.Get(null);
+                var parameterValue = GetConfiguredParameterValue(propertyElement.Value);
                 var parameterName = propertyElement.Key;
                 yield return new ResolvedParameter(
                     (pi, c) =>
@@ -159,30 +141,35 @@ namespace Autofac.Configuration.Core
                 {
                     var prop = (PropertyInfo)null;
                     pi.TryGetDeclaringProperty(out prop);
-                    // TODO: parameterValue.CoerceValue() - Try list, then dictionary, then value - look at CoerceValue in ParameterElement
                     return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop);
                 });
             }
         }
 
-        private static Type GetInstantiableListType(Type destinationType)
+        private static object GetConfiguredParameterValue(IConfiguration value)
         {
-            if (typeof(IEnumerable).IsAssignableFrom(destinationType))
+            var subKeys = value.GetSubKeys();
+            if(!subKeys.Any())
             {
-                var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new [] { typeof(object) };
-                if (generics.Length != 1)
-                {
-                    return null;
-                }
-
-                var listType = typeof(List<>).MakeGenericType(generics);
-
-                if (destinationType.IsAssignableFrom(listType))
-                {
-                    return listType;
-                }
+                return value.Get(null);
             }
 
+            int parsed;
+            if(subKeys.All(sk => Int32.TryParse(sk.Key, out parsed)))
+            {
+                // All the subkeys are integers - it's a list. Note there's a gotcha
+                // here where you can't really express a Dictionary<int, T> via configuration
+                // due to the way lists are handled in ConfigurationModel.
+                var list = new List<string>();
+                foreach(var subKey in subKeys)
+                {
+                    list.Add(subKey.Value.Get(null));
+                }
+
+                return new ConfiguredListParameter { List = list.ToArray() };
+            }
+
+            // TODO: There are subkeys but not all numbers - it's a dictionary.
             return null;
         }
     }

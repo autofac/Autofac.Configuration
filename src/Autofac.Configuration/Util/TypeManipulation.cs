@@ -34,7 +34,7 @@ namespace Autofac.Configuration.Util
     /// <summary>
     /// Utilities for converting string configuration values into strongly-typed objects.
     /// </summary>
-    class TypeManipulation
+    internal class TypeManipulation
     {
         /// <summary>
         /// Converts an object to a type compatible with a given parameter.
