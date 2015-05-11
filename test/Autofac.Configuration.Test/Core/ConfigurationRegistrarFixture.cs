@@ -179,7 +179,7 @@ public void PropertyConversionUsesTypeConverterAttribute()
         [Fact]
         public void Load_AllowsMultipleModulesOfSameTypeWithDifferentParameters()
         {
-            // Issue #271: Could not register more than one Moudle with the same type but different parameters in XmlConfiguration.
+            // Issue #271: Could not register more than one module with the same type but different parameters in XmlConfiguration.
             var builder = ConfigureContainer("SameModuleRegisteredMultipleTimes");
             var container = builder.Build();
             var collection = container.Resolve<IEnumerable<SimpleComponent>>();

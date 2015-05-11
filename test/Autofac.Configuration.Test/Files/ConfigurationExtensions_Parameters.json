@@ -1,7 +1,7 @@
 ﻿{
     "components": [
         {
-            "type": "Autofac.Tests.Configuration.Core.ConfigurationExtensionsFixture+HasDictionaryProperty",
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasDictionaryProperty",
             "properties": {
                 "populated": {
                     "a": 1,
@@ -11,14 +11,14 @@
             }
         },
         {
-            "type": "Autofac.Tests.Configuration.Core.ConfigurationExtensionsFixture+HasEnumerableProperty",
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasEnumerableProperty",
             "properties": {
                 "populated": [ 1, 2 ],
                 "empty": [ ]
             }
         },
         {
-            "type": "Autofac.Tests.Configuration.Core.ConfigurationExtensionsFixture+HasSimpleParametersAndProperties",
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasSimpleParametersAndProperties",
             "parameters": {
                 "number": 1,
                 "ip": "127.0.0.1"

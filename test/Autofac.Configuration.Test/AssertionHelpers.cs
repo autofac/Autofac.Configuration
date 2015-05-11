@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Autofac.Tests.Configuration
+namespace Autofac.Configuration.Test
 {
     static class AssertionHelpers
     {

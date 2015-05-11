@@ -7,7 +7,7 @@ using System.Reflection;
 using Autofac.Configuration.Util;
 using Xunit;
 
-namespace Autofac.Tests.Configuration.Util
+namespace Autofac.Configuration.Test.Util
 {
     public class TypeManipulationFixture
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using Autofac.Configuration;
 using Xunit;
 
-namespace Autofac.Tests.Configuration
+namespace Autofac.Configuration.Test.Core
 {
     public class EnumerableParametersFixture
     {
@@ -16,7 +16,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void PropertyStringListInjection()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<A>();
 
@@ -33,7 +33,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void ConvertsTypeInList()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<B>();
 
@@ -50,7 +50,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void FillsNonGenericListWithString()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<C>();
 
@@ -67,8 +67,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void InjectsSingleValueWithConversion()
         {
-            //Assert.False("string" is IEnumerable);
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<D>();
 
@@ -88,29 +87,13 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void InjectsConstructorParameter()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<E>();
 
             Assert.True(poco.List.Count == 2);
             Assert.Equal(poco.List[0], 1);
             Assert.Equal(poco.List[1], 2);
-        }
-
-        public class F
-        {
-            public IList<int> List { get; set; }
-        }
-
-        [Fact]
-        public void InjectsEmptyList()
-        {
-            var container = ConfigureContainer("EnumerableParameters").Build();
-
-            var poco = container.Resolve<F>();
-
-            Assert.NotNull(poco.List);
-            Assert.Equal(0, poco.List.Count);
         }
 
         public class G
@@ -121,7 +104,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void InjectsIEnumerable()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<G>();
 
@@ -140,7 +123,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void InjectsGenericIEnumerable()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<H>();
 
@@ -159,7 +142,7 @@ namespace Autofac.Tests.Configuration
         [Fact]
         public void InjectsGenericCollection()
         {
-            var container = ConfigureContainer("EnumerableParameters").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<I>();
 
@@ -167,15 +150,6 @@ namespace Autofac.Tests.Configuration
             Assert.True(poco.Collection.Count == 2);
             Assert.Equal(poco.Collection.First(), 1);
             Assert.Equal(poco.Collection.Last(), 2);
-        }
-
-        static ContainerBuilder ConfigureContainer(string configFile)
-        {
-            var cb = new ContainerBuilder();
-            var fullFilename = "Files/" + configFile + ".config";
-            var csr = new ConfigurationSettingsReader(SectionHandler.DefaultSectionName, fullFilename);
-            cb.RegisterModule(csr);
-            return cb;
         }
     }
 }

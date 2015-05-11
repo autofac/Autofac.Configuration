@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<autofac defaultAssembly="Autofac.Configuration.Test">
+	<components>
+		<component name="0">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+A</type>
+			<properties>
+				<Dictionary name="Key1">Val1</Dictionary>
+				<Dictionary name="Key2">Val2</Dictionary>
+			</properties>
+		</component>
+		<component name="1">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+B</type>
+			<parameters>
+				<dictionary name="Key1">Val1</dictionary>
+				<dictionary name="Key2">Val2</dictionary>
+			</parameters>
+		</component>
+		<component name="2">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+C</type>
+			<properties>
+				<Dictionary name="Key1">Val1</Dictionary>
+				<Dictionary name="Key2">Val2</Dictionary>
+			</properties>
+		</component>
+		<component name="3">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+D</type>
+			<properties>
+				<Dictionary name="Key1">Val1</Dictionary>
+				<Dictionary name="Key2">Val2</Dictionary>
+			</properties>
+		</component>
+		<component name="4">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+E</type>
+			<properties>
+				<Dictionary name="94be24db-22a1-45b7-8dbc-a09ffc11468d">Val1</Dictionary>
+				<Dictionary name="cf735002-8f21-4b72-a31f-1de6e24930bc">Val2</Dictionary>
+			</properties>
+		</component>
+		<component name="5">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+F</type>
+			<properties>
+				<Dictionary name="Key1">1</Dictionary>
+				<Dictionary name="Key2">2</Dictionary>
+			</properties>
+		</component>
+		<!--
+		Microsoft.Framework.ConfigurationModel ignores empty elements so you
+		don't know the difference between null and empty.
+		<component name="6">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+G</type>
+			<properties>
+				<Dictionary />
+			</properties>
+		</component>
+		-->
+	</components>
+</autofac>

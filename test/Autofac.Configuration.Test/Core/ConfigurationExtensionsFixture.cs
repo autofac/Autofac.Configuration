@@ -10,7 +10,7 @@ using Microsoft.Framework.ConfigurationModel;
 using Xunit;
 using ConfigModel = Microsoft.Framework.ConfigurationModel.Configuration;
 
-namespace Autofac.Tests.Configuration.Core
+namespace Autofac.Configuration.Test.Core
 {
     public class ConfigurationExtensionsFixture
     {
@@ -88,7 +88,7 @@ namespace Autofac.Tests.Configuration.Core
         [MemberData("GetParameters_SimpleParameters_Source")]
         public void GetParameters_SimpleParameters(string parameterName, object expectedValue)
         {
-            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
             var objectParameter = typeof(HasSimpleParametersAndProperties).GetConstructors().First().GetParameters().First(pi => pi.Name == parameterName);
             var provider = (Func<object>)null;
@@ -101,7 +101,7 @@ namespace Autofac.Tests.Configuration.Core
         [Fact]
         public void GetProperties_DictionaryPropertyEmpty()
         {
-            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
             var property = typeof(HasDictionaryProperty).GetProperty("Empty");
             var provider = (Func<object>)null;
@@ -115,7 +115,7 @@ namespace Autofac.Tests.Configuration.Core
         [Fact]
         public void GetProperties_DictionaryPropertyPopulated()
         {
-            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
             var property = typeof(HasDictionaryProperty).GetProperty("Populated");
             var provider = (Func<object>)null;
@@ -133,7 +133,7 @@ namespace Autofac.Tests.Configuration.Core
         [Fact]
         public void GetProperties_ListPropertyEmpty()
         {
-            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
             var property = typeof(HasEnumerableProperty).GetProperty("Empty");
             var provider = (Func<object>)null;
@@ -147,7 +147,7 @@ namespace Autofac.Tests.Configuration.Core
         [Fact]
         public void GetProperties_ListPropertyPopulated()
         {
-            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
             var property = typeof(HasEnumerableProperty).GetProperty("Populated");
             var provider = (Func<object>)null;
@@ -161,7 +161,7 @@ namespace Autofac.Tests.Configuration.Core
         [MemberData("GetProperties_SimpleProperties_Source")]
         public void GetProperties_SimpleProperties(string propertyName, object expectedValue)
         {
-            var config = LoadEmbeddedConfig("ConfigurationExtensions_Parameters.json");
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
             var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
             var property = typeof(HasSimpleParametersAndProperties).GetProperties().First(pi => pi.Name == propertyName);
             var provider = (Func<object>)null;
@@ -187,18 +187,6 @@ namespace Autofac.Tests.Configuration.Core
                 yield return new object[] { "Text", "text" };
                 yield return new object[] { "Url", new Uri("http://localhost") };
             }
-        }
-
-        private static IConfiguration LoadEmbeddedConfig(string configFile)
-        {
-            var config = new ConfigModel();
-            var source = new JsonConfigurationSource("path", true);
-            using (var stream = typeof(ConfigurationExtensionsFixture).GetTypeInfo().Assembly.GetManifestResourceStream("Files/" + configFile))
-            {
-                typeof(JsonConfigurationSource).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
-            }
-            config.Add(source, false);
-            return config;
         }
 
         private static IConfiguration SetUpDefaultAssembly(string assemblyName)
