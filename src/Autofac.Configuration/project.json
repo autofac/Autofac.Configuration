@@ -11,10 +11,8 @@
     "compilationOptions": {
         "warningsAsErrors": true
     },
-    "compile": ["**\\*.cs"],
-    "namedResource": {
-        "Autofac.Configuration.ConfigurationResources": "Properties/ConfigurationResources.resx"
-    },
+    "compile": ["**/*.cs"],
+    "resource": ["**/*.resx"],
     "dependencies": {
         "Autofac": "4.0.0-*",
         "Microsoft.Framework.ConfigurationModel": "1.0.0-*"

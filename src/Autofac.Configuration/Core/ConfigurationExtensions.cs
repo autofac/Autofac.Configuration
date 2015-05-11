@@ -82,6 +82,22 @@ namespace Autofac.Configuration.Core
             return Assembly.Load(new AssemblyName(assemblyName));
         }
 
+        /// <summary>
+        /// Converts configured parameter values into parameters that can be used
+        /// during object resolution.
+        /// </summary>
+        /// <param name="configuration">
+        /// The <see cref="IConfiguration"/> element that contains the component
+        /// with defined parameters.
+        /// </param>
+        /// <param name="key">
+        /// The <see cref="String"/> key indicating the sub-element with the
+        /// parameters. Usually this is <c>parameters</c>.
+        /// </param>
+        /// <returns>
+        /// An <see cref="IEnumerable{T}"/> of <see cref="Parameter"/> values
+        /// that can be used during object resolution.
+        /// </returns>
         public static IEnumerable<Parameter> GetParameters(this IConfiguration configuration, string key)
         {
             if (configuration == null)
@@ -109,6 +125,22 @@ namespace Autofac.Configuration.Core
             }
         }
 
+        /// <summary>
+        /// Converts configured property values into parameters that can be used
+        /// during object resolution.
+        /// </summary>
+        /// <param name="configuration">
+        /// The <see cref="IConfiguration"/> element that contains the component
+        /// with defined properties.
+        /// </param>
+        /// <param name="key">
+        /// The <see cref="String"/> key indicating the sub-element with the
+        /// propeties. Usually this is <c>properties</c>.
+        /// </param>
+        /// <returns>
+        /// An <see cref="IEnumerable{T}"/> of <see cref="Parameter"/> values
+        /// that can be used during object resolution.
+        /// </returns>
         public static IEnumerable<Parameter> GetProperties(this IConfiguration configuration, string key)
         {
             if (configuration == null)
@@ -146,11 +178,23 @@ namespace Autofac.Configuration.Core
             }
         }
 
+        /// <summary>
+        /// Inspects a parameter/property value to determine if it's a scalar,
+        /// list, or dictionary property and casts it appropriately.
+        /// </summary>
+        /// <param name="value">
+        /// The <see cref="IConfiguration"/> object containing the parameter/property
+        /// value to parse.
+        /// </param>
+        /// <returns>
+        /// A value that can be type-converted and used during object resolution.
+        /// </returns>
         private static object GetConfiguredParameterValue(IConfiguration value)
         {
             var subKeys = value.GetSubKeys();
             if(!subKeys.Any())
             {
+                // No subkeys indicates a scalar value.
                 return value.Get(null);
             }
 
@@ -169,8 +213,14 @@ namespace Autofac.Configuration.Core
                 return new ConfiguredListParameter { List = list.ToArray() };
             }
 
-            // TODO: There are subkeys but not all numbers - it's a dictionary.
-            return null;
+            // There are subkeys but not all numbers - it's a dictionary.
+            var dict = new Dictionary<string, string>();
+            foreach(var subKey in subKeys)
+            {
+                dict[subKey.Key] = subKey.Value.Get(null);
+            }
+
+            return new ConfiguredDictionaryParameter { Dictionary = dict };
         }
     }
 }

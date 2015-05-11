@@ -21,7 +21,7 @@ namespace Autofac.Configuration.Util
                 var castValue = value as ConfiguredListParameter;
                 if (castValue != null && instantiatableType != null)
                 {
-                    Type[] generics = instantiatableType.GetGenericArguments();
+                    var generics = instantiatableType.GetGenericArguments();
                     var collection = (IList)Activator.CreateInstance(instantiatableType);
                     foreach (var item in castValue.List)
                     {

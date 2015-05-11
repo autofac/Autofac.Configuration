@@ -147,6 +147,14 @@ namespace Autofac.Configuration
         }
 
         /// <summary>
+        /// Key cannot be null or empty in a dictionary parameter.
+        /// </summary>
+        internal static string DictionaryKeyMayNotBeNullOrEmpty
+        {
+            get { return GetString("DictionaryKeyMayNotBeNullOrEmpty"); }
+        }
+
+        /// <summary>
         /// The value '{0}' is not valid for the instance scope setting. Valid values are 'single-instance', 'per-dependency' (the default), 'per-lifetime-scope', and 'per-request'.
         /// </summary>
         internal static string FormatUnrecognisedScope(object p0)
