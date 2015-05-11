@@ -16,19 +16,44 @@ namespace Autofac.Configuration.Util
         {
             public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
             {
-                var instantiatableType = GetInstantiableType(destinationType);
-
                 var castValue = value as ConfiguredListParameter;
-                if (castValue != null && instantiatableType != null)
+                if (castValue != null)
                 {
-                    var generics = instantiatableType.GetGenericArguments();
-                    var collection = (IList)Activator.CreateInstance(instantiatableType);
-                    foreach (var item in castValue.List)
+                    // 99% of the time this type of parameter will be associated
+                    // with an ordinal list - List<T> or T[] sort of thing...
+                    var instantiatableType = GetInstantiableListType(destinationType);
+                    if (instantiatableType != null)
                     {
-                        collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
+                        var generics = instantiatableType.GetGenericArguments();
+                        var collection = (IList)Activator.CreateInstance(instantiatableType);
+                        foreach (var item in castValue.List)
+                        {
+                            collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
+                        }
+
+                        return collection;
                     }
 
-                    return collection;
+                    // ...but there is a very small chance this is a Dictionary<int, T> where
+                    // the keys are all 0-based and ordinal. This clause checks for
+                    // that one edge case. We should only have gotten here if
+                    // ConfigurationExtensions.GetConfiguredParameterValue saw
+                    // a 0-based configuration dictionary.
+                    instantiatableType = GetInstantiableDictionaryType(destinationType);
+                    if (instantiatableType != null)
+                    {
+                        var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
+                        var generics = instantiatableType.GetGenericArguments();
+
+                        for(int i = 0; i < castValue.List.Length; i++)
+                        {
+                            var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
+                            var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);
+
+                            dictionary.Add(convertedKey, convertedValue);
+                        }
+                        return dictionary;
+                    }
                 }
 
                 return base.ConvertTo(context, culture, value, destinationType);
@@ -36,7 +61,7 @@ namespace Autofac.Configuration.Util
 
             public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
             {
-                if (GetInstantiableType(destinationType) != null)
+                if (GetInstantiableListType(destinationType) != null || GetInstantiableDictionaryType(destinationType) != null)
                 {
                     return true;
                 }
@@ -44,7 +69,16 @@ namespace Autofac.Configuration.Util
                 return base.CanConvertTo(context, destinationType);
             }
 
-            private static Type GetInstantiableType(Type destinationType)
+            /// <summary>
+            /// Handles type determination list conversion.
+            /// </summary>
+            /// <param name="destinationType">
+            /// The type to which the list content should be converted.
+            /// </param>
+            /// <returns>
+            /// A list type compatible with the data values.
+            /// </returns>
+            private static Type GetInstantiableListType(Type destinationType)
             {
                 if (typeof(IEnumerable).IsAssignableFrom(destinationType))
                 {
@@ -59,6 +93,37 @@ namespace Autofac.Configuration.Util
                     if (destinationType.IsAssignableFrom(listType))
                     {
                         return listType;
+                    }
+                }
+
+                return null;
+            }
+
+            /// <summary>
+            /// Handles type determination for the case where the dictionary
+            /// has numeric/ordinal keys.
+            /// </summary>
+            /// <param name="destinationType">
+            /// The type to which the list content should be converted.
+            /// </param>
+            /// <returns>
+            /// A dictionary type where the key can be numeric.
+            /// </returns>
+            private static Type GetInstantiableDictionaryType(Type destinationType)
+            {
+                if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
+                    (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
+                {
+                    var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(int), typeof(object) };
+                    if (generics.Length != 2)
+                    {
+                        return null;
+                    }
+
+                    var dictType = typeof(Dictionary<,>).MakeGenericType(generics);
+                    if (destinationType.IsAssignableFrom(dictType))
+                    {
+                        return dictType;
                     }
                 }
 

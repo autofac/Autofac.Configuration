@@ -32,8 +32,8 @@
 		<component name="4">
 			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+E</type>
 			<properties>
-				<Dictionary name="94be24db-22a1-45b7-8dbc-a09ffc11468d">Val1</Dictionary>
-				<Dictionary name="cf735002-8f21-4b72-a31f-1de6e24930bc">Val2</Dictionary>
+				<Dictionary name="0">Val1</Dictionary>
+				<Dictionary name="1">Val2</Dictionary>
 			</properties>
 		</component>
 		<component name="5">
@@ -41,6 +41,14 @@
 			<properties>
 				<Dictionary name="Key1">1</Dictionary>
 				<Dictionary name="Key2">2</Dictionary>
+			</properties>
+		</component>
+		<component name="6">
+			<type>Autofac.Configuration.Test.Core.DictionaryParametersFixture+G</type>
+			<properties>
+				<Dictionary name="0">Val0</Dictionary>
+				<Dictionary name="5">Val1</Dictionary>
+				<Dictionary name="10">Val2</Dictionary>
 			</properties>
 		</component>
 		<!--

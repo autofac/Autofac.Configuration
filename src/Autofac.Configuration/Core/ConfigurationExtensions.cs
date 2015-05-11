@@ -189,9 +189,19 @@ namespace Autofac.Configuration.Core
         /// <returns>
         /// A value that can be type-converted and used during object resolution.
         /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The Microsoft configuration model code sees arrays (lists) the same
+        /// as a dictionary with numeric keys. We have to do some work to determine
+        /// how to store the parsed configuration values so they can be converted
+        /// appropriately at resolve time; and there's still an edge case where
+        /// someone actually wanted a <see cref="Dictionary{TKey, TValue}"/> with
+        /// sequential, zero-based numeric keys.
+        /// </para>
+        /// </remarks>
         private static object GetConfiguredParameterValue(IConfiguration value)
         {
-            var subKeys = value.GetSubKeys();
+            var subKeys = value.GetSubKeys().ToArray();
             if(!subKeys.Any())
             {
                 // No subkeys indicates a scalar value.
@@ -201,19 +211,34 @@ namespace Autofac.Configuration.Core
             int parsed;
             if(subKeys.All(sk => Int32.TryParse(sk.Key, out parsed)))
             {
-                // All the subkeys are integers - it's a list. Note there's a gotcha
-                // here where you can't really express a Dictionary<int, T> via configuration
-                // due to the way lists are handled in ConfigurationModel.
-                var list = new List<string>();
-                foreach(var subKey in subKeys)
+                // All the subkeys are integers - it's a list or a Dictionary<int, T>.
+                // If the keys aren't 0-based or sequential, go with dictionary.
+                int i = 0;
+                bool isList = true;
+                foreach(var subKey in subKeys.Select(sk => Int32.Parse(sk.Key)))
                 {
-                    list.Add(subKey.Value.Get(null));
+                    if(subKey != i)
+                    {
+                        isList = false;
+                        break;
+                    }
+
+                    i++;
                 }
 
-                return new ConfiguredListParameter { List = list.ToArray() };
+                if (isList)
+                {
+                    var list = new List<string>();
+                    foreach (var subKey in subKeys)
+                    {
+                        list.Add(subKey.Value.Get(null));
+                    }
+
+                    return new ConfiguredListParameter { List = list.ToArray() };
+                }
             }
 
-            // There are subkeys but not all numbers - it's a dictionary.
+            // There are subkeys but not all zero-based sequential numbers - it's a dictionary.
             var dict = new Dictionary<string, string>();
             foreach(var subKey in subKeys)
             {

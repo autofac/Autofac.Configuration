@@ -73,6 +73,5 @@ namespace Autofac.Configuration.Util
                 return null;
             }
         }
-
     }
 }

@@ -91,23 +91,21 @@ namespace Autofac.Configuration.Test.Core
 
         public class E
         {
-            public IDictionary<Guid, string> Dictionary { get; set; }
+            public IDictionary<int, string> Dictionary { get; set; }
         }
 
         [Fact]
-        public void ConvertsDictionaryKey()
+        public void NumericKeysZeroBasedListConvertedToDictionary()
         {
             var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<E>();
 
-            var key1 = new Guid("94be24db-22a1-45b7-8dbc-a09ffc11468d");
-            var key2 = new Guid("cf735002-8f21-4b72-a31f-1de6e24930bc");
             Assert.True(poco.Dictionary.Count == 2);
-            Assert.True(poco.Dictionary.ContainsKey(key1));
-            Assert.True(poco.Dictionary.ContainsKey(key2));
-            Assert.Equal("Val1", poco.Dictionary[key1]);
-            Assert.Equal("Val2", poco.Dictionary[key2]);
+            Assert.True(poco.Dictionary.ContainsKey(0));
+            Assert.True(poco.Dictionary.ContainsKey(1));
+            Assert.Equal("Val1", poco.Dictionary[0]);
+            Assert.Equal("Val2", poco.Dictionary[1]);
         }
 
         public class F
@@ -127,6 +125,27 @@ namespace Autofac.Configuration.Test.Core
             Assert.True(poco.Dictionary.ContainsKey("Key2"));
             Assert.Equal(1, poco.Dictionary["Key1"]);
             Assert.Equal(2, poco.Dictionary["Key2"]);
+        }
+
+        public class G
+        {
+            public IDictionary<int, string> Dictionary { get; set; }
+        }
+
+        [Fact]
+        public void NumericKeysZeroBasedNonSequential()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+
+            var poco = container.Resolve<G>();
+
+            Assert.True(poco.Dictionary.Count == 3);
+            Assert.True(poco.Dictionary.ContainsKey(0));
+            Assert.True(poco.Dictionary.ContainsKey(5));
+            Assert.True(poco.Dictionary.ContainsKey(10));
+            Assert.Equal("Val0", poco.Dictionary[0]);
+            Assert.Equal("Val1", poco.Dictionary[5]);
+            Assert.Equal("Val2", poco.Dictionary[10]);
         }
     }
 }
