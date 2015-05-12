@@ -174,7 +174,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var component in configuration.GetSubKey("components").GetSubKeys("component").Select(kvp => kvp.Value))
+            foreach (var component in configuration.GetSubKey("components").GetSubKeys().Select(kvp => kvp.Value))
             {
                 var registrar = builder.RegisterType(LoadType(component.Get("type"), defaultAssembly));
 
@@ -240,7 +240,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var moduleElement in configuration.GetSubKey("modules").GetSubKeys("module").Select(kvp => kvp.Value))
+            foreach (var moduleElement in configuration.GetSubKey("modules").GetSubKeys().Select(kvp => kvp.Value))
             {
                 var moduleType = this.LoadType(moduleElement.Get("type"), defaultAssembly);
                 IModule module = null;

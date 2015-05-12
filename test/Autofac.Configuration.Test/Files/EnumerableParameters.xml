@@ -1,70 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <autofac defaultAssembly="Autofac.Configuration.Test">
-	<components>
-		<component name="0">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+A</type>
-			<properties>
-				<List name="0">Val1</List>
-				<List name="1">Val2</List>
-			</properties>
-		</component>
-		<component name="1">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+B</type>
-			<properties>
-				<List name="0">1</List>
-				<List name="1">2</List>
-			</properties>
-		</component>
-		<component name="2">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+C</type>
-			<properties>
-				<List name="0">1</List>
-				<List name="1">2</List>
-			</properties>
-		</component>
-		<component name="3">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+D</type>
-			<properties>
-				<Num>123</Num>
-			</properties>
-		</component>
-		<component name="4">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+E</type>
-			<parameters>
-				<List name="0">1</List>
-				<List name="1">2</List>
-			</parameters>
-		</component>
-		<!--
+	<components name="0">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+A</type>
+		<properties>
+			<List name="0">Val1</List>
+			<List name="1">Val2</List>
+		</properties>
+	</components>
+	<components name="1">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+B</type>
+		<properties>
+			<List name="0">1</List>
+			<List name="1">2</List>
+		</properties>
+	</components>
+	<components name="2">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+C</type>
+		<properties>
+			<List name="0">1</List>
+			<List name="1">2</List>
+		</properties>
+	</components>
+	<components name="3">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+D</type>
+		<properties>
+			<Num>123</Num>
+		</properties>
+	</components>
+	<components name="4">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+E</type>
+		<parameters>
+			<List name="0">1</List>
+			<List name="1">2</List>
+		</parameters>
+	</components>
+	<!--
 		Microsoft.Framework.ConfigurationModel ignores empty elements so you
 		don't know the difference between null and empty.
-		<component name="5">
+		<components name="5">
 			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+F</type>
 			<properties>
 				<List />
 			</properties>
-		</component>
+		</components>
 		-->
-		<component name="6">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+G</type>
-			<properties>
-				<Enumerable name="0">Val1</Enumerable>
-				<Enumerable name="1">Val2</Enumerable>
-			</properties>
-		</component>
-		<component name="7">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+H</type>
-			<properties>
-				<Enumerable name="0">1</Enumerable>
-				<Enumerable name="1">2</Enumerable>
-			</properties>
-		</component>
-		<component name="8">
-			<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+I</type>
-			<properties>
-				<Collection name="0">1</Collection>
-				<Collection name="1">2</Collection>
-			</properties>
-		</component>
+	<components name="6">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+G</type>
+		<properties>
+			<Enumerable name="0">Val1</Enumerable>
+			<Enumerable name="1">Val2</Enumerable>
+		</properties>
+	</components>
+	<components name="7">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+H</type>
+		<properties>
+			<Enumerable name="0">1</Enumerable>
+			<Enumerable name="1">2</Enumerable>
+		</properties>
+	</components>
+	<components name="8">
+		<type>Autofac.Configuration.Test.Core.EnumerableParametersFixture+I</type>
+		<properties>
+			<Collection name="0">1</Collection>
+			<Collection name="1">2</Collection>
+		</properties>
 	</components>
 </autofac>

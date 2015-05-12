@@ -6,7 +6,6 @@
         "warningsAsErrors": true
     },
     "compile": ["**\\*.cs"],
-    "exclude": ["**\\ConfigurationRegistrarFixture.cs"],
     "resource": ["**\\*.resx", "Files\\*.*"],
     "commands": {
         "test": "xunit.runner.dnx"

@@ -1,0 +1,29 @@
+﻿{
+    "defaultAssembly": "Autofac.Configuration.Test",
+    "components": [
+        {
+            "type": "Autofac.Configuration.Test.Core.TypeConverterParametersFixture+HasDictionaryProperty",
+            "properties": {
+                "Dictionary": {
+                    "a": 1,
+                    "b": 2
+                }
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.TypeConverterParametersFixture+HasEnumerableProperty",
+            "properties": {
+                "List": [ 1, 2 ]
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.TypeConverterParametersFixture+HasParametersAndProperties",
+            "parameters": {
+                "parameter": 1
+            },
+            "properties": {
+                "Property": 2
+            }
+        }
+    ]
+}
