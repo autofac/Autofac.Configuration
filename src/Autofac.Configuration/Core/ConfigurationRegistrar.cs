@@ -51,46 +51,6 @@ namespace Autofac.Configuration.Core
     /// <seealso cref="Autofac.Configuration.IConfigurationRegistrar"/>
     public class ConfigurationRegistrar : IConfigurationRegistrar
     {
-        private IEnumerable<Service> EnumerateComponentServices(IConfiguration component, Assembly defaultAssembly)
-        {
-            var primaryServiceName = component.Get("service");
-            var componentName = component.Get("name");
-            if (!string.IsNullOrEmpty(primaryServiceName))
-            {
-                var serviceType = LoadType(primaryServiceName, defaultAssembly);
-                if (!string.IsNullOrEmpty(componentName))
-                {
-                    yield return new KeyedService(componentName, serviceType);
-                }
-                else
-                {
-                    yield return new TypedService(serviceType);
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(componentName))
-                {
-                    throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-                        ConfigurationResources.ServiceTypeMustBeSpecified, componentName));
-                }
-            }
-
-            foreach (var service in component.GetSubKeys("services").Select(kvp => kvp.Value))
-            {
-                var serviceType = LoadType(service.Get("type"), defaultAssembly);
-                var serviceName = service.Get("service");
-                if (!string.IsNullOrEmpty(serviceName))
-                {
-                    yield return new KeyedService(serviceName, serviceType);
-                }
-                else
-                {
-                    yield return new TypedService(serviceType);
-                }
-            }
-        }
-
         /// <summary>
         /// Registers the contents of a configuration section into a container builder.
         /// </summary>
@@ -116,6 +76,7 @@ namespace Autofac.Configuration.Core
             {
                 throw new ArgumentNullException("builder");
             }
+
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");
@@ -123,6 +84,52 @@ namespace Autofac.Configuration.Core
 
             this.RegisterConfiguredModules(builder, configuration);
             this.RegisterConfiguredComponents(builder, configuration);
+        }
+
+        /// <summary>
+        /// Loads a type by name.
+        /// </summary>
+        /// <param name="typeName">
+        /// Name of the <see cref="System.Type"/> to load. This may be a partial type name or a fully-qualified type name.
+        /// </param>
+        /// <param name="defaultAssembly">
+        /// The default <see cref="System.Reflection.Assembly"/> to use in type resolution if <paramref name="typeName"/>
+        /// is a partial type name.
+        /// </param>
+        /// <returns>
+        /// The resolved <see cref="System.Type"/> based on the specified name.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown if <paramref name="typeName"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// Thrown if <paramref name="typeName"/> is empty.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown if the specified <paramref name="typeName"/> can't be resolved as a fully-qualified type name and
+        /// isn't a partial type name for a <see cref="System.Type"/> found in the <paramref name="defaultAssembly"/>.
+        /// </exception>
+        protected virtual Type LoadType(string typeName, Assembly defaultAssembly)
+        {
+            if (typeName == null)
+            {
+                throw new ArgumentNullException("typeName");
+            }
+            if (typeName.Length == 0)
+            {
+                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "type name"), "typeName");
+            }
+            var type = Type.GetType(typeName);
+
+            if (type == null && defaultAssembly != null)
+            {
+                type = defaultAssembly.GetType(typeName, false, true); // Don't throw on error; we'll check it later.
+            }
+            if (type == null)
+            {
+                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
+            }
+            return type;
         }
 
         /// <summary>
@@ -142,8 +149,8 @@ namespace Autofac.Configuration.Core
         /// </exception>
         /// <remarks>
         /// <para>
-        /// This is where the individually configured component registrations get added to the <paramref name="builder" />.
-        /// The <c>components</c> collection from the <paramref name="configuration" />
+        /// This is where the individually configured component registrations get added to the <paramref name="builder"/>.
+        /// The <c>components</c> collection from the <paramref name="configuration"/>
         /// get processed into individual registrations with associated lifetime scope, name, etc.
         /// </para>
         /// <para>
@@ -223,9 +230,9 @@ namespace Autofac.Configuration.Core
         /// </exception>
         /// <remarks>
         /// <para>
-        /// This is where the individually configured component registrations get added to the <paramref name="builder" />.
-        /// The <c>modules</c> collection from the <paramref name="configuration" />
-        /// get processed into individual modules which are instantiated and activated inside the <paramref name="builder" />.
+        /// This is where the individually configured component registrations get added to the <paramref name="builder"/>.
+        /// The <c>modules</c> collection from the <paramref name="configuration"/>
+        /// get processed into individual modules which are instantiated and activated inside the <paramref name="builder"/>.
         /// </para>
         /// </remarks>
         protected virtual void RegisterConfiguredModules(ContainerBuilder builder, IConfiguration configuration)
@@ -243,7 +250,7 @@ namespace Autofac.Configuration.Core
             foreach (var moduleElement in configuration.GetSubKey("modules").GetSubKeys().Select(kvp => kvp.Value))
             {
                 var moduleType = this.LoadType(moduleElement.Get("type"), defaultAssembly);
-                IModule module = null;
+                var module = (IModule )null;
                 using (var moduleActivator = new ReflectionActivator(
                     moduleType,
                     new DefaultConstructorFinder(),
@@ -254,65 +261,6 @@ namespace Autofac.Configuration.Core
                     module = (IModule)moduleActivator.ActivateInstance(new ContainerBuilder().Build(), Enumerable.Empty<Parameter>());
                 }
                 builder.RegisterModule(module);
-            }
-        }
-
-        /// <summary>
-        /// Sets the property injection mode for the component.
-        /// </summary>
-        /// <param name="registrar">
-        /// The component registration on which property injection mode is being set.
-        /// </param>
-        /// <param name="injectProperties">
-        /// The <see cref="System.String"/> configuration value associated with property
-        /// injection for this component registration.
-        /// </param>
-        /// <remarks>
-        /// <para>
-        /// By default, this implementation understands <see langword="null" />, empty,
-        /// or <see langword="false" /> values (<c>false</c>, <c>0</c>, <c>no</c>)
-        /// to mean "no property injection should occur" and <see langword="true" />
-        /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "property injection
-        /// should occur."
-        /// </para>
-        /// <para>
-        /// You may override this method to extend the available grammar for property injection settings.
-        /// </para>
-        /// </remarks>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar" /> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        /// Thrown if the value for <paramref name="injectProperties" /> is not part of the
-        /// recognized grammar.
-        /// </exception>
-        protected virtual void SetInjectProperties<TReflectionActivatorData, TSingleRegistrationStyle>(IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, string injectProperties)
-            where TReflectionActivatorData : ReflectionActivatorData
-            where TSingleRegistrationStyle : SingleRegistrationStyle
-        {
-            if (registrar == null)
-            {
-                throw new ArgumentNullException("registrar");
-            }
-            if (String.IsNullOrWhiteSpace(injectProperties))
-            {
-                return;
-            }
-            switch (injectProperties.Trim().ToUpperInvariant())
-            {
-                case "NO":
-                case "N":
-                case "FALSE":
-                case "0":
-                    break;
-                case "YES":
-                case "Y":
-                case "TRUE":
-                case "1":
-                    registrar.PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
-                    break;
-                default:
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognisedInjectProperties, injectProperties));
             }
         }
 
@@ -328,9 +276,9 @@ namespace Autofac.Configuration.Core
         /// </param>
         /// <remarks>
         /// <para>
-        /// By default, this implementation understands <see langword="null" />, empty,
-        /// or <see langword="false" /> values (<c>false</c>, <c>0</c>, <c>no</c>)
-        /// to mean "no property injection should occur" and <see langword="true" />
+        /// By default, this implementation understands <see langword="null"/>, empty,
+        /// or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
+        /// to mean "no property injection should occur" and <see langword="true"/>
         /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "auto activation
         /// should occur."
         /// </para>
@@ -339,15 +287,15 @@ namespace Autofac.Configuration.Core
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar" /> is <see langword="null" />.
+        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
-        /// Thrown if the value for <paramref name="autoActivate" /> is not part of the
+        /// Thrown if the value for <paramref name="autoActivate"/> is not part of the
         /// recognized grammar.
         /// </exception>
         protected virtual void SetAutoActivate<TReflectionActivatorData, TSingleRegistrationStyle>(IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, string autoActivate)
-            where TReflectionActivatorData : ReflectionActivatorData
-            where TSingleRegistrationStyle : SingleRegistrationStyle
+            where TReflectionActivatorData: ReflectionActivatorData
+            where TSingleRegistrationStyle: SingleRegistrationStyle
         {
             if (registrar == null)
             {
@@ -387,7 +335,7 @@ namespace Autofac.Configuration.Core
         /// </param>
         /// <remarks>
         /// <para>
-        /// By default, this implementation understands <see langword="null" /> or empty
+        /// By default, this implementation understands <see langword="null"/> or empty
         /// values to be "default ownership model"; <c>lifetime-scope</c> or <c>LifetimeScope</c>
         /// is "owned by lifetime scope"; and <c>external</c> or <c>ExternallyOwned</c> is
         /// "externally owned."
@@ -397,15 +345,15 @@ namespace Autofac.Configuration.Core
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar" /> is <see langword="null" />.
+        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
-        /// Thrown if the value for <paramref name="ownership" /> is not part of the
+        /// Thrown if the value for <paramref name="ownership"/> is not part of the
         /// recognized grammar.
         /// </exception>
         protected virtual void SetComponentOwnership<TReflectionActivatorData, TSingleRegistrationStyle>(IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, string ownership)
-            where TReflectionActivatorData : ReflectionActivatorData
-            where TSingleRegistrationStyle : SingleRegistrationStyle
+            where TReflectionActivatorData: ReflectionActivatorData
+            where TSingleRegistrationStyle: SingleRegistrationStyle
         {
             if (registrar == null)
             {
@@ -431,6 +379,65 @@ namespace Autofac.Configuration.Core
         }
 
         /// <summary>
+        /// Sets the property injection mode for the component.
+        /// </summary>
+        /// <param name="registrar">
+        /// The component registration on which property injection mode is being set.
+        /// </param>
+        /// <param name="injectProperties">
+        /// The <see cref="System.String"/> configuration value associated with property
+        /// injection for this component registration.
+        /// </param>
+        /// <remarks>
+        /// <para>
+        /// By default, this implementation understands <see langword="null"/>, empty,
+        /// or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
+        /// to mean "no property injection should occur" and <see langword="true"/>
+        /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "property injection
+        /// should occur."
+        /// </para>
+        /// <para>
+        /// You may override this method to extend the available grammar for property injection settings.
+        /// </para>
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown if the value for <paramref name="injectProperties"/> is not part of the
+        /// recognized grammar.
+        /// </exception>
+        protected virtual void SetInjectProperties<TReflectionActivatorData, TSingleRegistrationStyle>(IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, string injectProperties)
+            where TReflectionActivatorData: ReflectionActivatorData
+            where TSingleRegistrationStyle: SingleRegistrationStyle
+        {
+            if (registrar == null)
+            {
+                throw new ArgumentNullException("registrar");
+            }
+            if (String.IsNullOrWhiteSpace(injectProperties))
+            {
+                return;
+            }
+            switch (injectProperties.Trim().ToUpperInvariant())
+            {
+                case "NO":
+                case "N":
+                case "FALSE":
+                case "0":
+                    break;
+                case "YES":
+                case "Y":
+                case "TRUE":
+                case "1":
+                    registrar.PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+                    break;
+                default:
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognisedInjectProperties, injectProperties));
+            }
+        }
+
+        /// <summary>
         /// Sets the lifetime scope for the component.
         /// </summary>
         /// <param name="registrar">
@@ -442,7 +449,7 @@ namespace Autofac.Configuration.Core
         /// </param>
         /// <remarks>
         /// <para>
-        /// By default, this implementation understands <see langword="null" /> or empty
+        /// By default, this implementation understands <see langword="null"/> or empty
         /// values to be "default ownership model"; <c>single-instance</c> or <c>SingleInstance</c>
         /// is singleton; <c>instance-per-lifetime-scope</c>, <c>InstancePerLifetimeScope</c>, <c>per-lifetime-scope</c>,
         /// or <c>PerLifetimeScope</c> is one instance per nested lifetime scope; and <c>instance-per-dependency</c>,
@@ -454,16 +461,16 @@ namespace Autofac.Configuration.Core
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar" /> is <see langword="null" />.
+        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
-        /// Thrown if the value for <paramref name="lifetimeScope" /> is not part of the
+        /// Thrown if the value for <paramref name="lifetimeScope"/> is not part of the
         /// recognized grammar.
         /// </exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "The cyclomatic complexity is in extension methods. This method is actually pretty simple.")]
         protected virtual void SetLifetimeScope<TReflectionActivatorData, TSingleRegistrationStyle>(IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, string lifetimeScope)
-            where TReflectionActivatorData : ReflectionActivatorData
-            where TSingleRegistrationStyle : SingleRegistrationStyle
+            where TReflectionActivatorData: ReflectionActivatorData
+            where TSingleRegistrationStyle: SingleRegistrationStyle
         {
             if (registrar == null)
             {
@@ -502,50 +509,25 @@ namespace Autofac.Configuration.Core
             }
         }
 
-        /// <summary>
-        /// Loads a type by name.
-        /// </summary>
-        /// <param name="typeName">
-        /// Name of the <see cref="System.Type"/> to load. This may be a partial type name or a fully-qualified type name.
-        /// </param>
-        /// <param name="defaultAssembly">
-        /// The default <see cref="System.Reflection.Assembly"/> to use in type resolution if <paramref name="typeName" />
-        /// is a partial type name.
-        /// </param>
-        /// <returns>
-        /// The resolved <see cref="System.Type"/> based on the specified name.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="typeName" /> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown if <paramref name="typeName" /> is empty.
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        /// Thrown if the specified <paramref name="typeName" /> can't be resolved as a fully-qualified type name and
-        /// isn't a partial type name for a <see cref="System.Type"/> found in the <paramref name="defaultAssembly" />.
-        /// </exception>
-        protected virtual Type LoadType(string typeName, Assembly defaultAssembly)
+        private IEnumerable<Service> EnumerateComponentServices(IConfiguration component, Assembly defaultAssembly)
         {
-            if (typeName == null)
+            foreach(var serviceDefinition in component.GetSubKeys("services"))
             {
-                throw new ArgumentNullException("typeName");
+                // "name" is a special reserved key in the XML configuration source
+                // that enables ordinal collections. To support both JSON and XML
+                // sources, we can't use "name" as the keyed service identifier;
+                // instead, it must be "key."
+                var serviceType = LoadType(serviceDefinition.Value.Get("type"), defaultAssembly);
+                var serviceKey = serviceDefinition.Value.Get("key");
+                if (!string.IsNullOrEmpty(serviceKey))
+                {
+                    yield return new KeyedService(serviceKey, serviceType);
+                }
+                else
+                {
+                    yield return new TypedService(serviceType);
+                }
             }
-            if (typeName.Length == 0)
-            {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "type name"), "typeName");
-            }
-            var type = Type.GetType(typeName);
-
-            if (type == null && defaultAssembly != null)
-            {
-                type = defaultAssembly.GetType(typeName, false, true); // Don't throw on error; we'll check it later.
-            }
-            if (type == null)
-            {
-                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
-            }
-            return type;
         }
     }
 }

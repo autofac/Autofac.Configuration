@@ -1,0 +1,17 @@
+{
+    "defaultAssembly": "Autofac.Configuration.Test",
+    "modules": [
+        {
+            "type": "Autofac.Configuration.Test.Core.ConfigurationRegistrarFixture+ParameterizedModule",
+            "parameters": {
+                "message": "First"
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.ConfigurationRegistrarFixture+ParameterizedModule",
+            "parameters": {
+                "message": "Second"
+            }
+        }
+    ]
+}

@@ -1,20 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac.Builder;
 using Autofac.Configuration;
+using Autofac.Configuration.Core;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
+using Microsoft.Framework.ConfigurationModel;
+using Moq;
 using Xunit;
 
-namespace Autofac.Tests.Configuration.Core
+namespace Autofac.Configuration.Test.Core
 {
     public class ConfigurationRegistrarFixture
     {
-        /*
         [Fact]
-        public void Load_AllowsMultipleRegistrationsOfSameType()
+        public void RegisterConfiguration_NullBuilder()
         {
-            var builder = ConfigureContainer("SameTypeRegisteredMultipleTimes");
+            var configuration = new Mock<IConfiguration>();
+            var registrar = new ConfigurationRegistrar();
+            Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(null, configuration.Object));
+        }
+
+        [Fact]
+        public void RegisterConfiguration_NullConfiguration()
+        {
+            var builder = new ContainerBuilder();
+            var registrar = new ConfigurationRegistrar();
+            Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(builder, null));
+        }
+
+        [Fact]
+        public void RegisterConfiguration_AllowsMultipleRegistrationsOfSameType()
+        {
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("SameTypeRegisteredMultipleTimes.json");
             var container = builder.Build();
             var collection = container.Resolve<IEnumerable<SimpleComponent>>();
             Assert.Equal(2, collection.Count());
@@ -25,10 +44,10 @@ namespace Autofac.Tests.Configuration.Core
         }
 
         [Fact]
-        public void Load_AllowsMultipleModulesOfSameTypeWithDifferentParameters()
+        public void RegisterConfiguration_AllowsMultipleModulesOfSameTypeWithDifferentParameters()
         {
             // Issue #271: Could not register more than one module with the same type but different parameters in XmlConfiguration.
-            var builder = ConfigureContainer("SameModuleRegisteredMultipleTimes");
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("SameModuleRegisteredMultipleTimes.json");
             var container = builder.Build();
             var collection = container.Resolve<IEnumerable<SimpleComponent>>();
             Assert.Equal(2, collection.Count());
@@ -39,13 +58,15 @@ namespace Autofac.Tests.Configuration.Core
         }
 
         [Fact]
-        public void Load_ConstructorInjection()
+        public void RegisterConfiguration_ConstructorInjection()
         {
-            var container = ConfigureContainer("SingletonWithTwoServices").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("SingletonWithTwoServices.xml");
+            var container = builder.Build();
             var cpt = (SimpleComponent)container.Resolve<ITestComponent>();
             Assert.Equal(1, cpt.Input);
         }
 
+        /*
         [Fact]
         public void Load_ExternalOwnership()
         {
@@ -70,14 +91,17 @@ namespace Autofac.Tests.Configuration.Core
             var container = ConfigureContainer("InstancePerDependency").Build();
             Assert.NotSame(container.Resolve<SimpleComponent>(), container.Resolve<SimpleComponent>());
         }
+        */
 
         [Fact]
-        public void Load_LifetimeScope_Singleton()
+        public void RegisterConfiguration_LifetimeScope_Singleton()
         {
-            var container = ConfigureContainer("SingletonWithTwoServices").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("SingletonWithTwoServices.xml");
+            var container = builder.Build();
             Assert.Same(container.Resolve<ITestComponent>(), container.Resolve<ITestComponent>());
         }
 
+        /*
         [Fact]
         public void Load_MemberOf()
         {
@@ -98,16 +122,19 @@ namespace Autofac.Tests.Configuration.Core
             var e = container.Resolve<ComponentConsumer>();
             Assert.NotNull(e.Component);
         }
+        */
 
         [Fact]
-        public void Load_PropertyInjectionWithProvidedValues()
+        public void RegisterConfiguration_PropertyInjectionWithProvidedValues()
         {
-            var container = ConfigureContainer("SingletonWithTwoServices").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("SingletonWithTwoServices.xml");
+            var container = builder.Build();
             var cpt = (SimpleComponent)container.Resolve<ITestComponent>();
             Assert.Equal("hello", cpt.Message);
             Assert.True(cpt.ABool, "The Boolean property value was not properly parsed/converted.");
         }
 
+        /*
         [Fact]
         public void Load_AutoActivationEnabledOnComponent()
         {
@@ -138,24 +165,17 @@ namespace Autofac.Tests.Configuration.Core
             Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out registration), "The expected service wasn't registered.");
             Assert.Equal(42, (int)registration.Metadata["answer"]);
         }
+        */
 
         [Fact]
-        public void Load_SingleComponentWithTwoServices()
+        public void RegisterConfiguration_SingleComponentWithTwoServices()
         {
-            var container = ConfigureContainer("SingletonWithTwoServices").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("SingletonWithTwoServices.xml");
+            var container = builder.Build();
             container.AssertRegistered<ITestComponent>("The ITestComponent wasn't registered.");
             container.AssertRegistered<object>("The object wasn't registered.");
             container.AssertNotRegistered<SimpleComponent>("The base SimpleComponent type was incorrectly registered.");
             Assert.Same(container.Resolve<ITestComponent>(), container.Resolve<object>());
-        }
-
-        private static ContainerBuilder ConfigureContainer(string configFileBaseName)
-        {
-            var cb = new ContainerBuilder();
-            var fullFilename = "Files/" + configFileBaseName + ".config";
-            var csr = new ConfigurationSettingsReader(SectionHandler.DefaultSectionName, fullFilename);
-            cb.RegisterModule(csr);
-            return cb;
         }
 
         interface ITestComponent { }
@@ -192,6 +212,5 @@ namespace Autofac.Tests.Configuration.Core
                 builder.RegisterType<SimpleComponent>().WithProperty("Message", this.Message);
             }
         }
-        */
     }
 }
