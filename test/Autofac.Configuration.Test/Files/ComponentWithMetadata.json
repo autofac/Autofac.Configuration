@@ -1,0 +1,21 @@
+﻿{
+    "defaultAssembly": "mscorlib",
+    "components": [
+        {
+            "type": "System.Object",
+            "services": [
+                {
+                    "type": "System.Object",
+                    "key": "a"
+                }
+            ],
+            "metadata": [
+                {
+                    "key": "answer",
+                    "value": 42,
+                    "type": "System.Int32"
+                }
+            ]
+        }
+    ]
+}

@@ -200,7 +200,7 @@ namespace Autofac.Configuration.Core
                 }
                 foreach (var ep in component.GetSubKeys("metadata").Select(kvp => kvp.Value))
                 {
-                    registrar.WithMetadata(ep.Get("name"), TypeManipulation.ChangeToCompatibleType(ep.Get("value"), Type.GetType(ep.Get("type"))));
+                    registrar.WithMetadata(ep.Get("key"), TypeManipulation.ChangeToCompatibleType(ep.Get("value"), Type.GetType(ep.Get("type"))));
                 }
                 if (!string.IsNullOrEmpty(component.Get("memberOf")))
                 {

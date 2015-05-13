@@ -66,32 +66,23 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(1, cpt.Input);
         }
 
-        /*
         [Fact]
-        public void Load_ExternalOwnership()
+        public void RegisterConfiguration_ExternalOwnership()
         {
-            var container = ConfigureContainer("ExternalOwnership").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ExternalOwnership.json");
+            var container = builder.Build();
             IComponentRegistration registration;
             Assert.True(container.ComponentRegistry.TryGetRegistration(new TypedService(typeof(SimpleComponent)), out registration), "The expected component was not registered.");
             Assert.Equal(InstanceOwnership.ExternallyOwned, registration.Ownership);
         }
 
         [Fact]
-        public void Load_IncludesFileReferences()
+        public void RegisterConfiguration_LifetimeScope_InstancePerDependency()
         {
-            var container = ConfigureContainer("Referrer").Build();
-            container.AssertRegisteredNamed<object>("a", "The component from the config file with the specified section name was not registered.");
-            container.AssertRegisteredNamed<object>("b", "The component from the config file with the default section name was not registered.");
-            container.AssertRegisteredNamed<object>("c", "The component from the referenced raw XML configuration file was not registered.");
-        }
-
-        [Fact]
-        public void Load_LifetimeScope_InstancePerDependency()
-        {
-            var container = ConfigureContainer("InstancePerDependency").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("InstancePerDependency.json");
+            var container = builder.Build();
             Assert.NotSame(container.Resolve<SimpleComponent>(), container.Resolve<SimpleComponent>());
         }
-        */
 
         [Fact]
         public void RegisterConfiguration_LifetimeScope_Singleton()
@@ -101,11 +92,10 @@ namespace Autofac.Configuration.Test.Core
             Assert.Same(container.Resolve<ITestComponent>(), container.Resolve<ITestComponent>());
         }
 
-        /*
         [Fact]
-        public void Load_MemberOf()
+        public void RegisterConfiguration_MemberOf()
         {
-            var builder = ConfigureContainer("MemberOf");
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("MemberOf.json");
             builder.RegisterCollection<ITestComponent>("named-collection").As<IList<ITestComponent>>();
             var container = builder.Build();
             var collection = container.Resolve<IList<ITestComponent>>();
@@ -114,15 +104,14 @@ namespace Autofac.Configuration.Test.Core
         }
 
         [Fact]
-        public void Load_PropertyInjectionEnabledOnComponent()
+        public void RegisterConfiguration_PropertyInjectionEnabledOnComponent()
         {
-            var builder = ConfigureContainer("EnablePropertyInjection");
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("EnablePropertyInjection.json");
             builder.RegisterType<SimpleComponent>().As<ITestComponent>();
             var container = builder.Build();
             var e = container.Resolve<ComponentConsumer>();
             Assert.NotNull(e.Component);
         }
-        */
 
         [Fact]
         public void RegisterConfiguration_PropertyInjectionWithProvidedValues()
@@ -134,38 +123,35 @@ namespace Autofac.Configuration.Test.Core
             Assert.True(cpt.ABool, "The Boolean property value was not properly parsed/converted.");
         }
 
-        /*
         [Fact]
-        public void Load_AutoActivationEnabledOnComponent()
+        public void RegisterConfiguration_AutoActivationEnabledOnComponent()
         {
-            var builder = ConfigureContainer("EnableAutoActivation");
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("EnableAutoActivation.json");
             var container = builder.Build();
-
             IComponentRegistration registration;
             Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out registration), "The expected component was not registered.");
             Assert.True(registration.Services.Any(a => a.GetType().Name == "AutoActivateService"), "Auto activate service was not registered on the component");
         }
 
         [Fact]
-        public void Load_AutoActivationNotEnabledOnComponent()
+        public void RegisterConfiguration_AutoActivationNotEnabledOnComponent()
         {
-            var builder = ConfigureContainer("EnableAutoActivation");
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("EnableAutoActivation.json");
             var container = builder.Build();
-
             IComponentRegistration registration;
             Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("b", typeof(object)), out registration), "The expected component was not registered.");
             Assert.False(registration.Services.Any(a => a.GetType().Name == "AutoActivateService"), "Auto activate service was registered on the component when it shouldn't be.");
         }
 
         [Fact]
-        public void Load_RegistersMetadata()
+        public void RegisterConfiguration_RegistersMetadata()
         {
-            var container = ConfigureContainer("ComponentWithMetadata").Build();
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentWithMetadata.json");
+            var container = builder.Build();
             IComponentRegistration registration;
             Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out registration), "The expected service wasn't registered.");
             Assert.Equal(42, (int)registration.Metadata["answer"]);
         }
-        */
 
         [Fact]
         public void RegisterConfiguration_SingleComponentWithTwoServices()
