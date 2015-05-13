@@ -9,10 +9,10 @@ This configuration file shows five concepts at once:
 -->
 <autofac defaultAssembly="Autofac.Configuration.Test">
     <components name="0">
-        <type>Autofac.Configuration.Test.Core.ConfigurationRegistrarFixture+SimpleComponent</type>
+        <type>Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent</type>
         <instanceScope>single-instance</instanceScope>
         <services name="0" type="System.Object, mscorlib" />
-        <services name="1" type="Autofac.Configuration.Test.Core.ConfigurationRegistrarFixture+ITestComponent" />
+        <services name="1" type="Autofac.Configuration.Test.Core.ComponentRegistrarFixture+ITestComponent" />
         <parameters>
             <input>1</input>
         </parameters>

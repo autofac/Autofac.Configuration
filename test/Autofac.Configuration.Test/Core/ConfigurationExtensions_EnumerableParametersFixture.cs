@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Autofac.Configuration.Test.Core
 {
-    public class EnumerableParametersFixture
+    public class ConfigurationExtensions_EnumerableParametersFixture
     {
         public class A
         {
@@ -16,7 +16,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void PropertyStringListInjection()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<A>();
 
@@ -33,7 +33,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void ConvertsTypeInList()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<B>();
 
@@ -50,7 +50,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void FillsNonGenericListWithString()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<C>();
 
@@ -67,7 +67,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsSingleValueWithConversion()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<D>();
 
@@ -87,7 +87,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsConstructorParameter()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<E>();
 
@@ -104,7 +104,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsIEnumerable()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<G>();
 
@@ -123,7 +123,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsGenericIEnumerable()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<H>();
 
@@ -142,7 +142,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsGenericCollection()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("EnumerableParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
             var poco = container.Resolve<I>();
 

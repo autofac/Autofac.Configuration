@@ -2,7 +2,7 @@
     "defaultAssembly": "Autofac.Configuration.Test",
     "components": [
         {
-            "type": "Autofac.Configuration.Test.Core.ConfigurationRegistrarFixture+SimpleComponent",
+            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
             "instanceScope": "per-dependency"
         }
     ]

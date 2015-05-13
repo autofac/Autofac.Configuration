@@ -91,35 +91,19 @@ namespace Autofac.Configuration
         }
 
         /// <summary>
-        /// The value '{0}' is not valid for the auto activate setting. Valid values are 'true' and 'false'.
+        /// The value '{0}' is not valid for a Boolean setting. Valid values are 'true' and 'false'.
         /// </summary>
-        internal static string UnrecognisedAutoActivate
+        internal static string UnrecognisedBoolean
         {
-            get { return GetString("UnrecognisedAutoActivate"); }
+            get { return GetString("UnrecognisedBoolean"); }
         }
 
         /// <summary>
-        /// The value '{0}' is not valid for the auto activate setting. Valid values are 'true' and 'false'.
+        /// The value '{0}' is not valid for a Boolean setting. Valid values are 'true' and 'false'.
         /// </summary>
-        internal static string FormatUnrecognisedAutoActivate(object p0)
+        internal static string FormatUnrecognisedBoolean(object p0)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("UnrecognisedAutoActivate"), p0);
-        }
-
-        /// <summary>
-        /// The value '{0}' is not valid for the inject properties setting. Valid values are 'true' and 'false'.
-        /// </summary>
-        internal static string UnrecognisedInjectProperties
-        {
-            get { return GetString("UnrecognisedInjectProperties"); }
-        }
-
-        /// <summary>
-        /// The value '{0}' is not valid for the inject properties setting. Valid values are 'true' and 'false'.
-        /// </summary>
-        internal static string FormatUnrecognisedInjectProperties(object p0)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("UnrecognisedInjectProperties"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("UnrecognisedBoolean"), p0);
         }
 
         /// <summary>

@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Autofac.Configuration.Core;
+using Autofac.Configuration.Util;
+using Autofac.Core;
+using Microsoft.Framework.ConfigurationModel;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using Autofac.Configuration.Core;
-using Autofac.Core;
-using Microsoft.Framework.ConfigurationModel;
 using Xunit;
+
 using ConfigModel = Microsoft.Framework.ConfigurationModel.Configuration;
 
 namespace Autofac.Configuration.Test.Core
@@ -84,6 +88,15 @@ namespace Autofac.Configuration.Test.Core
             Assert.Throws<ArgumentNullException>(() => config.GetAssembly(null));
         }
 
+        [Fact]
+        public void GetParameters_ParameterConversionUsesTypeConverterAttribute()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
+            var obj = container.Resolve<HasConvertibleParametersAndProperties>();
+            Assert.NotNull(obj.Parameter);
+            Assert.Equal(1, obj.Parameter.Value);
+        }
+
         [Theory]
         [MemberData("GetParameters_SimpleParameters_Source")]
         public void GetParameters_SimpleParameters(string parameterName, object expectedValue)
@@ -96,6 +109,15 @@ namespace Autofac.Configuration.Test.Core
             Assert.NotNull(parameter);
             Assert.NotNull(provider);
             Assert.Equal(expectedValue, provider());
+        }
+
+        public static IEnumerable<object[]> GetParameters_SimpleParameters_Source
+        {
+            get
+            {
+                yield return new object[] { "number", 1 };
+                yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
+            }
         }
 
         [Fact]
@@ -131,6 +153,29 @@ namespace Autofac.Configuration.Test.Core
         }
 
         [Fact]
+        public void GetProperties_DictionaryPropertyUsesTypeConverterAttribute()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
+            var obj = container.Resolve<HasDictionaryProperty>();
+            Assert.NotNull(obj.Convertible);
+            Assert.Equal(2, obj.Convertible.Count);
+            Assert.Equal(1, obj.Convertible["a"].Value);
+            Assert.Equal(2, obj.Convertible["b"].Value);
+        }
+
+        [Fact]
+        public void GetProperties_ListConversionUsesTypeConverterAttribute()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
+            var obj = container.Resolve<HasEnumerableProperty>();
+            Assert.NotNull(obj.Convertible);
+            var convertible = obj.Convertible.ToArray();
+            Assert.Equal(2, convertible.Length);
+            Assert.Equal(1, convertible[0].Value);
+            Assert.Equal(2, convertible[1].Value);
+        }
+
+        [Fact]
         public void GetProperties_ListPropertyEmpty()
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
@@ -157,6 +202,15 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(new List<int> { 1, 2 }, provider());
         }
 
+        [Fact]
+        public void GetProperties_PropertyConversionUsesTypeConverterAttribute()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
+            var obj = container.Resolve<HasConvertibleParametersAndProperties>();
+            Assert.NotNull(obj.Property);
+            Assert.Equal(2, obj.Property.Value);
+        }
+
         [Theory]
         [MemberData("GetProperties_SimpleProperties_Source")]
         public void GetProperties_SimpleProperties(string propertyName, object expectedValue)
@@ -169,15 +223,6 @@ namespace Autofac.Configuration.Test.Core
             Assert.NotNull(parameter);
             Assert.NotNull(provider);
             Assert.Equal(expectedValue, provider());
-        }
-
-        public static IEnumerable<object[]> GetParameters_SimpleParameters_Source
-        {
-            get
-            {
-                yield return new object[] { "number", 1 };
-                yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
-            }
         }
 
         public static IEnumerable<object[]> GetProperties_SimpleProperties_Source
@@ -198,18 +243,121 @@ namespace Autofac.Configuration.Test.Core
             return config;
         }
 
+        public class Convertible
+        {
+            public int Value { get; set; }
+        }
+
+        public class ConvertibleConverter : TypeConverter
+        {
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            {
+                return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+            }
+
+            public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+                var str = value as String;
+                if (str == null)
+                {
+                    return base.ConvertFrom(context, culture, value);
+                }
+                var converter = TypeDescriptor.GetConverter(typeof(int));
+                return new Convertible { Value = (int)converter.ConvertFromString(context, culture, str) };
+            }
+        }
+
+        public class ConvertibleDictionaryConverter : TypeConverter
+        {
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            {
+                return sourceType == typeof(ConfiguredDictionaryParameter) || base.CanConvertFrom(context, sourceType);
+            }
+
+            public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+                var castValue = value as ConfiguredDictionaryParameter;
+                if (castValue == null)
+                {
+                    return base.ConvertFrom(context, culture, value);
+                }
+                var dict = new Dictionary<string, Convertible>();
+                var converter = new ConvertibleConverter();
+                foreach (var item in castValue.Dictionary)
+                {
+                    dict[item.Key] = (Convertible)converter.ConvertFrom(item.Value);
+                }
+                return dict;
+            }
+        }
+
+        public class ConvertibleListConverter : TypeConverter
+        {
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            {
+                return sourceType == typeof(ConfiguredListParameter) || base.CanConvertFrom(context, sourceType);
+            }
+
+            public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+                var castValue = value as ConfiguredListParameter;
+                if (castValue == null)
+                {
+                    return base.ConvertFrom(context, culture, value);
+                }
+                var list = new List<Convertible>();
+                var converter = new ConvertibleConverter();
+                foreach (var item in castValue.List)
+                {
+                    list.Add((Convertible)converter.ConvertFrom(item));
+                }
+                return list;
+            }
+        }
+
+        public class HasConvertibleParametersAndProperties
+        {
+            public HasConvertibleParametersAndProperties([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
+            {
+                Parameter = parameter;
+            }
+
+            public Convertible Parameter { get; set; }
+
+            [TypeConverter(typeof(ConvertibleConverter))]
+            public Convertible Property { get; set; }
+        }
+
         public class HasDictionaryProperty
         {
-            public Dictionary<string, int> Populated { get; set; }
+            [TypeConverter(typeof(ConvertibleDictionaryConverter))]
+            public IDictionary<string, Convertible> Convertible { get; set; }
+
             public Dictionary<string, int> Empty { get; set; }
 
+            public Dictionary<string, int> Populated { get; set; }
         }
 
         public class HasEnumerableProperty
         {
-            public IEnumerable<int> Populated { get; set; }
+            [TypeConverter(typeof(ConvertibleListConverter))]
+            public IEnumerable<Convertible> Convertible { get; set; }
 
             public IEnumerable<int> Empty { get; set; }
+
+            public IEnumerable<int> Populated { get; set; }
         }
 
         public class HasSimpleParametersAndProperties

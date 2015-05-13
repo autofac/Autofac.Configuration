@@ -247,5 +247,52 @@ namespace Autofac.Configuration.Core
 
             return new ConfiguredDictionaryParameter { Dictionary = dict };
         }
+
+        /// <summary>
+        /// Loads a type by name.
+        /// </summary>
+        /// <param name="value">
+        /// The <see cref="IConfiguration"/> object containing the type value to load.
+        /// </param>
+        /// <param name="key">
+        /// Name of the <see cref="System.Type"/> to load. This may be a partial type name or a fully-qualified type name.
+        /// </param>
+        /// <param name="defaultAssembly">
+        /// The default <see cref="System.Reflection.Assembly"/> to use in type resolution if <paramref name="key"/>
+        /// is a partial type name.
+        /// </param>
+        /// <returns>
+        /// The resolved <see cref="System.Type"/> based on the specified name.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown if <paramref name="configuration"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown if the specified <paramref name="key"/> can't be resolved as a fully-qualified type name and
+        /// isn't a partial type name for a <see cref="System.Type"/> found in the <paramref name="defaultAssembly"/>.
+        /// </exception>
+        public static Type GetType(this IConfiguration configuration, string key, Assembly defaultAssembly)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            var typeName = configuration.Get(key);
+            var type = Type.GetType(typeName);
+
+            if (type == null && defaultAssembly != null)
+            {
+                // Don't throw on error; we'll check it later.
+                type = defaultAssembly.GetType(typeName, false, true);
+            }
+
+            if (type == null)
+            {
+                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
+            }
+
+            return type;
+        }
     }
 }

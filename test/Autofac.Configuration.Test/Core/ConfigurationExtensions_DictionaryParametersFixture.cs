@@ -6,7 +6,7 @@ using System;
 
 namespace Autofac.Configuration.Test.Core
 {
-    public class DictionaryParametersFixture
+    public class ConfigurationExtensions_DictionaryParametersFixture
     {
         public class A
         {
@@ -16,7 +16,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsDictionaryProperty()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<A>();
 
@@ -40,7 +40,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsDictionaryParameter()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<B>();
 
@@ -59,7 +59,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsNonGenericDictionary()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<C>();
 
@@ -78,7 +78,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void InjectsConcreteDictionary()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<D>();
 
@@ -97,7 +97,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void NumericKeysZeroBasedListConvertedToDictionary()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<E>();
 
@@ -116,7 +116,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void ConvertsDictionaryValue()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<F>();
 
@@ -135,7 +135,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void NumericKeysZeroBasedNonSequential()
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("DictionaryParameters.xml").Build();
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_DictionaryParameters.xml").Build();
 
             var poco = container.Resolve<G>();
 

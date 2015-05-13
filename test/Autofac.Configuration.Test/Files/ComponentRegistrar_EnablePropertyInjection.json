@@ -2,7 +2,7 @@
     "defaultAssembly": "Autofac.Configuration.Test",
     "components": [
         {
-            "type": "Autofac.Configuration.Test.Core.ConfigurationRegistrarFixture+ComponentConsumer",
+            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+ComponentConsumer",
             "injectProperties": true
         }
     ]
