@@ -1,5 +1,50 @@
 # Build variables
 $dnvmVersion = "1.0.0-beta4";
+$ErrorActionPreference = "Stop"
+
+########################
+# FUNCTIONS
+########################
+function Install-Dnvm
+{
+    & where.exe dnvm 2>&1 | Out-Null
+    if($LASTEXITCODE -ne 0)
+    {
+        Write-Host "DNVM not found"
+        &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
+
+        # Normally this happens automatically during install but AppVeyor has
+        # an issue where you may need to manually re-run setup from within this process.
+        if($env:DNX_HOME -eq $NULL)
+        {
+            Write-Host "Initial DNVM environment setup failed; running manual setup"
+            $tempDnvmPath = Join-Path $env:TEMP "dnvminstall"
+            $dnvmSetupCmdPath = Join-Path $tempDnvmPath "dnvm.ps1"
+            & $dnvmSetupCmdPath setup
+        }
+    }
+}
+function Restore-Packages
+{
+    param([string] $DirectoryName)
+    & dnu restore ("""" + $DirectoryName + """")
+}
+
+function Build-Projects
+{
+    param([string] $DirectoryName)
+    & dnu pack ("""" + $DirectoryName + """") --configuration Release --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { throw "Build failed on "  + $DirectoryName }
+}
+
+function Test-Projects
+{
+    param([string] $DirectoryName)
+    & dnx ("""" + $DirectoryName + """") test; if($LASTEXITCODE -ne 0) { throw "Tests failed on "  + $DirectoryName }
+}
+
+########################
+# THE BUILD!
+########################
 
 Push-Location $PSScriptRoot
 
@@ -7,21 +52,7 @@ Push-Location $PSScriptRoot
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 # Install DNVM
-& where.exe dnvm 2>&1 | Out-Null
-if($LASTEXITCODE -ne 0)
-{
-    Write-Host "DNVM not found"
-    &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
-    $tempPath = Join-Path $env:TEMP "dnvminstall"
-    $dnvmCmdPath = Join-Path $tempPath "dnvm.ps1"
-    & $dnvmCmdPath setup
-}
-
-Write-Host "AppVeyor diagnostics..."
-Write-Host "PATH:" $env:Path
-Write-Host "DNX_HOME:" $env:DNX_HOME
-Write-Host "C:\Users\appveyor\.dnx exists?" (Test-Path C:\Users\appveyor\.dnx)
-Write-Host "C:\Users\appveyor\.dnx\bin exists?" (Test-Path C:\Users\appveyor\.dnx\bin)
+Install-Dnvm
 
 # Install DNX
 dnvm install $dnvmVersion -r CoreCLR
@@ -36,9 +67,10 @@ $env:DNX_BUILD_VERSION = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1}[$env
 Write-Host "Build number:" $env:DNX_BUILD_VERSION
 
 # Build/package
-Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { dnu pack ("""" + $_.DirectoryName + """") --configuration Release --out .\artifacts\packages; if($LASTEXITCODE -ne 0) { throw "Build failed on "  + $_.DirectoryName } }
+Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Build-Projects $_.DirectoryName }
 
 # Test
-Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { dnx ("""" + $_.DirectoryName + """") test; if($LASTEXITCODE -ne 0) { throw "Tests failed on "  + $_.DirectoryName } }
+Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
 
 Pop-Location
+
