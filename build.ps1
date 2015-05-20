@@ -1,6 +1,5 @@
 # Build variables
 $dnvmVersion = "1.0.0-beta4";
-$ErrorActionPreference = "Stop"
 
 ########################
 # FUNCTIONS
@@ -73,4 +72,3 @@ Get-ChildItem -Path .\src -Filter *.xproj -Recurse | ForEach-Object { Build-Proj
 Get-ChildItem -Path .\test -Filter *.xproj -Recurse | ForEach-Object { Test-Projects $_.DirectoryName }
 
 Pop-Location
-
