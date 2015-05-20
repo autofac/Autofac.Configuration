@@ -10,7 +10,7 @@ clone_depth: 1
 test: off
 
 build_script:
-- build.ps1
+- ps: .\build.ps1
 
 artifacts:
 - path: artifacts\packages\**\*.nupkg
