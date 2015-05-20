@@ -1,5 +1,5 @@
 {
-    "version": "4.0.0-*",
+    "version": "4.0.0-alpha-*",
     "authors": ["Autofac Contributors"],
     "description": "Configuration support for Autofac",
     "summary": "Enables Autofac dependencies to be set up using configuration sources.",
