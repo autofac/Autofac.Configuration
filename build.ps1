@@ -10,8 +10,15 @@ if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 & where.exe dnvm 2>&1 | Out-Null
 if($LASTEXITCODE -ne 0)
 {
+    Write-Host "DNVM not found"
     &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
 }
+
+Write-Host "AppVeyor diagnostics..."
+Write-Host "PATH:" $env:Path
+Write-Host "DNX_HOME:" $env:DNX_HOME
+Write-Host "C:\Users\appveyor\.dnx exists?" (Test-Path C:\Users\appveyor\.dnx)
+Write-Host "C:\Users\appveyor\.dnx\bin exists?" (Test-Path C:\Users\appveyor\.dnx\bin)
 
 # Install DNX
 dnvm install $dnvmVersion -r CoreCLR
