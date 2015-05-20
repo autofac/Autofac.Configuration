@@ -7,7 +7,8 @@ Push-Location $PSScriptRoot
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 # Install DNVM
-if(((where.exe dnvm) | Out-String) -eq "")
+& where.exe dnvm 2>&1 | Out-Null
+if($LASTEXITCODE -ne 0)
 {
     &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
 }
