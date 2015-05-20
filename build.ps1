@@ -12,6 +12,9 @@ if($LASTEXITCODE -ne 0)
 {
     Write-Host "DNVM not found"
     &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
+    $tempPath = Join-Path $env:TEMP "dnvminstall"
+    $dnvmCmdPath = Join-Path $tempPath "dnvm.ps1"
+    & $dnvmCmdPath setup
 }
 
 Write-Host "AppVeyor diagnostics..."
