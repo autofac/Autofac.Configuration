@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("Autofac.Tests.Configuration")]
+[assembly: AssemblyTitle("Autofac.Configuration.Test")]

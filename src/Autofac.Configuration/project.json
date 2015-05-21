@@ -1,5 +1,5 @@
 {
-    "version": "4.0.0-alpha-*",
+    "version": "4.0.0-alpha3-*",
     "authors": ["Autofac Contributors"],
     "description": "Configuration support for Autofac",
     "summary": "Enables Autofac dependencies to be set up using configuration sources.",
@@ -14,21 +14,10 @@
     "compile": ["**/*.cs"],
     "resource": ["**/*.resx"],
     "dependencies": {
-        "Autofac": "4.0.0-*",
+        "Autofac": "4.0.0-alpha3-*",
         "Microsoft.Framework.ConfigurationModel": "1.0.0-*"
     },
     "frameworks": {
-        "net45": {
-            "frameworkAssemblies": {
-                "System.Collections": "",
-                "System.ComponentModel": "",
-                "System.Globalization": "",
-                "System.Linq": "",
-                "System.Reflection": "",
-                "System.Reflection.Extensions": "",
-                "System.Resources.ResourceManager": ""
-            }
-        },
         "dnx451": {
             "frameworkAssemblies": {
                 "System.Collections": "",
@@ -53,6 +42,17 @@
                 "System.Reflection.Extensions": "4.0.0-beta-*",
                 "System.Reflection.TypeExtensions": "4.0.0-beta-*",
                 "System.Resources.ResourceManager": "4.0.0-beta-*"
+            }
+        },
+        "net45": {
+            "frameworkAssemblies": {
+                "System.Collections": "",
+                "System.ComponentModel": "",
+                "System.Globalization": "",
+                "System.Linq": "",
+                "System.Reflection": "",
+                "System.Reflection.Extensions": "",
+                "System.Resources.ResourceManager": ""
             }
         }
     }
