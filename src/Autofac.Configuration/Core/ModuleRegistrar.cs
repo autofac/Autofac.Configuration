@@ -24,13 +24,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using Autofac.Builder;
-using Autofac.Configuration.Util;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
 using Microsoft.Framework.ConfigurationModel;

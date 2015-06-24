@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac.Configuration;
 using Xunit;
 
 namespace Autofac.Configuration.Test.Core

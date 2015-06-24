@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using Autofac.Configuration.Core;
-using Autofac.Core;
+﻿using System.Reflection;
 using Microsoft.Framework.ConfigurationModel;
-using Xunit;
 using ConfigModel = Microsoft.Framework.ConfigurationModel.Configuration;
 
 namespace Autofac.Configuration.Test
