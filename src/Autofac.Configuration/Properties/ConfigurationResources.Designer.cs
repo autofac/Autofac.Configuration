@@ -8,7 +8,7 @@ namespace Autofac.Configuration
     internal static class ConfigurationResources
     {
         private static readonly ResourceManager _resourceManager
-            = new ResourceManager("Autofac.Configuration.ConfigurationResources", typeof(ConfigurationResources).GetTypeInfo().Assembly);
+            = new ResourceManager("Autofac.Configuration.Properties.ConfigurationResources", typeof(ConfigurationResources).GetTypeInfo().Assembly);
 
         /// <summary>
         /// The {0} may not be empty.

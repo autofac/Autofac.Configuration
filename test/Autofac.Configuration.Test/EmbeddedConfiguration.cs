@@ -10,7 +10,7 @@ namespace Autofac.Configuration.Test
         {
             var config = new ConfigModel();
             var source = new JsonConfigurationSource("path", true);
-            using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Files/" + configFile))
+            using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile))
             {
                 typeof(JsonConfigurationSource).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
             }
@@ -22,7 +22,7 @@ namespace Autofac.Configuration.Test
         {
             var config = new ConfigModel();
             var source = new XmlConfigurationSource("path");
-            using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Files/" + configFile))
+            using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile))
             {
                 typeof(XmlConfigurationSource).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
             }
