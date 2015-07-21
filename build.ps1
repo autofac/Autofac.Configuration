@@ -67,6 +67,8 @@ if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 Remove-PathVariable "*Program Files\Microsoft DNX\DNVM*"
 Install-Dnvm
 
+dnvm
+
 # Install DNX
 dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
 dnvm install $dnxVersion -r CLR -Unstable -NoNative
