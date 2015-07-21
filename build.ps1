@@ -45,7 +45,8 @@ function Test-Projects
 function Remove-PathVariable
 {
     param([string] $VariableToRemove)
-    Split-String -Input $env:Path -Separator ";" | Where-Object { $_.ToString() -inotlike $VariableToRemove } | Join-String -Separator ";" | Set-PathVariable
+    $newItems = ($env:Path).Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
+    [System.String]::Join(';', $newItems) | Set-PathVariable
 }
 
 ########################
