@@ -16,8 +16,8 @@
         "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-*",
         "Microsoft.Framework.ConfigurationModel.Xml": "1.0.0-*",
         "Moq": "4.2.1502.911",
-        "xunit": "2.1.0-*",
-        "xunit.runner.dnx": "2.1.0-*"
+        "xunit": "2.1.0-beta3-*",
+        "xunit.runner.dnx": "2.1.0-beta3-*"
     },
     "frameworks": {
         "dnx451": { },
