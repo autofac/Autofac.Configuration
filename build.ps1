@@ -1,5 +1,5 @@
 # Build variables
-$dnvmVersion = "1.0.0-beta5";
+$dnxVersion = "1.0.0-beta5";
 
 ########################
 # FUNCTIONS
@@ -7,7 +7,7 @@ $dnvmVersion = "1.0.0-beta5";
 function Install-Dnvm
 {
     & where.exe dnvm 2>&1 | Out-Null
-    if($LASTEXITCODE -ne 0)
+    if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
     {
         Write-Host "DNVM not found"
         &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
@@ -23,6 +23,7 @@ function Install-Dnvm
         }
     }
 }
+
 function Restore-Packages
 {
     param([string] $DirectoryName)
@@ -53,13 +54,10 @@ if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 # Install DNVM
 Install-Dnvm
 
-# Temp - get the DNVM info. I think it's on beta4 on AppVeyor.
-dnvm
-
 # Install DNX
-dnvm install $dnvmVersion -r CoreCLR -NoNative
-dnvm install $dnvmVersion -r CLR -NoNative
-dnvm use $dnvmVersion -r CLR
+dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
+dnvm install $dnxVersion -r CLR -Unstable -NoNative
+dnvm use $dnxVersion -r CLR
 
 # Package restore
 Get-ChildItem -Path . -Filter *.xproj -Recurse | ForEach-Object { dnu restore ("""" + $_.DirectoryName + """") }
