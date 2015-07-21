@@ -45,8 +45,12 @@ function Test-Projects
 function Remove-PathVariable
 {
     param([string] $VariableToRemove)
-    $newItems = ($env:Path).Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
-    $env:Path = [System.String]::Join(';', $newItems)
+    $path = [Environment]::GetEnvironmentVariable("PATH", "User")
+    $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
+    [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "User")
+    $path = [Environment]::GetEnvironmentVariable("PATH", "Process")
+    $newItems = $path.Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
+    [Environment]::SetEnvironmentVariable("PATH", [System.String]::Join(';', $newItems), "Process")
 }
 
 ########################
