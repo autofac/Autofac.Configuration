@@ -69,6 +69,8 @@ Install-Dnvm
 
 dnvm
 
+Get-ChildItem Env:
+
 # Install DNX
 dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
 dnvm install $dnxVersion -r CLR -Unstable -NoNative
