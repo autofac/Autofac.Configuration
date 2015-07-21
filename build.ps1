@@ -53,6 +53,9 @@ if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 # Install DNVM
 Install-Dnvm
 
+# Temp - get the DNVM info. I think it's on beta4 on AppVeyor.
+dnvm
+
 # Install DNX
 dnvm install $dnvmVersion -r CoreCLR -NoNative
 dnvm install $dnvmVersion -r CLR -NoNative
