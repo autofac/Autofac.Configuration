@@ -46,7 +46,7 @@ function Remove-PathVariable
 {
     param([string] $VariableToRemove)
     $newItems = ($env:Path).Split(';') | Where-Object { $_.ToString() -inotlike $VariableToRemove }
-    [System.String]::Join(';', $newItems) | Set-PathVariable
+    $env:Path = [System.String]::Join(';', $newItems)
 }
 
 ########################
