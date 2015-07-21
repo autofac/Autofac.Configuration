@@ -42,6 +42,12 @@ function Test-Projects
     & dnx ("""" + $DirectoryName + """") test; if($LASTEXITCODE -ne 0) { exit 2 }
 }
 
+function Remove-PathVariable
+{
+    param([string] $VariableToRemove)
+    Split-String -Input $env:Path -Separator ";" | Where-Object { $_.ToString() -inotlike $VariableToRemove } | Join-String -Separator ";" | Set-PathVariable
+}
+
 ########################
 # THE BUILD!
 ########################
@@ -51,9 +57,10 @@ Push-Location $PSScriptRoot
 # Clean
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
-# Install DNVM
+# Remove the installed DNVM from the path and force use of
+# per-user DNVM (which we can upgrade as needed without admin permissions)
+Remove-PathVariable "*Program Files\Microsoft DNX\DNVM*"
 Install-Dnvm
-dnvm update-self
 
 # Install DNX
 dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
