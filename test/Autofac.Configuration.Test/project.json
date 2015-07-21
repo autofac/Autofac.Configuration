@@ -1,5 +1,5 @@
 ﻿{
-    "version": "4.0.0-alpha4-*",
+    "version": "4.0.0-beta5-*",
     "authors": ["Autofac Contributors"],
     "description": "Tests for Autofac configuration support.",
     "compilationOptions": {
@@ -11,7 +11,7 @@
         "test": "xunit.runner.dnx"
     },
     "dependencies": {
-        "Autofac.Configuration": "4.0.0-alpha4-*",
+        "Autofac.Configuration": "4.0.0-beta5-*",
         "Microsoft.Framework.ConfigurationModel": "1.0.0-*",
         "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-*",
         "Microsoft.Framework.ConfigurationModel.Xml": "1.0.0-*",

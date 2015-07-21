@@ -1,5 +1,5 @@
 {
-    "version": "4.0.0-alpha4-*",
+    "version": "4.0.0-beta5-*",
     "authors": ["Autofac Contributors"],
     "description": "Configuration support for Autofac",
     "summary": "Enables Autofac dependencies to be set up using configuration sources.",
@@ -14,7 +14,7 @@
     "compile": ["**/*.cs"],
     "resource": ["**/*.resx"],
     "dependencies": {
-        "Autofac": "4.0.0-alpha4-*",
+        "Autofac": "4.0.0-beta5-*",
         "Microsoft.Framework.ConfigurationModel": "1.0.0-*"
     },
     "frameworks": {
