@@ -7,7 +7,7 @@ $dnxVersion = "1.0.0-beta5";
 function Install-Dnvm
 {
     & where.exe dnvm 2>&1 | Out-Null
-    if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
+    if($LASTEXITCODE -ne 0)
     {
         Write-Host "DNVM not found"
         &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
@@ -53,6 +53,7 @@ if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 # Install DNVM
 Install-Dnvm
+dnvm update-self
 
 # Install DNX
 dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
