@@ -74,8 +74,8 @@ Remove-PathVariable "*Program Files\Microsoft DNX\DNVM*"
 Install-Dnvm
 
 # Install DNX
-dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
-dnvm install $dnxVersion -r CLR -Unstable -NoNative
+dnvm install $dnxVersion -r CoreCLR -NoNative
+dnvm install $dnxVersion -r CLR -NoNative
 dnvm use $dnxVersion -r CLR
 
 # Package restore
