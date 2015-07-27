@@ -1,13 +1,10 @@
-# Build variables
-$dnxVersion = "1.0.0-beta5";
-
 ########################
 # FUNCTIONS
 ########################
 function Install-Dnvm
 {
     & where.exe dnvm 2>&1 | Out-Null
-    if($LASTEXITCODE -ne 0)
+    if(($LASTEXITCODE -ne 0) -Or ((Test-Path Env:\APPVEYOR) -eq $true))
     {
         Write-Host "DNVM not found"
         &{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}
@@ -22,6 +19,13 @@ function Install-Dnvm
             & $dnvmSetupCmdPath setup
         }
     }
+}
+
+function Get-DnxVersion
+{
+    $globalJson = join-path $PSScriptRoot "global.json"
+    $jsonData = Get-Content -Path $globalJson -Raw | ConvertFrom-JSON
+    return $jsonData.sdk.version
 }
 
 function Restore-Packages
@@ -59,6 +63,8 @@ function Remove-PathVariable
 
 Push-Location $PSScriptRoot
 
+$dnxVersion = Get-DnxVersion
+
 # Clean
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
@@ -68,8 +74,8 @@ Remove-PathVariable "*Program Files\Microsoft DNX\DNVM*"
 Install-Dnvm
 
 # Install DNX
-dnvm install $dnxVersion -r CoreCLR -NoNative
-dnvm install $dnxVersion -r CLR -NoNative
+dnvm install $dnxVersion -r CoreCLR -Unstable -NoNative
+dnvm install $dnxVersion -r CLR -Unstable -NoNative
 dnvm use $dnxVersion -r CLR
 
 # Package restore

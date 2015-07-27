@@ -35,7 +35,7 @@
 		</parameters>
 	</components>
 	<!--
-		Microsoft.Framework.ConfigurationModel ignores empty elements so you
+		Microsoft.Framework.Configuration ignores empty elements so you
 		don't know the difference between null and empty.
 		<components name="5">
 			<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+F</type>

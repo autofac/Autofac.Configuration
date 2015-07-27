@@ -1,5 +1,5 @@
 ﻿using Autofac.Configuration.Core;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 
 namespace Autofac.Configuration

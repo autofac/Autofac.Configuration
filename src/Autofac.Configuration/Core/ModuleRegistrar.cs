@@ -27,7 +27,7 @@ using System;
 using System.Linq;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 
 namespace Autofac.Configuration.Core
 {
@@ -71,7 +71,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var moduleElement in configuration.GetSubKey("modules").GetSubKeys().Select(kvp => kvp.Value))
+            foreach (var moduleElement in configuration.GetConfigurationSection("modules").GetConfigurationSections().Select(kvp => kvp.Value))
             {
                 var moduleType = moduleElement.GetType("type", defaultAssembly);
                 var module = (IModule)null;

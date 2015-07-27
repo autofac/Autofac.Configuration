@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac.Configuration.Util;
 using Autofac.Core;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 
 namespace Autofac.Configuration.Core
 {
@@ -114,7 +114,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            foreach (var parameterElement in configuration.GetSubKeys(key))
+            foreach (var parameterElement in configuration.GetConfigurationSections(key))
             {
                 var parameterValue = GetConfiguredParameterValue(parameterElement.Value);
                 var parameterName = parameterElement.Key;
@@ -157,7 +157,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            foreach (var propertyElement in configuration.GetSubKeys(key))
+            foreach (var propertyElement in configuration.GetConfigurationSections(key))
             {
                 var parameterValue = GetConfiguredParameterValue(propertyElement.Value);
                 var parameterName = propertyElement.Key;
@@ -200,7 +200,7 @@ namespace Autofac.Configuration.Core
         /// </remarks>
         private static object GetConfiguredParameterValue(IConfiguration value)
         {
-            var subKeys = value.GetSubKeys().ToArray();
+            var subKeys = value.GetConfigurationSections().ToArray();
             if(!subKeys.Any())
             {
                 // No subkeys indicates a scalar value.

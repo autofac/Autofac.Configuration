@@ -21,7 +21,7 @@ using System.Reflection;
 using Autofac.Builder;
 using Autofac.Configuration.Util;
 using Autofac.Core;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 
 namespace Autofac.Configuration.Core
 {
@@ -69,7 +69,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var component in configuration.GetSubKey("components").GetSubKeys().Select(kvp => kvp.Value))
+            foreach (var component in configuration.GetConfigurationSection("components").GetConfigurationSections().Select(kvp => kvp.Value))
             {
                 var registrar = builder.RegisterType(component.GetType("type", defaultAssembly));
                 this.RegisterComponentServices(component, registrar, defaultAssembly);
@@ -110,7 +110,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("component");
             }
 
-            foreach (var serviceDefinition in component.GetSubKeys("services"))
+            foreach (var serviceDefinition in component.GetConfigurationSections("services"))
             {
                 // "name" is a special reserved key in the XML configuration source
                 // that enables ordinal collections. To support both JSON and XML
@@ -197,7 +197,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            foreach (var ep in component.GetSubKeys("metadata").Select(kvp => kvp.Value))
+            foreach (var ep in component.GetConfigurationSections("metadata").Select(kvp => kvp.Value))
             {
                 registrar.WithMetadata(ep.Get("key"), TypeManipulation.ChangeToCompatibleType(ep.Get("value"), ep.GetType("type", defaultAssembly)));
             }

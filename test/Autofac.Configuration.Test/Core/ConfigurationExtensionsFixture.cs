@@ -1,7 +1,7 @@
 ﻿using Autofac.Configuration.Core;
 using Autofac.Configuration.Util;
 using Autofac.Core;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,8 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Xunit;
-
-using ConfigModel = Microsoft.Framework.ConfigurationModel.Configuration;
+using Microsoft.Framework.Configuration.Memory;
 
 namespace Autofac.Configuration.Test.Core
 {
@@ -31,7 +30,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void DefaultAssembly_AssemblyNameMissing()
         {
-            var config = new ConfigModel();
+            var config = new ConfigurationBuilder().Build();
             Assert.Null(config.DefaultAssembly());
         }
 
@@ -70,7 +69,7 @@ namespace Autofac.Configuration.Test.Core
         [InlineData("   ")]
         public void GetAssembly_EmptyKey(string key)
         {
-            var config = new ConfigModel();
+            var config = new ConfigurationBuilder().Build();
             Assert.Throws<ArgumentException>(() => config.GetAssembly(key));
         }
 
@@ -84,7 +83,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void GetAssembly_NullKey()
         {
-            var config = new ConfigModel();
+            var config = new ConfigurationBuilder().Build();
             Assert.Throws<ArgumentNullException>(() => config.GetAssembly(null));
         }
 
@@ -102,7 +101,7 @@ namespace Autofac.Configuration.Test.Core
         public void GetParameters_SimpleParameters(string parameterName, object expectedValue)
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
+            var component = config.GetConfigurationSections("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
             var objectParameter = typeof(HasSimpleParametersAndProperties).GetConstructors().First().GetParameters().First(pi => pi.Name == parameterName);
             var provider = (Func<object>)null;
             var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
@@ -124,7 +123,7 @@ namespace Autofac.Configuration.Test.Core
         public void GetProperties_DictionaryPropertyEmpty()
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
+            var component = config.GetConfigurationSections("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
             var property = typeof(HasDictionaryProperty).GetProperty("Empty");
             var provider = (Func<object>)null;
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
@@ -138,7 +137,7 @@ namespace Autofac.Configuration.Test.Core
         public void GetProperties_DictionaryPropertyPopulated()
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
+            var component = config.GetConfigurationSections("components").Where(kvp => kvp.Value.Get("type") == typeof(HasDictionaryProperty).FullName).First().Value;
             var property = typeof(HasDictionaryProperty).GetProperty("Populated");
             var provider = (Func<object>)null;
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
@@ -179,7 +178,7 @@ namespace Autofac.Configuration.Test.Core
         public void GetProperties_ListPropertyEmpty()
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
+            var component = config.GetConfigurationSections("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
             var property = typeof(HasEnumerableProperty).GetProperty("Empty");
             var provider = (Func<object>)null;
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
@@ -193,7 +192,7 @@ namespace Autofac.Configuration.Test.Core
         public void GetProperties_ListPropertyPopulated()
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
+            var component = config.GetConfigurationSections("components").Where(kvp => kvp.Value.Get("type") == typeof(HasEnumerableProperty).FullName).First().Value;
             var property = typeof(HasEnumerableProperty).GetProperty("Populated");
             var provider = (Func<object>)null;
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
@@ -216,7 +215,7 @@ namespace Autofac.Configuration.Test.Core
         public void GetProperties_SimpleProperties(string propertyName, object expectedValue)
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-            var component = config.GetSubKeys("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
+            var component = config.GetConfigurationSections("components").Where(kvp => kvp.Value.Get("type") == typeof(HasSimpleParametersAndProperties).FullName).First().Value;
             var property = typeof(HasSimpleParametersAndProperties).GetProperties().First(pi => pi.Name == propertyName);
             var provider = (Func<object>)null;
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
@@ -238,9 +237,9 @@ namespace Autofac.Configuration.Test.Core
         {
             var source = new MemoryConfigurationSource();
             source.Add("defaultAssembly", assemblyName);
-            var config = new ConfigModel();
+            var config = new ConfigurationBuilder();
             config.Add(source);
-            return config;
+            return config.Build();
         }
 
         public class Convertible
