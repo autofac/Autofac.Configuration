@@ -11,7 +11,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Xunit;
-using Microsoft.Framework.Configuration.Memory;
 
 namespace Autofac.Configuration.Test.Core
 {

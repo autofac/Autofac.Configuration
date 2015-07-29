@@ -15,7 +15,7 @@
     "resource": ["**/*.resx"],
     "dependencies": {
         "Autofac": "4.0.0-beta6-*",
-        "Microsoft.Framework.Configuration": "1.0.0-*"
+        "Microsoft.Framework.Configuration": "1.0.0-beta6"
     },
     "frameworks": {
         "dnx451": {
