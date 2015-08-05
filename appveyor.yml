@@ -1,20 +1,20 @@
-version: 3.3.0.{build}
-
-assembly_info:
-  patch: true
-  file: AssemblyInfo.cs
-  assembly_version: "3.3.0.0"
-  assembly_file_version: "{version}"
-  assembly_informational_version: "3.3.0-CI-{build}"
+version: 4.0.0.{build}
 
 configuration: Release
 
-before_build: nuget restore
+nuget:
+  disable_publish_on_pr: true
 
-build:
-  verbosity: minimal
-  publish_nuget: true
-  publish_nuget_symbols: true
+clone_depth: 1
+
+test: off
+
+build_script:
+- ps: .\build.ps1
+
+artifacts:
+- path: artifacts\packages\**\*.nupkg
+  name: MyGet
 
 deploy:
 - provider: NuGet
@@ -22,3 +22,4 @@ deploy:
   api_key:
     secure: N4KZCRegcmenMoJ0peZfQwDzqq+Wt4oxGzNTgvkrDxgWyZhw7hNwKmd4n2AsNKQX
   symbol_server: https://nuget.symbolsource.org/MyGet/autofac
+  artifact: MyGet

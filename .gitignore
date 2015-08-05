@@ -4,7 +4,10 @@
 # User-specific files
 *.suo
 *.user
-*.sln.docstates
+*.docstates
+*.cache
+*.userprefs
+project.lock.json
 
 # Build results
 [Dd]ebug/
@@ -17,6 +20,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+[Aa]rtifacts/
 
 # Roslyn cache directories
 *.ide/
@@ -65,6 +69,7 @@ _Chutzpah*
 # Visual C++ cache files
 ipch/
 *.aps
+*.ipch
 *.ncb
 *.opensdf
 *.sdf
@@ -98,6 +103,7 @@ _TeamCity*
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml
+*.ncrunchsolution
 
 # MightyMoose
 *.mm.*
@@ -125,6 +131,7 @@ publish/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
+[Pp]ublish[Pp]rofiles/
 # TODO: Comment the next line if you want to checkin your web deploy settings 
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
@@ -133,11 +140,16 @@ publish/
 # NuGet Packages
 *.nupkg
 # The packages folder can be ignored because of Package Restore
-/packages/*
+**/packages/*
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
+# Don't check in NuGet proper
+.nuget/
+nuget.exe
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
+# Local filesystem/test NuGet
+local-nuget/
 
 # Windows Azure Build Output
 csx/
@@ -181,3 +193,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+# Mac OS
+*DS_Store

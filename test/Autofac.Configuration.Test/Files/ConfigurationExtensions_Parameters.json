@@ -1,0 +1,47 @@
+﻿{
+    "defaultAssembly": "Autofac.Configuration.Test",
+    "components": [
+        {
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasDictionaryProperty",
+            "properties": {
+                "populated": {
+                    "a": 1,
+                    "b": 2
+                },
+                "empty": { },
+                "convertible": {
+                    "a": 1,
+                    "b": 2
+                }
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasEnumerableProperty",
+            "properties": {
+                "populated": [ 1, 2 ],
+                "empty": [ ],
+                "convertible": [ 1, 2 ]
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasSimpleParametersAndProperties",
+            "parameters": {
+                "number": 1,
+                "ip": "127.0.0.1"
+            },
+            "properties": {
+                "text": "text",
+                "url": "http://localhost"
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasConvertibleParametersAndProperties",
+            "parameters": {
+                "parameter": 1
+            },
+            "properties": {
+                "Property": 2
+            }
+        }
+    ]
+}

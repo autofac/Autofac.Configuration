@@ -1,0 +1,17 @@
+{
+    "defaultAssembly": "Autofac.Configuration.Test",
+    "components": [
+        {
+            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
+            "parameters": {
+                "input": 5
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
+            "parameters": {
+                "input": 10
+            }
+        }
+    ]
+}

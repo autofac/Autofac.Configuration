@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+This configuration file shows five concepts at once:
+* Single-instance lifetime scope registration.
+* One type registered as two different services.
+* Constructor parameter injection.
+* Property injection for specific properties with provided values.
+* Type conversion of properties (string to bool).
+-->
+<autofac defaultAssembly="Autofac.Configuration.Test">
+    <components name="0">
+        <type>Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent</type>
+        <instanceScope>single-instance</instanceScope>
+        <services name="0" type="System.Object, mscorlib" />
+        <services name="1" type="Autofac.Configuration.Test.Core.ComponentRegistrarFixture+ITestComponent" />
+        <parameters>
+            <input>1</input>
+        </parameters>
+        <properties>
+            <Message>hello</Message>
+            <ABool>true</ABool>
+        </properties>
+    </components>
+</autofac>

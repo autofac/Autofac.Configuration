@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<autofac defaultAssembly="Autofac.Configuration.Test">
+	<components name="0">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+A</type>
+		<properties>
+			<List name="0">Val1</List>
+			<List name="1">Val2</List>
+		</properties>
+	</components>
+	<components name="1">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+B</type>
+		<properties>
+			<List name="0">1</List>
+			<List name="1">2</List>
+		</properties>
+	</components>
+	<components name="2">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+C</type>
+		<properties>
+			<List name="0">1</List>
+			<List name="1">2</List>
+		</properties>
+	</components>
+	<components name="3">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+D</type>
+		<properties>
+			<Num>123</Num>
+		</properties>
+	</components>
+	<components name="4">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+E</type>
+		<parameters>
+			<List name="0">1</List>
+			<List name="1">2</List>
+		</parameters>
+	</components>
+	<!--
+		Microsoft.Framework.Configuration ignores empty elements so you
+		don't know the difference between null and empty.
+		<components name="5">
+			<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+F</type>
+			<properties>
+				<List />
+			</properties>
+		</components>
+		-->
+	<components name="6">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+G</type>
+		<properties>
+			<Enumerable name="0">Val1</Enumerable>
+			<Enumerable name="1">Val2</Enumerable>
+		</properties>
+	</components>
+	<components name="7">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+H</type>
+		<properties>
+			<Enumerable name="0">1</Enumerable>
+			<Enumerable name="1">2</Enumerable>
+		</properties>
+	</components>
+	<components name="8">
+		<type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+I</type>
+		<properties>
+			<Collection name="0">1</Collection>
+			<Collection name="1">2</Collection>
+		</properties>
+	</components>
+</autofac>

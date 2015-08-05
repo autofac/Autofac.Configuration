@@ -1,0 +1,24 @@
+﻿{
+    "defaultAssembly": "mscorlib",
+    "components": [
+        {
+            "type": "System.Object",
+            "services": [
+                {
+                    "type": "System.Object",
+                    "key": "a"
+                }
+            ],
+            "autoActivate": true
+        },
+        {
+            "type": "System.Object",
+            "services": [
+                {
+                    "type": "System.Object",
+                    "key": "b"
+                }
+            ]
+        }
+    ]
+}
