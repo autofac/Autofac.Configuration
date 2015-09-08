@@ -69,7 +69,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var component in configuration.GetConfigurationSection("components").GetConfigurationSections().Select(kvp => kvp.Value))
+            foreach (var component in configuration.GetSection("components").GetChildren())
             {
                 var registrar = builder.RegisterType(component.GetType("type", defaultAssembly));
                 this.RegisterComponentServices(component, registrar, defaultAssembly);
@@ -110,14 +110,14 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("component");
             }
 
-            foreach (var serviceDefinition in component.GetConfigurationSections("services"))
+            foreach (var serviceDefinition in component.GetSection("services").GetChildren())
             {
                 // "name" is a special reserved key in the XML configuration source
                 // that enables ordinal collections. To support both JSON and XML
                 // sources, we can't use "name" as the keyed service identifier;
                 // instead, it must be "key."
-                var serviceType = serviceDefinition.Value.GetType("type", defaultAssembly);
-                var serviceKey = serviceDefinition.Value.Get("key");
+                var serviceType = serviceDefinition.GetType("type", defaultAssembly);
+                var serviceKey = serviceDefinition["key"];
                 if (!string.IsNullOrEmpty(serviceKey))
                 {
                     yield return new KeyedService(serviceKey, serviceType);
@@ -158,9 +158,9 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            if (!string.IsNullOrEmpty(component.Get("memberOf")))
+            if (!string.IsNullOrEmpty(component["memberOf"]))
             {
-                registrar.MemberOf(component.Get("memberOf"));
+                registrar.MemberOf(component["memberOf"]);
             }
         }
 
@@ -197,9 +197,9 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            foreach (var ep in component.GetConfigurationSections("metadata").Select(kvp => kvp.Value))
+            foreach (var ep in component.GetSection("metadata").GetChildren())
             {
-                registrar.WithMetadata(ep.Get("key"), TypeManipulation.ChangeToCompatibleType(ep.Get("value"), ep.GetType("type", defaultAssembly)));
+                registrar.WithMetadata(ep["key"], TypeManipulation.ChangeToCompatibleType(ep["value"], ep.GetType("type", defaultAssembly)));
             }
         }
 
@@ -351,7 +351,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            if (component.Get("autoActivate").ToFlexibleBoolean())
+            if (component["autoActivate"].ToFlexibleBoolean())
             {
                 registrar.AutoActivate();
             }
@@ -416,7 +416,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            var ownership = component.Get("ownership");
+            var ownership = component["ownership"];
             if (String.IsNullOrWhiteSpace(ownership))
             {
                 return;
@@ -478,7 +478,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            if(component.Get("injectProperties").ToFlexibleBoolean())
+            if(component["injectProperties"].ToFlexibleBoolean())
             {
                 registrar.PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             }
@@ -546,7 +546,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("registrar");
             }
 
-            var lifetimeScope = component.Get("instanceScope");
+            var lifetimeScope = component["instanceScope"];
             if (String.IsNullOrWhiteSpace(lifetimeScope))
             {
                 return;

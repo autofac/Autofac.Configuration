@@ -1,7 +1,5 @@
 ﻿{
-    "version": "4.0.0-beta6-*",
     "authors": ["Autofac Contributors"],
-    "description": "Tests for Autofac configuration support.",
     "compilationOptions": {
         "warningsAsErrors": true
     },
@@ -11,13 +9,13 @@
         "test": "xunit.runner.dnx"
     },
     "dependencies": {
-        "Autofac.Configuration": "4.0.0-beta6-*",
-        "Microsoft.Framework.Configuration": "1.0.0-beta6",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
-        "Microsoft.Framework.Configuration.Xml": "1.0.0-beta6",
+        "Autofac.Configuration": "4.0.0-beta7-*",
+        "Microsoft.Framework.Configuration": "1.0.0-beta7",
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta7",
+        "Microsoft.Framework.Configuration.Xml": "1.0.0-beta7",
         "Moq": "4.2.1502.911",
-        "xunit": "2.1.0-beta4-build3075",
-        "xunit.runner.dnx": "2.1.0-beta4-build125",
+        "xunit": "2.1.0-rc1-*",
+        "xunit.runner.dnx": "2.1.0-beta5-*",
         "xunit.runner.visualstudio": "2.1.0-*"
     },
     "frameworks": {

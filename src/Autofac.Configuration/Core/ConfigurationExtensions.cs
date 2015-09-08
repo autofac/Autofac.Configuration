@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Autofac.Configuration.Util;
 using Autofac.Core;
+using Autofac.Configuration.Util;
 using Microsoft.Framework.Configuration;
 
 namespace Autofac.Configuration.Core
@@ -72,7 +72,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            var assemblyName = configuration.Get(key);
+            var assemblyName = configuration[key];
             if (String.IsNullOrWhiteSpace(assemblyName))
             {
                 return null;
@@ -114,10 +114,10 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            foreach (var parameterElement in configuration.GetConfigurationSections(key))
+            foreach (var parameterElement in configuration.GetSection(key).GetChildren())
             {
-                var parameterValue = GetConfiguredParameterValue(parameterElement.Value);
-                var parameterName = parameterElement.Key;
+                var parameterValue = GetConfiguredParameterValue(parameterElement);
+                var parameterName = GetKeyName(parameterElement.Key);
                 yield return new ResolvedParameter(
                     (pi, c) => String.Equals(pi.Name, parameterName, StringComparison.OrdinalIgnoreCase),
                     (pi, c) => TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, pi));
@@ -157,10 +157,10 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
             }
 
-            foreach (var propertyElement in configuration.GetConfigurationSections(key))
+            foreach (var propertyElement in configuration.GetSection(key).GetChildren())
             {
-                var parameterValue = GetConfiguredParameterValue(propertyElement.Value);
-                var parameterName = propertyElement.Key;
+                var parameterValue = GetConfiguredParameterValue(propertyElement);
+                var parameterName = GetKeyName(propertyElement.Key);
                 yield return new ResolvedParameter(
                     (pi, c) =>
                 {
@@ -175,76 +175,6 @@ namespace Autofac.Configuration.Core
                     return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop);
                 });
             }
-        }
-
-        /// <summary>
-        /// Inspects a parameter/property value to determine if it's a scalar,
-        /// list, or dictionary property and casts it appropriately.
-        /// </summary>
-        /// <param name="value">
-        /// The <see cref="IConfiguration"/> object containing the parameter/property
-        /// value to parse.
-        /// </param>
-        /// <returns>
-        /// A value that can be type-converted and used during object resolution.
-        /// </returns>
-        /// <remarks>
-        /// <para>
-        /// The Microsoft configuration model code sees arrays (lists) the same
-        /// as a dictionary with numeric keys. We have to do some work to determine
-        /// how to store the parsed configuration values so they can be converted
-        /// appropriately at resolve time; and there's still an edge case where
-        /// someone actually wanted a <see cref="Dictionary{TKey, TValue}"/> with
-        /// sequential, zero-based numeric keys.
-        /// </para>
-        /// </remarks>
-        private static object GetConfiguredParameterValue(IConfiguration value)
-        {
-            var subKeys = value.GetConfigurationSections().ToArray();
-            if(!subKeys.Any())
-            {
-                // No subkeys indicates a scalar value.
-                return value.Get(null);
-            }
-
-            int parsed;
-            if(subKeys.All(sk => Int32.TryParse(sk.Key, out parsed)))
-            {
-                // All the subkeys are integers - it's a list or a Dictionary<int, T>.
-                // If the keys aren't 0-based or sequential, go with dictionary.
-                int i = 0;
-                bool isList = true;
-                foreach(var subKey in subKeys.Select(sk => Int32.Parse(sk.Key)))
-                {
-                    if(subKey != i)
-                    {
-                        isList = false;
-                        break;
-                    }
-
-                    i++;
-                }
-
-                if (isList)
-                {
-                    var list = new List<string>();
-                    foreach (var subKey in subKeys)
-                    {
-                        list.Add(subKey.Value.Get(null));
-                    }
-
-                    return new ConfiguredListParameter { List = list.ToArray() };
-                }
-            }
-
-            // There are subkeys but not all zero-based sequential numbers - it's a dictionary.
-            var dict = new Dictionary<string, string>();
-            foreach(var subKey in subKeys)
-            {
-                dict[subKey.Key] = subKey.Value.Get(null);
-            }
-
-            return new ConfiguredDictionaryParameter { Dictionary = dict };
         }
 
         /// <summary>
@@ -277,7 +207,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException("configuration");
             }
 
-            var typeName = configuration.Get(key);
+            var typeName = configuration[key];
             var type = Type.GetType(typeName);
 
             if (type == null && defaultAssembly != null)
@@ -292,6 +222,95 @@ namespace Autofac.Configuration.Core
             }
 
             return type;
+        }
+
+        /// <summary>
+        /// Inspects a parameter/property value to determine if it's a scalar,
+        /// list, or dictionary property and casts it appropriately.
+        /// </summary>
+        /// <param name="value">
+        /// The <see cref="IConfigurationSection"/> object containing the parameter/property
+        /// value to parse.
+        /// </param>
+        /// <returns>
+        /// A value that can be type-converted and used during object resolution.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The Microsoft configuration model code sees arrays (lists) the same
+        /// as a dictionary with numeric keys. We have to do some work to determine
+        /// how to store the parsed configuration values so they can be converted
+        /// appropriately at resolve time; and there's still an edge case where
+        /// someone actually wanted a <see cref="Dictionary{TKey, TValue}"/> with
+        /// sequential, zero-based numeric keys.
+        /// </para>
+        /// </remarks>
+        private static object GetConfiguredParameterValue(IConfigurationSection value)
+        {
+            var subKeys = value.GetChildren().Select(sk => new Tuple<string,string>(GetKeyName(sk.Key), sk.Value)).ToArray();
+            if (subKeys.Length == 0)
+            {
+                // No subkeys indicates a scalar value.
+                return value.Value;
+            }
+
+            int parsed;
+            if (subKeys.All(sk => Int32.TryParse(sk.Item1, out parsed)))
+            {
+                // All the subkeys are integers - it's a list or a Dictionary<int, T>.
+                // If the keys aren't 0-based or sequential, go with dictionary.
+                var i = 0;
+                var isList = true;
+                foreach (var subKey in subKeys.Select(sk => Int32.Parse(sk.Item1)))
+                {
+                    if (subKey != i)
+                    {
+                        isList = false;
+                        break;
+                    }
+
+                    i++;
+                }
+
+                if (isList)
+                {
+                    var list = new List<string>();
+                    foreach (var subKey in subKeys)
+                    {
+                        list.Add(subKey.Item2);
+                    }
+
+                    return new ConfiguredListParameter { List = list.ToArray() };
+                }
+            }
+
+            // There are subkeys but not all zero-based sequential numbers - it's a dictionary.
+            var dict = new Dictionary<string, string>();
+            foreach (var subKey in subKeys)
+            {
+                dict[subKey.Item1] = subKey.Item2;
+            }
+
+            return new ConfiguredDictionaryParameter { Dictionary = dict };
+        }
+
+        /// <summary>
+        /// Gets the simple configuration key name from a full, colon-delimited
+        /// configuration key name.
+        /// </summary>
+        /// <param name="fullKey">The full configuration key name, like <c>configuration:full:key</c>.</param>
+        /// <returns>
+        /// The last segment in the colon-delimited full key name, like <c>key</c>.
+        /// </returns>
+        private static string GetKeyName(string fullKey)
+        {
+            var index = fullKey.LastIndexOf(':');
+            if (index < 0)
+            {
+                return fullKey;
+            }
+
+            return fullKey.Substring(index + 1);
         }
     }
 }

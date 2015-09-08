@@ -71,7 +71,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var moduleElement in configuration.GetConfigurationSection("modules").GetConfigurationSections().Select(kvp => kvp.Value))
+            foreach (var moduleElement in configuration.GetSection("modules").GetChildren())
             {
                 var moduleType = moduleElement.GetType("type", defaultAssembly);
                 var module = (IModule)null;

@@ -28,10 +28,10 @@ namespace Autofac.Configuration.Test
                 typeof(XmlConfigurationSource).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
             }
             config.Add(source, false);
-			return config.Build();
-		}
+            return config.Build();
+        }
 
-		public static ContainerBuilder ConfigureContainer(IConfiguration configuration)
+        public static ContainerBuilder ConfigureContainer(IConfiguration configuration)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ConfigurationModule(configuration));
