@@ -1,5 +1,5 @@
 {
-    "version": "4.0.0-beta7-*",
+    "version": "4.0.0-beta8-*",
     "authors": ["Autofac Contributors"],
     "description": "Configuration support for Autofac",
     "summary": "Enables Autofac dependencies to be set up using configuration sources.",
@@ -18,23 +18,23 @@
         "url": "https://github.com/autofac/Autofac"
     },
     "dependencies": {
-        "Autofac": "4.0.0-beta7-*",
-        "Microsoft.Framework.Configuration": "1.0.0-beta7"
+        "Autofac": "4.0.0-beta8-*",
+        "Microsoft.Framework.Configuration": "1.0.0-beta8-*"
     },
     "frameworks": {
         "dnx451": {},
         "dotnet": {
             "dependencies": {
-                "System.Collections": "4.0.11-beta-23225",
-                "System.ComponentModel.TypeConverter": "4.0.1-beta-23225",
-                "System.Diagnostics.Tools": "4.0.1-beta-23225",
-                "System.Globalization": "4.0.11-beta-23225",
-                "System.IO": "4.0.11-beta-23225",
-                "System.Linq": "4.0.1-beta-23225",
-                "System.Reflection": "4.1.0-beta-23225",
-                "System.Reflection.Extensions": "4.0.1-beta-23225",
-                "System.Reflection.TypeExtensions": "4.0.1-beta-23225",
-                "System.Resources.ResourceManager": "4.0.1-beta-23225"
+                "System.Collections": "4.0.11-beta-*",
+                "System.ComponentModel.TypeConverter": "4.0.1-beta-*",
+                "System.Diagnostics.Tools": "4.0.1-beta-*",
+                "System.Globalization": "4.0.11-beta-*",
+                "System.IO": "4.0.11-beta-*",
+                "System.Linq": "4.0.1-beta-*",
+                "System.Reflection": "4.1.0-beta-*",
+                "System.Reflection.Extensions": "4.0.1-beta-*",
+                "System.Reflection.TypeExtensions": "4.0.1-beta-*",
+                "System.Resources.ResourceManager": "4.0.1-beta-*"
             }
         },
         "net45":{
