@@ -8,6 +8,9 @@
 *.cache
 *.userprefs
 project.lock.json
+.vs/
+[Ii]ndex.dat
+[Ss]torage.dat
 
 # Build results
 [Dd]ebug/
@@ -132,7 +135,7 @@ publish/
 *.[Pp]ublish.xml
 *.azurePubxml
 [Pp]ublish[Pp]rofiles/
-# TODO: Comment the next line if you want to checkin your web deploy settings 
+# TODO: Comment the next line if you want to checkin your web deploy settings
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
 *.publishproj
