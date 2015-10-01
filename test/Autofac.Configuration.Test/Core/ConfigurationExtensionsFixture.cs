@@ -235,7 +235,7 @@ namespace Autofac.Configuration.Test.Core
 
         private static IConfiguration SetUpDefaultAssembly(string assemblyName)
         {
-            var source = new MemoryConfigurationSource();
+            var source = new MemoryConfigurationProvider();
             source.Add("defaultAssembly", assemblyName);
             var config = new ConfigurationBuilder();
             config.Add(source);

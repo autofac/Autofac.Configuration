@@ -10,10 +10,10 @@ namespace Autofac.Configuration.Test
         public static IConfiguration LoadJson(string configFile)
         {
             var config = new ConfigurationBuilder();
-            var source = new JsonConfigurationSource("path", true);
+            var source = new JsonConfigurationProvider("path", true);
             using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile))
             {
-                typeof(JsonConfigurationSource).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
+                typeof(JsonConfigurationProvider).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
             }
             config.Add(source, false);
             return config.Build();
@@ -22,10 +22,10 @@ namespace Autofac.Configuration.Test
         public static IConfiguration LoadXml(string configFile)
         {
             var config = new ConfigurationBuilder();
-            var source = new XmlConfigurationSource("path");
+            var source = new XmlConfigurationProvider("path");
             using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile))
             {
-                typeof(XmlConfigurationSource).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
+                typeof(XmlConfigurationProvider).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
             }
             config.Add(source, false);
             return config.Build();
