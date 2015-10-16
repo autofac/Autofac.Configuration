@@ -10,9 +10,9 @@
     },
     "dependencies": {
         "Autofac.Configuration": "4.0.0-beta8-*",
-        "Microsoft.Framework.Configuration": "1.0.0-beta8-*",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-beta8-*",
-        "Microsoft.Framework.Configuration.Xml": "1.0.0-beta8-*",
+        "Microsoft.Framework.Configuration": "1.0.0-beta8",
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
+        "Microsoft.Framework.Configuration.Xml": "1.0.0-beta8",
         "Moq": "4.2.1502.911",
         "xunit": "2.1.0-rc1-*",
         "xunit.runner.dnx": "2.1.0-beta5-*",
