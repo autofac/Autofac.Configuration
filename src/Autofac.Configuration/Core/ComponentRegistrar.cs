@@ -21,7 +21,7 @@ using System.Reflection;
 using Autofac.Builder;
 using Autofac.Configuration.Util;
 using Autofac.Core;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration.Core
 {

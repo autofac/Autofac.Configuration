@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Configuration.Json;
-using Microsoft.Framework.Configuration.Xml;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Configuration.Xml;
 
 namespace Autofac.Configuration.Test
 {

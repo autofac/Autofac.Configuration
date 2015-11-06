@@ -1,4 +1,4 @@
-﻿using Microsoft.Framework.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration
 {

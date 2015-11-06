@@ -24,7 +24,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration.Core
 {

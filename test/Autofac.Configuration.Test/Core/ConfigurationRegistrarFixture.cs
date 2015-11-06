@@ -1,6 +1,6 @@
 ﻿using System;
 using Autofac.Configuration.Core;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 

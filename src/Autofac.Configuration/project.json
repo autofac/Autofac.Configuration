@@ -1,5 +1,5 @@
 {
-    "version": "4.0.0-beta8-*",
+    "version": "4.0.0-rc1-*",
     "authors": ["Autofac Contributors"],
     "description": "Configuration support for Autofac",
     "summary": "Enables Autofac dependencies to be set up using configuration sources.",
@@ -18,12 +18,12 @@
         "url": "https://github.com/autofac/Autofac.Configuration"
     },
     "dependencies": {
-        "Autofac": "4.0.0-beta8-*",
-        "Microsoft.Framework.Configuration": "1.0.0-beta8"
+        "Autofac": "4.0.0-rc1-*",
+        "Microsoft.Extensions.Configuration": "1.0.0-rc1-*"
     },
     "frameworks": {
-        "dnx451": {},
-        "dnxcore50": {
+        "net451": {},
+        "dotnet5.4": {
             "dependencies": {
                 "System.Collections": "4.0.11-beta-*",
                 "System.ComponentModel.TypeConverter": "4.0.1-beta-*",
@@ -37,7 +37,6 @@
                 "System.Resources.ResourceManager": "4.0.1-beta-*"
             }
         },
-        "net45": {},
         "netcore50": {
             "dependencies": {
                 "System.Collections": "4.0.11-beta-*",

@@ -27,7 +27,7 @@ using System;
 using System.Linq;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration.Core
 {

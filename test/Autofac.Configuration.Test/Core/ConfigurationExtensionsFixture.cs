@@ -1,7 +1,7 @@
 ﻿using Autofac.Configuration.Core;
 using Autofac.Configuration.Util;
 using Autofac.Core;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Xunit;
-using Microsoft.Framework.Configuration.Memory;
+using Microsoft.Extensions.Configuration.Memory;
 
 namespace Autofac.Configuration.Test.Core
 {

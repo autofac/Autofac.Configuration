@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac.Core;
 using Autofac.Configuration.Util;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration.Core
 {
