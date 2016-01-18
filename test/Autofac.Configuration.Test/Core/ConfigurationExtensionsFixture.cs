@@ -359,7 +359,7 @@ namespace Autofac.Configuration.Test.Core
             public IEnumerable<int> Populated { get; set; }
         }
 
-        public class HasSimpleParametersAndProperties
+        public class HasSimpleParametersAndProperties : BaseSimpleParametersAndProperties
         {
             public HasSimpleParametersAndProperties(int number, IPAddress ip)
             {
@@ -371,9 +371,13 @@ namespace Autofac.Configuration.Test.Core
 
             public int Number { get; private set; }
 
-            public string Text { get; set; }
-
             public Uri Url { get; set; }
+        }
+
+        public class BaseSimpleParametersAndProperties
+        {
+            // Issue #2 - Ensure properties in base classes can be set by config.
+            public string Text { get; set; }
         }
     }
 }

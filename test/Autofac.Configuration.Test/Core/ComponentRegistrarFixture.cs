@@ -92,9 +92,13 @@ namespace Autofac.Configuration.Test.Core
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_EnablePropertyInjection.json");
             builder.RegisterType<SimpleComponent>().As<ITestComponent>();
+            builder.RegisterInstance("hello").As<string>();
             var container = builder.Build();
             var e = container.Resolve<ComponentConsumer>();
             Assert.NotNull(e.Component);
+
+            // Issue #2 - Ensure properties in base classes can be set by config.
+            Assert.Equal("hello", e.Message);
         }
 
         [Fact]
@@ -103,8 +107,10 @@ namespace Autofac.Configuration.Test.Core
             var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ComponentRegistrar_SingletonWithTwoServices.xml");
             var container = builder.Build();
             var cpt = (SimpleComponent)container.Resolve<ITestComponent>();
-            Assert.Equal("hello", cpt.Message);
             Assert.True(cpt.ABool, "The Boolean property value was not properly parsed/converted.");
+
+            // Issue #2 - Ensure properties in base classes can be set by config.
+            Assert.Equal("hello", cpt.Message);
         }
 
         [Fact]
@@ -128,16 +134,22 @@ namespace Autofac.Configuration.Test.Core
             Assert.Same(container.Resolve<ITestComponent>(), container.Resolve<object>());
         }
 
-        private class ComponentConsumer
+        private class ComponentConsumer : BaseComponentConsumer
         {
             public ITestComponent Component { get; set; }
+        }
+
+        private class BaseComponentConsumer
+        {
+            // Issue #2 - Ensure properties in base classes can be set by config.
+            public string Message { get; set; }
         }
 
         private interface ITestComponent
         {
         }
 
-        private class SimpleComponent : ITestComponent
+        private class SimpleComponent : BaseComponent, ITestComponent
         {
             public SimpleComponent()
             {
@@ -151,7 +163,11 @@ namespace Autofac.Configuration.Test.Core
             public bool ABool { get; set; }
 
             public int Input { get; set; }
+        }
 
+        private class BaseComponent
+        {
+            // Issue #2 - Ensure properties in base classes can be set by config.
             public string Message { get; set; }
         }
     }
