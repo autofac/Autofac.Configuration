@@ -1,6 +1,7 @@
 ﻿{
     "authors": ["Autofac Contributors"],
     "compilationOptions": {
+        "keyFile": "../../Autofac.snk",
         "warningsAsErrors": true
     },
     "compile": ["**\\*.cs"],
