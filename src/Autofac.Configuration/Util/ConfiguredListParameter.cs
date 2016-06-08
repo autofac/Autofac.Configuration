@@ -13,6 +13,16 @@ namespace Autofac.Configuration.Util
 
         private class ListTypeConverter : TypeConverter
         {
+            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+            {
+                if (GetInstantiableListType(destinationType) != null || GetInstantiableDictionaryType(destinationType) != null)
+                {
+                    return true;
+                }
+
+                return base.CanConvertTo(context, destinationType);
+            }
+
             public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
             {
                 var castValue = value as ConfiguredListParameter;
@@ -25,7 +35,7 @@ namespace Autofac.Configuration.Util
                     {
                         var generics = instantiatableType.GetGenericArguments();
                         var collection = (IList)Activator.CreateInstance(instantiatableType);
-                        foreach (var item in castValue.List)
+                        foreach (string item in castValue.List)
                         {
                             collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
                         }
@@ -44,58 +54,19 @@ namespace Autofac.Configuration.Util
                         var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
                         var generics = instantiatableType.GetGenericArguments();
 
-                        for(int i = 0; i < castValue.List.Length; i++)
+                        for (int i = 0; i < castValue.List.Length; i++)
                         {
                             var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
                             var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);
 
                             dictionary.Add(convertedKey, convertedValue);
                         }
+
                         return dictionary;
                     }
                 }
 
                 return base.ConvertTo(context, culture, value, destinationType);
-            }
-
-            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-            {
-                if (GetInstantiableListType(destinationType) != null || GetInstantiableDictionaryType(destinationType) != null)
-                {
-                    return true;
-                }
-
-                return base.CanConvertTo(context, destinationType);
-            }
-
-            /// <summary>
-            /// Handles type determination list conversion.
-            /// </summary>
-            /// <param name="destinationType">
-            /// The type to which the list content should be converted.
-            /// </param>
-            /// <returns>
-            /// A list type compatible with the data values.
-            /// </returns>
-            private static Type GetInstantiableListType(Type destinationType)
-            {
-                if (typeof(IEnumerable).IsAssignableFrom(destinationType))
-                {
-                    var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(object) };
-                    if (generics.Length != 1)
-                    {
-                        return null;
-                    }
-
-                    var listType = typeof(List<>).MakeGenericType(generics);
-
-                    if (destinationType.IsAssignableFrom(listType))
-                    {
-                        return listType;
-                    }
-                }
-
-                return null;
             }
 
             /// <summary>
@@ -123,6 +94,36 @@ namespace Autofac.Configuration.Util
                     if (destinationType.IsAssignableFrom(dictType))
                     {
                         return dictType;
+                    }
+                }
+
+                return null;
+            }
+
+            /// <summary>
+            /// Handles type determination list conversion.
+            /// </summary>
+            /// <param name="destinationType">
+            /// The type to which the list content should be converted.
+            /// </param>
+            /// <returns>
+            /// A list type compatible with the data values.
+            /// </returns>
+            private static Type GetInstantiableListType(Type destinationType)
+            {
+                if (typeof(IEnumerable).IsAssignableFrom(destinationType))
+                {
+                    var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(object) };
+                    if (generics.Length != 1)
+                    {
+                        return null;
+                    }
+
+                    var listType = typeof(List<>).MakeGenericType(generics);
+
+                    if (destinationType.IsAssignableFrom(listType))
+                    {
+                        return listType;
                     }
                 }
 

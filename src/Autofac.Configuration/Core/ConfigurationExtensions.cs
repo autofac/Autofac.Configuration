@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Autofac.Core;
 using Autofac.Configuration.Util;
+using Autofac.Core;
 using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration.Core
@@ -59,21 +59,21 @@ namespace Autofac.Configuration.Core
         {
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             if (key == null)
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
-            if (String.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), nameof(key));
             }
 
-            var assemblyName = configuration[key];
-            if (String.IsNullOrWhiteSpace(assemblyName))
+            string assemblyName = configuration[key];
+            if (string.IsNullOrWhiteSpace(assemblyName))
             {
                 return null;
             }
@@ -101,25 +101,25 @@ namespace Autofac.Configuration.Core
         {
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             if (key == null)
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
-            if (String.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), nameof(key));
             }
 
             foreach (var parameterElement in configuration.GetSection(key).GetChildren())
             {
                 var parameterValue = GetConfiguredParameterValue(parameterElement);
-                var parameterName = GetKeyName(parameterElement.Key);
+                string parameterName = GetKeyName(parameterElement.Key);
                 yield return new ResolvedParameter(
-                    (pi, c) => String.Equals(pi.Name, parameterName, StringComparison.OrdinalIgnoreCase),
+                    (pi, c) => string.Equals(pi.Name, parameterName, StringComparison.OrdinalIgnoreCase),
                     (pi, c) => TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, pi));
             }
         }
@@ -144,29 +144,29 @@ namespace Autofac.Configuration.Core
         {
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             if (key == null)
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
-            if (String.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), "key");
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), nameof(key));
             }
 
             foreach (var propertyElement in configuration.GetSection(key).GetChildren())
             {
                 var parameterValue = GetConfiguredParameterValue(propertyElement);
-                var parameterName = GetKeyName(propertyElement.Key);
+                string parameterName = GetKeyName(propertyElement.Key);
                 yield return new ResolvedParameter(
                     (pi, c) =>
                 {
                     PropertyInfo prop;
                     return pi.TryGetDeclaringProperty(out prop) &&
-                        String.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
+string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
                 },
                     (pi, c) =>
                 {
@@ -180,7 +180,7 @@ namespace Autofac.Configuration.Core
         /// <summary>
         /// Loads a type by name.
         /// </summary>
-        /// <param name="value">
+        /// <param name="configuration">
         /// The <see cref="IConfiguration"/> object containing the type value to load.
         /// </param>
         /// <param name="key">
@@ -204,10 +204,10 @@ namespace Autofac.Configuration.Core
         {
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
-            var typeName = configuration[key];
+            string typeName = configuration[key];
             var type = Type.GetType(typeName);
 
             if (type == null && defaultAssembly != null)
@@ -218,7 +218,7 @@ namespace Autofac.Configuration.Core
 
             if (type == null)
             {
-                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
             }
 
             return type;
@@ -247,7 +247,7 @@ namespace Autofac.Configuration.Core
         /// </remarks>
         private static object GetConfiguredParameterValue(IConfigurationSection value)
         {
-            var subKeys = value.GetChildren().Select(sk => new Tuple<string,string>(GetKeyName(sk.Key), sk.Value)).ToArray();
+            var subKeys = value.GetChildren().Select(sk => new Tuple<string, string>(GetKeyName(sk.Key), sk.Value)).ToArray();
             if (subKeys.Length == 0)
             {
                 // No subkeys indicates a scalar value.
@@ -255,13 +255,11 @@ namespace Autofac.Configuration.Core
             }
 
             int parsed;
-            if (subKeys.All(sk => Int32.TryParse(sk.Item1, out parsed)))
+            if (subKeys.All(sk => int.TryParse(sk.Item1, out parsed)))
             {
-                // All the subkeys are integers - it's a list or a Dictionary<int, T>.
-                // If the keys aren't 0-based or sequential, go with dictionary.
-                var i = 0;
-                var isList = true;
-                foreach (var subKey in subKeys.Select(sk => Int32.Parse(sk.Item1)))
+                int i = 0;
+                bool isList = true;
+                foreach (int subKey in subKeys.Select(sk => int.Parse(sk.Item1)))
                 {
                     if (subKey != i)
                     {
@@ -304,7 +302,7 @@ namespace Autofac.Configuration.Core
         /// </returns>
         private static string GetKeyName(string fullKey)
         {
-            var index = fullKey.LastIndexOf(':');
+            int index = fullKey.LastIndexOf(':');
             if (index < 0)
             {
                 return fullKey;

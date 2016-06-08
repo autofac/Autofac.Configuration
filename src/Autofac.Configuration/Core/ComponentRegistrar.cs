@@ -10,7 +10,6 @@
 // copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following
 // conditions:
-//
 
 using System;
 using System.Collections.Generic;
@@ -61,11 +60,12 @@ namespace Autofac.Configuration.Core
         {
             if (builder == null)
             {
-                throw new ArgumentNullException("builder");
+                throw new ArgumentNullException(nameof(builder));
             }
+
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
@@ -76,7 +76,6 @@ namespace Autofac.Configuration.Core
                 this.RegisterComponentParameters(component, registrar);
                 this.RegisterComponentProperties(component, registrar);
                 this.RegisterComponentMetadata(component, registrar, defaultAssembly);
-                this.RegisterComponentCollectionMembership(component, registrar);
                 this.SetLifetimeScope(component, registrar);
                 this.SetComponentOwnership(component, registrar);
                 this.SetInjectProperties(component, registrar);
@@ -107,7 +106,7 @@ namespace Autofac.Configuration.Core
         {
             if (component == null)
             {
-                throw new ArgumentNullException("component");
+                throw new ArgumentNullException(nameof(component));
             }
 
             foreach (var serviceDefinition in component.GetSection("services").GetChildren())
@@ -117,7 +116,7 @@ namespace Autofac.Configuration.Core
                 // sources, we can't use "name" as the keyed service identifier;
                 // instead, it must be "key."
                 var serviceType = serviceDefinition.GetType("type", defaultAssembly);
-                var serviceKey = serviceDefinition["key"];
+                string serviceKey = serviceDefinition["key"];
                 if (!string.IsNullOrEmpty(serviceKey))
                 {
                     yield return new KeyedService(serviceKey, serviceType);
@@ -126,41 +125,6 @@ namespace Autofac.Configuration.Core
                 {
                     yield return new TypedService(serviceType);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Reads configuration data for a component's collection membership
-        /// and updates the component registration as needed.
-        /// </summary>
-        /// <param name="component">
-        /// The configuration data containing the component. The <c>memberOf</c>
-        /// content will be read from this configuration object and used
-        /// as the collection membership.
-        /// </param>
-        /// <param name="registrar">
-        /// The component registration to update with collection membership.
-        /// </param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
-        /// </exception>
-        protected virtual void RegisterComponentCollectionMembership<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
-            where TReflectionActivatorData : ReflectionActivatorData
-            where TSingleRegistrationStyle : SingleRegistrationStyle
-        {
-            if (component == null)
-            {
-                throw new ArgumentNullException("component");
-            }
-
-            if (registrar == null)
-            {
-                throw new ArgumentNullException("registrar");
-            }
-
-            if (!string.IsNullOrEmpty(component["memberOf"]))
-            {
-                registrar.MemberOf(component["memberOf"]);
             }
         }
 
@@ -189,12 +153,12 @@ namespace Autofac.Configuration.Core
         {
             if (component == null)
             {
-                throw new ArgumentNullException("component");
+                throw new ArgumentNullException(nameof(component));
             }
 
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
             foreach (var ep in component.GetSection("metadata").GetChildren())
@@ -224,12 +188,12 @@ namespace Autofac.Configuration.Core
         {
             if (component == null)
             {
-                throw new ArgumentNullException("component");
+                throw new ArgumentNullException(nameof(component));
             }
 
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
             foreach (var param in component.GetParameters("parameters"))
@@ -259,12 +223,12 @@ namespace Autofac.Configuration.Core
         {
             if (component == null)
             {
-                throw new ArgumentNullException("component");
+                throw new ArgumentNullException(nameof(component));
             }
 
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
             foreach (var prop in component.GetProperties("properties"))
@@ -298,12 +262,12 @@ namespace Autofac.Configuration.Core
         {
             if (component == null)
             {
-                throw new ArgumentNullException("component");
+                throw new ArgumentNullException(nameof(component));
             }
 
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
             foreach (var service in this.EnumerateComponentServices(component, defaultAssembly))
@@ -343,12 +307,12 @@ namespace Autofac.Configuration.Core
         /// recognized grammar.
         /// </exception>
         protected virtual void SetAutoActivate<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
-            where TReflectionActivatorData: ReflectionActivatorData
-            where TSingleRegistrationStyle: SingleRegistrationStyle
+            where TReflectionActivatorData : ReflectionActivatorData
+            where TSingleRegistrationStyle : SingleRegistrationStyle
         {
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
             if (component["autoActivate"].ToFlexibleBoolean())
@@ -404,26 +368,26 @@ namespace Autofac.Configuration.Core
         /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
-        /// Thrown if the value for <paramref name="ownership"/> is not part of the
+        /// Thrown if the value for <c>ownership</c> is not part of the
         /// recognized grammar.
         /// </exception>
         protected virtual void SetComponentOwnership<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
-            where TReflectionActivatorData: ReflectionActivatorData
-            where TSingleRegistrationStyle: SingleRegistrationStyle
+            where TReflectionActivatorData : ReflectionActivatorData
+            where TSingleRegistrationStyle : SingleRegistrationStyle
         {
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
-            var ownership = component["ownership"];
-            if (String.IsNullOrWhiteSpace(ownership))
+            string ownership = component["ownership"];
+            if (string.IsNullOrWhiteSpace(ownership))
             {
                 return;
             }
 
             ownership = ownership.Trim().Replace("-", "");
-            if(ownership.Equals("lifetimescope", StringComparison.OrdinalIgnoreCase))
+            if (ownership.Equals("lifetimescope", StringComparison.OrdinalIgnoreCase))
             {
                 registrar.OwnedByLifetimeScope();
                 return;
@@ -470,15 +434,15 @@ namespace Autofac.Configuration.Core
         /// recognized grammar.
         /// </exception>
         protected virtual void SetInjectProperties<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
-            where TReflectionActivatorData: ReflectionActivatorData
-            where TSingleRegistrationStyle: SingleRegistrationStyle
+            where TReflectionActivatorData : ReflectionActivatorData
+            where TSingleRegistrationStyle : SingleRegistrationStyle
         {
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
-            if(component["injectProperties"].ToFlexibleBoolean())
+            if (component["injectProperties"].ToFlexibleBoolean())
             {
                 registrar.PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             }
@@ -538,16 +502,16 @@ namespace Autofac.Configuration.Core
         /// </exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "The cyclomatic complexity is in extension methods. This method is actually pretty simple.")]
         protected virtual void SetLifetimeScope<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
-            where TReflectionActivatorData: ReflectionActivatorData
-            where TSingleRegistrationStyle: SingleRegistrationStyle
+            where TReflectionActivatorData : ReflectionActivatorData
+            where TSingleRegistrationStyle : SingleRegistrationStyle
         {
             if (registrar == null)
             {
-                throw new ArgumentNullException("registrar");
+                throw new ArgumentNullException(nameof(registrar));
             }
 
-            var lifetimeScope = component["instanceScope"];
-            if (String.IsNullOrWhiteSpace(lifetimeScope))
+            string lifetimeScope = component["instanceScope"];
+            if (string.IsNullOrWhiteSpace(lifetimeScope))
             {
                 return;
             }

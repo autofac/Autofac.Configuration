@@ -65,6 +65,7 @@ namespace Autofac.Configuration.Core
             {
                 throw new ArgumentNullException("builder");
             }
+
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");
@@ -84,6 +85,7 @@ namespace Autofac.Configuration.Core
                 {
                     module = (IModule)moduleActivator.ActivateInstance(new ContainerBuilder().Build(), Enumerable.Empty<Parameter>());
                 }
+
                 builder.RegisterModule(module);
             }
         }

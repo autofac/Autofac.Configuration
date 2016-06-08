@@ -24,7 +24,7 @@ namespace Autofac.Configuration.Util
         /// </exception>
         public static bool ToFlexibleBoolean(this string value)
         {
-            if(String.IsNullOrWhiteSpace(value) ||
+            if (string.IsNullOrWhiteSpace(value) ||
                 value.Equals("false", StringComparison.OrdinalIgnoreCase) ||
                 value.Equals("no", StringComparison.OrdinalIgnoreCase) ||
                 value.Equals("n", StringComparison.OrdinalIgnoreCase) ||
@@ -32,7 +32,6 @@ namespace Autofac.Configuration.Util
             {
                 return false;
             }
-
             else if (value.Equals("true", StringComparison.OrdinalIgnoreCase) ||
                 value.Equals("yes", StringComparison.OrdinalIgnoreCase) ||
                 value.Equals("y", StringComparison.OrdinalIgnoreCase) ||

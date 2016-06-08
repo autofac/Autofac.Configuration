@@ -76,11 +76,13 @@ namespace Autofac.Configuration.Test.Util
                 {
                     return null;
                 }
+
                 var str = value as String;
                 if (str == null)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
+
                 var converter = TypeDescriptor.GetConverter(typeof(int));
                 return new Convertible { Value = (int)converter.ConvertFromString(context, culture, str) };
             }
@@ -88,7 +90,10 @@ namespace Autofac.Configuration.Test.Util
 
         public class HasTypeConverterAttributes
         {
-            public HasTypeConverterAttributes([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter) { this.Property = parameter; }
+            public HasTypeConverterAttributes([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
+            {
+                this.Property = parameter;
+            }
 
             [TypeConverter(typeof(ConvertibleConverter))]
             public Convertible Property { get; set; }

@@ -1,6 +1,6 @@
-﻿using Autofac.Configuration.Core;
+﻿using System;
+using Autofac.Configuration.Core;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace Autofac.Configuration
 {
@@ -9,6 +9,26 @@ namespace Autofac.Configuration
     /// </summary>
     public class ConfigurationModule : Module
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationModule"/> class.
+        /// </summary>
+        /// <param name="configuration">
+        /// An <see cref="IConfiguration"/> containing the definition for
+        /// modules and components to register with the container.
+        /// </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown if <paramref name="configuration"/> is <see langword="null"/>.
+        /// </exception>
+        public ConfigurationModule(IConfiguration configuration)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            this.Configuration = configuration;
+        }
+
         /// <summary>
         /// Gets the configuration to register.
         /// </summary>
@@ -28,26 +48,6 @@ namespace Autofac.Configuration
         /// will be a <see cref="Autofac.Configuration.Core.ConfigurationRegistrar"/>.
         /// </value>
         public IConfigurationRegistrar ConfigurationRegistrar { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigurationModule"/> class.
-        /// </summary>
-        /// <param name="configuration">
-        /// An <see cref="IConfiguration"/> containing the definition for
-        /// modules and components to register with the container.
-        /// </param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="configuration"/> is <see langword="null"/>.
-        /// </exception>
-        public ConfigurationModule(IConfiguration configuration)
-        {
-            if(configuration == null)
-            {
-                throw new ArgumentNullException("configuration");
-            }
-
-            this.Configuration = configuration;
-        }
 
         /// <summary>
         /// Executes the conversion of configuration data into component registrations.
@@ -73,8 +73,9 @@ namespace Autofac.Configuration
         {
             if (builder == null)
             {
-                throw new ArgumentNullException("builder");
+                throw new ArgumentNullException(nameof(builder));
             }
+
             var registrar = this.ConfigurationRegistrar ?? new ConfigurationRegistrar();
             registrar.RegisterConfiguration(builder, this.Configuration);
         }

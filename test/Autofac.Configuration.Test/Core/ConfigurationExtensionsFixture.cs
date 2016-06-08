@@ -1,8 +1,4 @@
-﻿using Autofac.Configuration.Core;
-using Autofac.Configuration.Util;
-using Autofac.Core;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -10,8 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using Autofac.Configuration.Core;
+using Autofac.Configuration.Util;
+using Autofac.Core;
+using Microsoft.Extensions.Configuration;
 using Xunit;
-using Microsoft.Extensions.Configuration.Memory;
 
 namespace Autofac.Configuration.Test.Core
 {
@@ -44,7 +43,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void DefaultAssembly_FullAssemblyName()
         {
-            var expected = typeof(String).GetTypeInfo().Assembly;
+            var expected = typeof(string).GetTypeInfo().Assembly;
             var config = SetUpDefaultAssembly(expected.FullName);
             Assert.Equal(expected, config.DefaultAssembly());
         }
@@ -59,7 +58,7 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void DefaultAssembly_SimpleAssemblyName()
         {
-            var expected = typeof(String).GetTypeInfo().Assembly;
+            var expected = typeof(string).GetTypeInfo().Assembly;
             var config = SetUpDefaultAssembly("mscorlib");
             Assert.Equal(expected, config.DefaultAssembly());
         }
@@ -97,7 +96,7 @@ namespace Autofac.Configuration.Test.Core
         }
 
         [Theory]
-        [MemberData("GetParameters_SimpleParameters_Source")]
+        [MemberData(nameof(GetParameters_SimpleParameters_Source))]
         public void GetParameters_SimpleParameters(string parameterName, object expectedValue)
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
@@ -108,15 +107,6 @@ namespace Autofac.Configuration.Test.Core
             Assert.NotNull(parameter);
             Assert.NotNull(provider);
             Assert.Equal(expectedValue, provider());
-        }
-
-        public static IEnumerable<object[]> GetParameters_SimpleParameters_Source
-        {
-            get
-            {
-                yield return new object[] { "number", 1 };
-                yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
-            }
         }
 
         [Fact]
@@ -211,7 +201,7 @@ namespace Autofac.Configuration.Test.Core
         }
 
         [Theory]
-        [MemberData("GetProperties_SimpleProperties_Source")]
+        [MemberData(nameof(GetProperties_SimpleProperties_Source))]
         public void GetProperties_SimpleProperties(string propertyName, object expectedValue)
         {
             var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
@@ -224,22 +214,31 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(expectedValue, provider());
         }
 
-        public static IEnumerable<object[]> GetProperties_SimpleProperties_Source
+        private static IEnumerable<object[]> GetParameters_SimpleParameters_Source()
         {
-            get
-            {
-                yield return new object[] { "Text", "text" };
-                yield return new object[] { "Url", new Uri("http://localhost") };
-            }
+            yield return new object[] { "number", 1 };
+            yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
+        }
+
+        private static IEnumerable<object[]> GetProperties_SimpleProperties_Source()
+        {
+            yield return new object[] { "Text", "text" };
+            yield return new object[] { "Url", new Uri("http://localhost") };
         }
 
         private static IConfiguration SetUpDefaultAssembly(string assemblyName)
         {
-            var source = new MemoryConfigurationProvider();
-            source.Add("defaultAssembly", assemblyName);
-            var config = new ConfigurationBuilder();
-            config.Add(source);
-            return config.Build();
+            var data = new Dictionary<string, string>
+            {
+                { "defaultAssembly", assemblyName }
+            };
+            return new ConfigurationBuilder().AddInMemoryCollection(data).Build();
+        }
+
+        public class BaseSimpleParametersAndProperties
+        {
+            // Issue #2 - Ensure properties in base classes can be set by config.
+            public string Text { get; set; }
         }
 
         public class Convertible
@@ -260,11 +259,13 @@ namespace Autofac.Configuration.Test.Core
                 {
                     return null;
                 }
-                var str = value as String;
+
+                string str = value as string;
                 if (str == null)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
+
                 var converter = TypeDescriptor.GetConverter(typeof(int));
                 return new Convertible { Value = (int)converter.ConvertFromString(context, culture, str) };
             }
@@ -283,17 +284,20 @@ namespace Autofac.Configuration.Test.Core
                 {
                     return null;
                 }
+
                 var castValue = value as ConfiguredDictionaryParameter;
                 if (castValue == null)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
+
                 var dict = new Dictionary<string, Convertible>();
                 var converter = new ConvertibleConverter();
                 foreach (var item in castValue.Dictionary)
                 {
                     dict[item.Key] = (Convertible)converter.ConvertFrom(item.Value);
                 }
+
                 return dict;
             }
         }
@@ -311,17 +315,20 @@ namespace Autofac.Configuration.Test.Core
                 {
                     return null;
                 }
+
                 var castValue = value as ConfiguredListParameter;
                 if (castValue == null)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
+
                 var list = new List<Convertible>();
                 var converter = new ConvertibleConverter();
-                foreach (var item in castValue.List)
+                foreach (string item in castValue.List)
                 {
                     list.Add((Convertible)converter.ConvertFrom(item));
                 }
+
                 return list;
             }
         }
@@ -330,7 +337,7 @@ namespace Autofac.Configuration.Test.Core
         {
             public HasConvertibleParametersAndProperties([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
             {
-                Parameter = parameter;
+                this.Parameter = parameter;
             }
 
             public Convertible Parameter { get; set; }
@@ -359,7 +366,7 @@ namespace Autofac.Configuration.Test.Core
             public IEnumerable<int> Populated { get; set; }
         }
 
-        public class HasSimpleParametersAndProperties
+        public class HasSimpleParametersAndProperties : BaseSimpleParametersAndProperties
         {
             public HasSimpleParametersAndProperties(int number, IPAddress ip)
             {
@@ -370,8 +377,6 @@ namespace Autofac.Configuration.Test.Core
             public IPAddress IP { get; private set; }
 
             public int Number { get; private set; }
-
-            public string Text { get; set; }
 
             public Uri Url { get; set; }
         }
