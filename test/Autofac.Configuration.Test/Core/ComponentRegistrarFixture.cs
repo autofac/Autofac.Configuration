@@ -77,17 +77,6 @@ namespace Autofac.Configuration.Test.Core
         }
 
         [Fact]
-        public void RegisterConfiguredComponents_MemberOf()
-        {
-            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_MemberOf.json");
-            builder.RegisterCollection<ITestComponent>("named-collection").As<IList<ITestComponent>>();
-            var container = builder.Build();
-            var collection = container.Resolve<IList<ITestComponent>>();
-            var first = collection[0];
-            Assert.IsType<SimpleComponent>(first);
-        }
-
-        [Fact]
         public void RegisterConfiguredComponents_PropertyInjectionEnabledOnComponent()
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_EnablePropertyInjection.json");

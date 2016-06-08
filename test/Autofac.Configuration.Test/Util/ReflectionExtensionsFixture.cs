@@ -28,7 +28,10 @@ namespace Autofac.Configuration.Test.Util
 
         private class HasProperty
         {
-            public string NotSetter(string value) { return value; }
+            public string NotSetter(string value)
+            {
+                return value;
+            }
 
             public string Property { get; set; }
         }

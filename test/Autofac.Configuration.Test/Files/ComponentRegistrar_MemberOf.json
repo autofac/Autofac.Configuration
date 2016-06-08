@@ -1,9 +1,0 @@
-﻿{
-    "defaultAssembly": "Autofac.Configuration.Test",
-    "components": [
-        {
-            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
-            "memberOf": "named-collection"
-        }
-    ]
-}

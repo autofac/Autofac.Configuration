@@ -2,7 +2,7 @@
 
 namespace Autofac.Configuration.Test
 {
-    static class AssertionHelpers
+    internal static class AssertionHelpers
     {
         public static void AssertRegistered<TService>(this IComponentContext context, string message = "Expected component was not registered.")
         {

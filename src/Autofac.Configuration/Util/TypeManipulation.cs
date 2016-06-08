@@ -24,9 +24,9 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace Autofac.Configuration.Util
@@ -53,11 +53,12 @@ namespace Autofac.Configuration.Util
         /// </exception>
         public static object ChangeToCompatibleType(object value, Type destinationType, ParameterInfo memberInfo)
         {
-            TypeConverterAttribute attrib = null;
+            var attrib = (TypeConverterAttribute)null;
             if (memberInfo != null)
             {
                 attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
             }
+
             return ChangeToCompatibleType(value, destinationType, attrib);
         }
 
@@ -78,11 +79,12 @@ namespace Autofac.Configuration.Util
         /// </exception>
         public static object ChangeToCompatibleType(object value, Type destinationType, MemberInfo memberInfo)
         {
-            TypeConverterAttribute attrib = null;
+            var attrib = (TypeConverterAttribute)null;
             if (memberInfo != null)
             {
                 attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
             }
+
             return ChangeToCompatibleType(value, destinationType, attrib);
         }
 
@@ -105,7 +107,7 @@ namespace Autofac.Configuration.Util
         {
             if (destinationType == null)
             {
-                throw new ArgumentNullException("destinationType");
+                throw new ArgumentNullException(nameof(destinationType));
             }
 
             if (value == null)
@@ -119,10 +121,10 @@ namespace Autofac.Configuration.Util
                 return value;
             }
 
-            TypeConverter converter = null;
+            var converter = (TypeConverter)null;
 
             // Try to get custom type converter information.
-            if (converterAttribute != null && !String.IsNullOrEmpty(converterAttribute.ConverterTypeName))
+            if (converterAttribute != null && !string.IsNullOrEmpty(converterAttribute.ConverterTypeName))
             {
                 converter = GetTypeConverterFromName(converterAttribute.ConverterTypeName);
                 if (converter.CanConvertFrom(value.GetType()))
@@ -159,7 +161,7 @@ namespace Autofac.Configuration.Util
                 }
             }
 
-            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConversionUnsupported, value.GetType(), destinationType));
+            throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConversionUnsupported, value.GetType(), destinationType));
         }
 
         /// <summary>
@@ -181,8 +183,9 @@ namespace Autofac.Configuration.Util
             var converter = Activator.CreateInstance(converterType) as TypeConverter;
             if (converter == null)
             {
-                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName));
             }
+
             return converter;
         }
     }

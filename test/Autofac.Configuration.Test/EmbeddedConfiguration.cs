@@ -9,26 +9,24 @@ namespace Autofac.Configuration.Test
     {
         public static IConfiguration LoadJson(string configFile)
         {
-            var config = new ConfigurationBuilder();
-            var source = new JsonConfigurationProvider("path", true);
+            var provider = new JsonConfigurationProvider(new JsonConfigurationSource { Optional = true });
             using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile))
             {
-                typeof(JsonConfigurationProvider).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
+                provider.Load(stream);
             }
-            config.Add(source, false);
-            return config.Build();
+
+            return new ConfigurationBuilder().Add(provider.Source).Build();
         }
 
         public static IConfiguration LoadXml(string configFile)
         {
-            var config = new ConfigurationBuilder();
-            var source = new XmlConfigurationProvider("path");
+            var provider = new XmlConfigurationProvider(new XmlConfigurationSource { Optional = true });
             using (var stream = typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile))
             {
-                typeof(XmlConfigurationProvider).GetMethod("Load", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new object[] { stream });
+                provider.Load(stream);
             }
-            config.Add(source, false);
-            return config.Build();
+
+            return new ConfigurationBuilder().Add(provider.Source).Build();
         }
 
         public static ContainerBuilder ConfigureContainer(IConfiguration configuration)

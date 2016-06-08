@@ -36,6 +36,7 @@ namespace Autofac.Configuration.Util
 
                         dictionary.Add(convertedKey, convertedValue);
                     }
+
                     return dictionary;
                 }
 
