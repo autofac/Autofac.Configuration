@@ -28,9 +28,9 @@
   },
   "description": "Configuration support for Autofac.",
   "frameworks": {
-    "netstandard1.1": {
+    "netstandard1.3": {
       "dependencies": {
-        "System.Collections": "4.0.12-rc2-*",
+        "System.Collections": "4.0.11-rc2-*",
         "System.ComponentModel.TypeConverter": "4.0.1-rc2-*",
         "System.Diagnostics.Tools": "4.0.1-rc2-*",
         "System.Globalization": "4.0.11-rc2-*",
@@ -40,10 +40,7 @@
         "System.Reflection.Extensions": "4.0.1-rc2-*",
         "System.Reflection.TypeExtensions": "4.1.0-rc2-*",
         "System.Resources.ResourceManager": "4.0.1-rc2-*"
-      },
-      "imports": [
-        "dotnet5.2"
-      ]
+      }
     }
   },
   "packOptions": {
