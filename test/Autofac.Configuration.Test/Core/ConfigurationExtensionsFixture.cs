@@ -214,6 +214,18 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(expectedValue, provider());
         }
 
+        private static IEnumerable<object[]> GetParameters_SimpleParameters_Source()
+        {
+            yield return new object[] { "number", 1 };
+            yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
+        }
+
+        private static IEnumerable<object[]> GetProperties_SimpleProperties_Source()
+        {
+            yield return new object[] { "Text", "text" };
+            yield return new object[] { "Url", new Uri("http://localhost") };
+        }
+
         private static IConfiguration SetUpDefaultAssembly(string assemblyName)
         {
             var data = new Dictionary<string, string>
@@ -221,18 +233,6 @@ namespace Autofac.Configuration.Test.Core
                 { "defaultAssembly", assemblyName }
             };
             return new ConfigurationBuilder().AddInMemoryCollection(data).Build();
-        }
-
-        private IEnumerable<object[]> GetParameters_SimpleParameters_Source()
-        {
-            yield return new object[] { "number", 1 };
-            yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
-        }
-
-        private IEnumerable<object[]> GetProperties_SimpleProperties_Source()
-        {
-            yield return new object[] { "Text", "text" };
-            yield return new object[] { "Url", new Uri("http://localhost") };
         }
 
         public class BaseSimpleParametersAndProperties
