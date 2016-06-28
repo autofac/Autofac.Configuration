@@ -12,7 +12,7 @@
     "keyFile": "../../Autofac.snk"
   },
   "dependencies": {
-    "Autofac.Configuration": "4.0.0-rc2-240",
+    "Autofac.Configuration": "4.0.0-rc2-*",
     "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.Xml": "1.0.0-rc2-final",
