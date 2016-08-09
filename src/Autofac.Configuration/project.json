@@ -4,14 +4,11 @@
       "/ruleset:../../build/Analyzers.ruleset"
     ],
     "keyFile": "../../Autofac.snk",
-    "nowarn": [
-      "CS1591"
-    ],
     "warningsAsErrors": true,
     "xmlDoc": true
   },
   "dependencies": {
-    "Autofac": "4.0.0-rc3-*",
+    "Autofac": "4.0.0",
     "Microsoft.CodeAnalysis.FxCopAnalyzers": {
       "type": "build",
       "version": "1.1.0"
@@ -64,5 +61,5 @@
       "dependencyinjection"
     ]
   },
-  "version": "4.0.0-rc3-*"
+  "version": "4.0.0-*"
 }
