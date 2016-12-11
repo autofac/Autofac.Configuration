@@ -1,0 +1,3 @@
+H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Debug\Autofac.Configuration.csprojResolveAssemblyReference.cache
+H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Debug\Autofac.Configuration.ConfigurationSettingsReaderResources.resources
+H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Debug\Autofac.Configuration.csproj.GenerateResource.Cache

@@ -45,6 +45,7 @@ namespace Autofac.Configuration.Elements
         const string InstanceScopeAttributeName = "instance-scope";
         const string InstanceOwnershipAttributeName = "instance-ownership";
         const string InjectPropertiesAttributeName = "inject-properties";
+        const string InterceptedByAttributeName = "interceptors";
         const string AutoActivateAttibuteName = "auto-activate";
         internal const string Key = TypeAttributeName;
 
@@ -144,7 +145,20 @@ namespace Autofac.Configuration.Elements
                 return (string)this[InjectPropertiesAttributeName];
             }
         }
-
+        /// <summary>
+        /// Sets up property injection for the component instances. This uses the
+        /// OnActivated event so that circular dependencies can be handled.
+        /// </summary>
+        /// <value>never (default,) all, unset.</value>
+        [ConfigurationProperty(InterceptedByAttributeName, IsRequired = false)]
+        public string InterceptedBy
+        {
+            get
+            {
+                // TODO: Convert property injection to a Boolean.
+                return (string)this[InterceptedByAttributeName];
+            }
+        }
         /// <summary>
         /// Sets up auto activation for the component instances.
         /// </summary>

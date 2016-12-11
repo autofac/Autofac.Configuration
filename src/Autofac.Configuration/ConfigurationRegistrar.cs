@@ -34,6 +34,7 @@ using Autofac.Configuration.Elements;
 using Autofac.Configuration.Util;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
+using Autofac.Extras.DynamicProxy2;
 
 namespace Autofac.Configuration
 {
@@ -175,9 +176,20 @@ namespace Autofac.Configuration
                 var registrar = builder.RegisterType(LoadType(component.Type, configurationSection.DefaultAssembly));
 
                 var services = this.EnumerateComponentServices(component, configurationSection.DefaultAssembly);
+               
                 foreach (var service in services)
                 {
-                    registrar.As(service);
+                    if (!string.IsNullOrEmpty(component.InterceptedBy))
+                    {
+                        registrar.As(service)
+                            .EnableInterfaceInterceptors()
+                            .InterceptedBy(LoadType(component.InterceptedBy, configurationSection.DefaultAssembly));
+                    }
+                    else
+                    {
+                        registrar.As(service);
+                    }
+                     
                 }
                 foreach (var param in component.Parameters.ToParameters())
                 {
