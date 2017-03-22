@@ -65,4 +65,11 @@
             <Collection name="1">2</Collection>
         </properties>
     </components>
+    <components name="9">
+        <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+J</type>
+        <parameters>
+            <list name="0">Val1</list>
+            <list name="1">Val2</list>
+        </parameters>
+    </components>
 </autofac>

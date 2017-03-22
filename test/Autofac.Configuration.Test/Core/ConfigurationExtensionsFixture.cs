@@ -87,6 +87,19 @@ namespace Autofac.Configuration.Test.Core
         }
 
         [Fact]
+        public void GetParameters_ListParameterPopulated()
+        {
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+            var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasEnumerableParameter).FullName).First();
+            var objectParameter = typeof(HasEnumerableParameter).GetConstructors().First().GetParameters().First(pi => pi.Name == "list");
+            var provider = (Func<object>)null;
+            var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
+            Assert.NotNull(parameter);
+            Assert.NotNull(provider);
+            Assert.Equal(new List<string> { "a", "b" }, provider());
+        }
+
+        [Fact]
         public void GetParameters_ParameterConversionUsesTypeConverterAttribute()
         {
             var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
@@ -354,6 +367,16 @@ namespace Autofac.Configuration.Test.Core
             public Dictionary<string, int> Empty { get; set; }
 
             public Dictionary<string, int> Populated { get; set; }
+        }
+
+        public class HasEnumerableParameter
+        {
+            public HasEnumerableParameter(IList<string> list)
+            {
+                this.List = list;
+            }
+
+            public IList<string> List { get; private set; }
         }
 
         public class HasEnumerableProperty
