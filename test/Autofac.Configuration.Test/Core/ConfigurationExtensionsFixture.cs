@@ -230,7 +230,7 @@ namespace Autofac.Configuration.Test.Core
         {
             var data = new Dictionary<string, string>
             {
-                { "defaultAssembly", assemblyName }
+                { "defaultAssembly", assemblyName },
             };
             return new ConfigurationBuilder().AddInMemoryCollection(data).Build();
         }

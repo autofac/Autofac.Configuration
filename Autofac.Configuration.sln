@@ -1,20 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{32285FA4-6B46-4D6B-A840-2B13E4C8B58E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3BA657BF-28B1-42DA-B5B0-1C4601FCF7B1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FAD65E9C-3CF3-4F68-9757-C7358604030B}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Configuration", "src\Autofac.Configuration\Autofac.Configuration.csproj", "{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Autofac.Configuration", "src\Autofac.Configuration\Autofac.Configuration.xproj", "{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Autofac.Configuration.Test", "test\Autofac.Configuration.Test\Autofac.Configuration.Test.xproj", "{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Configuration.Test", "test\Autofac.Configuration.Test\Autofac.Configuration.Test.csproj", "{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,24 +33,24 @@ Global
 		{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F}.Release|x86.ActiveCfg = Release|Any CPU
 		{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F}.Release|x86.Build.0 = Release|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Debug|x86.Build.0 = Debug|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Release|x86.ActiveCfg = Release|Any CPU
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921}.Release|x86.Build.0 = Release|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Debug|x86.Build.0 = Debug|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Release|x86.ActiveCfg = Release|Any CPU
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F} = {32285FA4-6B46-4D6B-A840-2B13E4C8B58E}
-		{3D6F4FA0-FFBF-4377-8F3F-F42D072CA921} = {3BA657BF-28B1-42DA-B5B0-1C4601FCF7B1}
+		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883} = {3BA657BF-28B1-42DA-B5B0-1C4601FCF7B1}
 	EndGlobalSection
 EndGlobal
