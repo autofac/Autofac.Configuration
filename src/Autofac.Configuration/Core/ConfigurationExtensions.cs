@@ -259,7 +259,7 @@ string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
             {
                 int i = 0;
                 bool isList = true;
-                foreach (int subKey in subKeys.Select(sk => int.Parse(sk.Item1)))
+                foreach (int subKey in subKeys.Select(sk => int.Parse(sk.Item1, CultureInfo.InvariantCulture)))
                 {
                     if (subKey != i)
                     {
