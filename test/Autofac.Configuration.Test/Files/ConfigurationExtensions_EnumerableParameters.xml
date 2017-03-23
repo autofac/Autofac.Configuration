@@ -72,4 +72,18 @@
             <list name="1">Val2</list>
         </parameters>
     </components>
+    <components name="10">
+        <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+K</type>
+        <parameters>
+            <list name="0">Val1</list>
+            <list name="1">Val2</list>
+        </parameters>
+    </components>
+    <components name="11">
+        <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+L</type>
+        <parameters>
+            <list name="0">Val1</list>
+            <list name="1">Val2</list>
+        </parameters>
+    </components>
 </autofac>

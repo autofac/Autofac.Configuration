@@ -172,5 +172,54 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(poco.List[0], "Val1");
             Assert.Equal(poco.List[1], "Val2");
         }
+
+        public class K
+        {
+            public K(IList<string> list = null)
+            {
+                this.List = list;
+            }
+
+            public IList<string> List { get; private set; }
+        }
+
+        [Fact]
+        public void ParameterStringListInjectionOptionalParameter()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+            var poco = container.Resolve<K>();
+
+            Assert.True(poco.List.Count == 2);
+            Assert.Equal(poco.List[0], "Val1");
+            Assert.Equal(poco.List[1], "Val2");
+        }
+
+        public class L
+        {
+            public L()
+            {
+                this.List = new List<string>();
+            }
+
+            public L(IList<string> list = null)
+            {
+                this.List = list;
+            }
+
+            public IList<string> List { get; private set; }
+        }
+
+        [Fact]
+        public void ParameterStringListInjectionMultipleConstructors()
+        {
+            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+            var poco = container.Resolve<L>();
+
+            Assert.True(poco.List.Count == 2);
+            Assert.Equal(poco.List[0], "Val1");
+            Assert.Equal(poco.List[1], "Val2");
+        }
     }
 }
