@@ -58,8 +58,12 @@ namespace Autofac.Configuration.Test.Core
         [Fact]
         public void DefaultAssembly_SimpleAssemblyName()
         {
+            // String is in a different assembly depending on the
+            // target framework. We have to calculate it and truncate
+            // the full assembly name at the first comma.
             var expected = typeof(string).GetTypeInfo().Assembly;
-            var config = SetUpDefaultAssembly("mscorlib");
+            var fullName = expected.FullName.Substring(0, expected.FullName.IndexOf(','));
+            var config = SetUpDefaultAssembly(fullName);
             Assert.Equal(expected, config.DefaultAssembly());
         }
 

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using Autofac.Configuration.Util;
 using Xunit;
 
