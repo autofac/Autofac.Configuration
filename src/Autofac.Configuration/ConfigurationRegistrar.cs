@@ -179,17 +179,8 @@ namespace Autofac.Configuration
                
                 foreach (var service in services)
                 {
-                    if (!string.IsNullOrEmpty(component.InterceptedBy))
-                    {
-                        registrar.As(service)
-                            .EnableInterfaceInterceptors()
-                            .InterceptedBy(LoadType(component.InterceptedBy, configurationSection.DefaultAssembly));
-                    }
-                    else
-                    {
-                        registrar.As(service);
-                    }
-                     
+                    registrar.As(service);
+
                 }
                 foreach (var param in component.Parameters.ToParameters())
                 {
@@ -211,6 +202,12 @@ namespace Autofac.Configuration
                 this.SetComponentOwnership(registrar, component.Ownership);
                 this.SetInjectProperties(registrar, component.InjectProperties);
                 this.SetAutoActivate(registrar, component.AutoActivate);
+
+                if (!string.IsNullOrEmpty(component.InterceptedBy))
+                {
+                    registrar.EnableInterfaceInterceptors()
+                        .InterceptedBy(LoadType(component.InterceptedBy, configurationSection.DefaultAssembly));
+                }
             }
         }
 
@@ -344,7 +341,7 @@ namespace Autofac.Configuration
             {
                 return;
             }
-            switch (injectProperties.Trim().ToUpperInvariant())
+            switch (injectProperties.Trim().ToUpper())
             {
                 case "NO":
                 case "N":
@@ -355,7 +352,7 @@ namespace Autofac.Configuration
                 case "Y":
                 case "TRUE":
                 case "1":
-                    registrar.PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+                    registrar.PropertiesAutowired();
                     break;
                 default:
                     throw new ConfigurationErrorsException(string.Format(CultureInfo.CurrentCulture, ConfigurationSettingsReaderResources.UnrecognisedInjectProperties, injectProperties));

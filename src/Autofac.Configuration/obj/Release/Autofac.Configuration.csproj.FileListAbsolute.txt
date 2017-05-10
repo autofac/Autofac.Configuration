@@ -1,9 +1,9 @@
-H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Release\Autofac.Configuration.ConfigurationSettingsReaderResources.resources
-H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Release\Autofac.Configuration.csproj.GenerateResource.Cache
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\bin\Release\Autofac.Configuration.xml
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\bin\Release\Autofac.Configuration.dll
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\bin\Release\Autofac.Configuration.pdb
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\bin\Release\Autofac.Configuration.dll.CodeAnalysisLog.xml
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\bin\Release\Autofac.Configuration.dll.lastcodeanalysissucceeded
+H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Release\Autofac.Configuration.ConfigurationSettingsReaderResources.resources
+H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Release\Autofac.Configuration.csproj.GenerateResource.Cache
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Release\Autofac.Configuration.dll
 H:\Csharp\GitHub\Autofac.Configuration\src\Autofac.Configuration\obj\Release\Autofac.Configuration.pdb
