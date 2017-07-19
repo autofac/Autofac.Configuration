@@ -1,4 +1,4 @@
-#Autofac.Configuration
+# Autofac.Configuration
 
 Configuration support for [Autofac](http://autofac.org).
 
