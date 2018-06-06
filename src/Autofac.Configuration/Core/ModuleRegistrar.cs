@@ -63,12 +63,12 @@ namespace Autofac.Configuration.Core
         {
             if (builder == null)
             {
-                throw new ArgumentNullException("builder");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             var defaultAssembly = configuration.DefaultAssembly();

@@ -77,7 +77,7 @@ function Install-DotNetCli
   # Download the dotnet CLI install script
   if (!(Test-Path .\dotnet\install.ps1))
   {
-    Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.1/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
+    Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile ".\.dotnet\dotnet-install.ps1"
   }
 
   # Run the dotnet CLI install
@@ -145,9 +145,9 @@ function Invoke-DotNetPack
     $PackagesPath,
 
     [Parameter(Mandatory=$True, ValueFromPipeline=$False)]
-    [ValidateNotNull()]
-    [System.IO.DirectoryInfo]
-    $VersionSuffix
+    [AllowEmptyString()]
+    [string]
+    $VersionSuffix = ""
   )
   Begin
   {
@@ -157,8 +157,27 @@ function Invoke-DotNetPack
   {
     foreach($Project in $ProjectDirectory)
     {
-      & dotnet build ("""" + $Project.FullName + """") --configuration Release --version-suffix $VersionSuffix
-      & dotnet pack ("""" + $Project.FullName + """") --configuration Release --version-suffix $VersionSuffix --include-symbols --output $PackagesPath
+      if ($VersionSuffix -eq "")
+      {
+        & dotnet build ("""" + $Project.FullName + """") --configuration Release
+      }
+      else
+      {
+        & dotnet build ("""" + $Project.FullName + """") --configuration Release --version-suffix $VersionSuffix
+      }
+      if ($LASTEXITCODE -ne 0)
+      {
+        exit 1
+      }
+
+      if ($VersionSuffix -eq "")
+      {
+        & dotnet pack ("""" + $Project.FullName + """") --configuration Release --output $PackagesPath
+      }
+      else
+      {
+        & dotnet pack ("""" + $Project.FullName + """") --configuration Release --version-suffix $VersionSuffix --output $PackagesPath
+      }
       if ($LASTEXITCODE -ne 0)
       {
         exit 1

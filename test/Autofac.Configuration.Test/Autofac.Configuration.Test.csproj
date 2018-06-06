@@ -32,9 +32,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="1.0.2" />
-    <PackageReference Include="Moq" Version="4.7.1" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.0.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001">
+    <PackageReference Include="Moq" Version="4.8.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="xunit" Version="2.2.0" />

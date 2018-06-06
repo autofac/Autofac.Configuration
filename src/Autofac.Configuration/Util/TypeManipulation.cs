@@ -175,7 +175,7 @@ namespace Autofac.Configuration.Util
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if <paramref name="converterTypeName"/> does not correspond
-        /// to a <see cref="TypeConverter"/>
+        /// to a <see cref="TypeConverter"/>.
         /// </exception>
         private static TypeConverter GetTypeConverterFromName(string converterTypeName)
         {

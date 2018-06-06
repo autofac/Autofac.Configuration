@@ -68,12 +68,12 @@ namespace Autofac.Configuration.Core
         {
             if (componentRegistrar == null)
             {
-                throw new ArgumentNullException("componentRegistrar");
+                throw new ArgumentNullException(nameof(componentRegistrar));
             }
 
             if (moduleRegistrar == null)
             {
-                throw new ArgumentNullException("moduleRegistrar");
+                throw new ArgumentNullException(nameof(moduleRegistrar));
             }
 
             this.ComponentRegistrar = componentRegistrar;
@@ -121,12 +121,12 @@ namespace Autofac.Configuration.Core
         {
             if (builder == null)
             {
-                throw new ArgumentNullException("builder");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             if (configuration == null)
             {
-                throw new ArgumentNullException("configuration");
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             this.ModuleRegistrar.RegisterConfiguredModules(builder, configuration);
