@@ -86,4 +86,11 @@
             <list name="1">Val2</list>
         </parameters>
     </components>
+    <components name="12">
+        <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+M</type>
+        <parameters>
+            <list name="0">Val1</list>
+            <list>Val2</list> <!-- no name -->
+        </parameters>
+    </components>
 </autofac>

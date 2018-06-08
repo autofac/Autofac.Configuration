@@ -1,0 +1,10 @@
+﻿<autofac defaultAssembly="Autofac.Configuration.Test">
+    <components name="0">
+        <type>Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent</type>
+        <instanceScope>single-instance</instanceScope>
+        <services name="0" type="System.Object, mscorlib" />
+        <metadata>
+            <item name="0" type="System.Int32" value="42" />
+        </metadata>
+    </components>
+</autofac>

@@ -72,7 +72,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var moduleElement in configuration.GetSection("modules").GetChildren())
+            foreach (var moduleElement in configuration.GetOrderedSubsections("modules"))
             {
                 var moduleType = moduleElement.GetType("type", defaultAssembly);
                 var module = (IModule)null;

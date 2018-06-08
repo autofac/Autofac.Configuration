@@ -120,6 +120,9 @@
   <data name="ArgumentMayNotBeEmpty" xml:space="preserve">
     <value>The {0} may not be empty.</value>
   </data>
+  <data name="CollectionMustBeOrderedByName" xml:space="preserve">
+    <value>The '{0}' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. '{1}' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.</value>
+  </data>
   <data name="DictionaryKeyMayNotBeNullOrEmpty" xml:space="preserve">
     <value>Key cannot be null or empty in a dictionary parameter.</value>
   </data>
