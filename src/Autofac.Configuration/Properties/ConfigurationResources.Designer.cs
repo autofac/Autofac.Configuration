@@ -146,6 +146,22 @@ namespace Autofac.Configuration
             return string.Format(CultureInfo.CurrentCulture, GetString("UnrecognisedScope"), p0);
         }
 
+        /// <summary>
+        /// The '{0}' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. '{1}' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.
+        /// </summary>
+        internal static string CollectionMustBeOrderedByName
+        {
+            get { return GetString("CollectionMustBeOrderedByName"); }
+        }
+
+        /// <summary>
+        /// The '{0}' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. '{1}' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.
+        /// </summary>
+        internal static string FormatCollectionMustBeOrderedByName(object p0, object p1)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("CollectionMustBeOrderedByName"), p0, p1);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

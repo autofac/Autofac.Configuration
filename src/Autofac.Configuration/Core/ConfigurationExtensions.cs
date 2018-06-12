@@ -225,6 +225,44 @@ string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
+        /// Gets an ordered list of child configuration sections.
+        /// </summary>
+        /// <param name="configuration">The configuration item containing the list.</param>
+        /// <param name="key">The subsection from which to get the ordered list of children.</param>
+        /// <returns>The desired list of configuration subsections.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown if <paramref name="configuration"/> or <paramref name="key"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown if any of the subsections lack an  integer-valued <see cref="IConfigurationSection.Key"/>.
+        /// </exception>
+        internal static IEnumerable<IConfigurationSection> GetOrderedSubsections(this IConfiguration configuration, string key)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            var configurationSection = configuration.GetSection(key);
+            foreach (var section in configurationSection.GetChildren())
+            {
+                if (Int32.TryParse(section.Key, out var _))
+                {
+                    yield return section;
+                }
+                else
+                {
+                    throw new InvalidOperationException(ConfigurationResources.FormatCollectionMustBeOrderedByName(key, configurationSection.Path));
+                }
+            }
+        }
+
+        /// <summary>
         /// Inspects a parameter/property value to determine if it's a scalar,
         /// list, or dictionary property and casts it appropriately.
         /// </summary>

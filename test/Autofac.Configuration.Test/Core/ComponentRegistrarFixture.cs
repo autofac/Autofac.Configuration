@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Autofac.Builder;
 using Autofac.Core;
 using Xunit;
 
@@ -121,6 +121,30 @@ namespace Autofac.Configuration.Test.Core
             container.AssertRegistered<object>("The object wasn't registered.");
             container.AssertNotRegistered<SimpleComponent>("The base SimpleComponent type was incorrectly registered.");
             Assert.Same(container.Resolve<ITestComponent>(), container.Resolve<object>());
+        }
+
+        [Fact]
+        public void RegisterConfiguredComponents_ComponentsMissingName()
+        {
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ComponentRegistrar_ComponentsMissingName.xml");
+            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
+            Assert.Equal("The 'components' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. 'components' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.", exception.Message);
+        }
+
+        [Fact]
+        public void RegisterConfiguredComponents_ServicesMissingName()
+        {
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ComponentRegistrar_ServicesMissingName.xml");
+            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
+            Assert.Equal("The 'services' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. 'components:0:services' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.", exception.Message);
+        }
+
+        [Fact]
+        public void RegisterConfiguredComponents_MetadataMissingName()
+        {
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ComponentRegistrar_MetadataMissingName.xml");
+            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
+            Assert.Equal("The 'metadata' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. 'components:0:metadata' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.", exception.Message);
         }
 
         private class ComponentConsumer : BaseComponentConsumer

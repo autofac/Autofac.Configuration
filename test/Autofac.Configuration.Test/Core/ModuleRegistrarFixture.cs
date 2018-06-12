@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -18,6 +19,14 @@ namespace Autofac.Configuration.Test.Core
             // Test using Any() because we aren't necessarily guaranteed the order of resolution.
             Assert.True(collection.Any(a => a.Message == "First"), "The first registration wasn't found.");
             Assert.True(collection.Any(a => a.Message == "Second"), "The second registration wasn't found.");
+        }
+
+        [Fact]
+        public void RegisterConfiguredComponents_MetadataMissingName_ThrowsInvalidOperation()
+        {
+            var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ModuleRegistrar_ModulesMissingName.xml");
+            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
+            Assert.Equal("The 'modules' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. 'modules' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.", exception.Message);
         }
 
         private class ParameterizedModule : Module

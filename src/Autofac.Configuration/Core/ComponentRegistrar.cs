@@ -69,7 +69,7 @@ namespace Autofac.Configuration.Core
             }
 
             var defaultAssembly = configuration.DefaultAssembly();
-            foreach (var component in configuration.GetSection("components").GetChildren())
+            foreach (var component in configuration.GetOrderedSubsections("components"))
             {
                 var registrar = builder.RegisterType(component.GetType("type", defaultAssembly));
                 this.RegisterComponentServices(component, registrar, defaultAssembly);
@@ -109,7 +109,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException(nameof(component));
             }
 
-            foreach (var serviceDefinition in component.GetSection("services").GetChildren())
+            foreach (var serviceDefinition in component.GetOrderedSubsections("services"))
             {
                 // "name" is a special reserved key in the XML configuration source
                 // that enables ordinal collections. To support both JSON and XML
@@ -161,7 +161,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException(nameof(registrar));
             }
 
-            foreach (var ep in component.GetSection("metadata").GetChildren())
+            foreach (var ep in component.GetOrderedSubsections("metadata"))
             {
                 registrar.WithMetadata(ep["key"], TypeManipulation.ChangeToCompatibleType(ep["value"], ep.GetType("type", defaultAssembly)));
             }

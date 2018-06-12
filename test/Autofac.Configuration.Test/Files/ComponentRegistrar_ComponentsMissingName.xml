@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<autofac>
+    <components name="0">
+        <type>Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent, Autofac.Configuration.Test</type>
+        <services name="0" type="Autofac.Configuration.Test.Core.ComponentRegistrarFixture+ITestComponent, Autofac.Configuration.Test" />
+    </components>
+    <components> <!-- missing name -->
+        <type>Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent, Autofac.Configuration.Test</type>
+        <services name="0" type="Autofac.Configuration.Test.Core.ComponentRegistrarFixture+ITestComponent, Autofac.Configuration.Test" />
+    </components>
+</autofac>

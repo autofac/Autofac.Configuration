@@ -221,5 +221,27 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(poco.List[0], "Val1");
             Assert.Equal(poco.List[1], "Val2");
         }
+
+        public class M
+        {
+            public M(IList<string> list) => this.List = list;
+
+            public IList<string> List { get; }
+        }
+
+        /// <summary>
+        /// A characterization test, not intended to express desired behaviour, but to capture the current behaviour.
+        /// </summary>
+        [Fact]
+        public void ParameterStringListInjectionSecondElementHasNoName()
+        {
+            var container = EmbeddedConfiguration
+                .ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+            var poco = container.Resolve<M>();
+
+            // Val2 is dropped from the configuration when it's parsed.
+            Assert.Collection(poco.List, v => Assert.Equal(v, "Val1"));
+        }
     }
 }

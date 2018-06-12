@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<autofac defaultAssembly="Autofac.Configuration.Test">
+    <modules>
+        <type>Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ParameterizedModule</type>
+    </modules>
+</autofac>
