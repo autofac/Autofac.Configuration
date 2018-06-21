@@ -152,7 +152,7 @@ namespace Autofac.Configuration.Test.Core
             Assert.NotNull(provider);
             var value = provider();
             Assert.NotNull(value);
-            Assert.IsType(typeof(Dictionary<string, int>), value);
+            Assert.IsType<Dictionary<string, int>>(value);
             var dict = (Dictionary<string, int>)value;
             Assert.Equal(1, dict["a"]);
             Assert.Equal(2, dict["b"]);
@@ -231,13 +231,13 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(expectedValue, provider());
         }
 
-        private static IEnumerable<object[]> GetParameters_SimpleParameters_Source()
+        public static IEnumerable<object[]> GetParameters_SimpleParameters_Source()
         {
             yield return new object[] { "number", 1 };
             yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
         }
 
-        private static IEnumerable<object[]> GetProperties_SimpleProperties_Source()
+        public static IEnumerable<object[]> GetProperties_SimpleProperties_Source()
         {
             yield return new object[] { "Text", "text" };
             yield return new object[] { "Url", new Uri("http://localhost") };
