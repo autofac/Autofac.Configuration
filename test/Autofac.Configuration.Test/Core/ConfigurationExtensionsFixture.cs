@@ -126,6 +126,34 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(expectedValue, provider());
         }
 
+        [Theory]
+        [MemberData(nameof(GetInvariantCulture_Parameters_Source))]
+        public void GetInvariantCulture_ParametersJson(string parameterName, object expectedValue)
+        {
+            var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+            var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasInvariantCultureParameters).FullName).First();
+            var objectParameter = typeof(HasInvariantCultureParameters).GetConstructors().First().GetParameters().First(pi => pi.Name == parameterName);
+            var provider = (Func<object>)null;
+            var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
+            Assert.NotNull(parameter);
+            Assert.NotNull(provider);
+            Assert.Equal(expectedValue, provider());
+        }
+
+        [Theory]
+        [MemberData(nameof(GetInvariantCulture_Parameters_Source))]
+        public void GetInvariantCulture_ParametersXml(string parameterName, object expectedValue)
+        {
+            var config = EmbeddedConfiguration.LoadXml("ConfigurationExtensions_Parameters.xml");
+            var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasInvariantCultureParameters).FullName).First();
+            var objectParameter = typeof(HasInvariantCultureParameters).GetConstructors().First().GetParameters().First(pi => pi.Name == parameterName);
+            var provider = (Func<object>)null;
+            var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
+            Assert.NotNull(parameter);
+            Assert.NotNull(provider);
+            Assert.Equal(expectedValue, provider());
+        }
+
         [Fact]
         public void GetProperties_DictionaryPropertyEmpty()
         {
@@ -237,6 +265,12 @@ namespace Autofac.Configuration.Test.Core
             yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
         }
 
+        public static IEnumerable<object[]> GetInvariantCulture_Parameters_Source()
+        {
+            yield return new object[] { "min", 3.048 };
+            yield return new object[] { "max", 4.572 };
+        }
+
         public static IEnumerable<object[]> GetProperties_SimpleProperties_Source()
         {
             yield return new object[] { "Text", "text" };
@@ -277,8 +311,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                string str = value as string;
-                if (str == null)
+                if (!(value is string str))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -302,8 +335,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                var castValue = value as ConfiguredDictionaryParameter;
-                if (castValue == null)
+                if (!(value is ConfiguredDictionaryParameter castValue))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -333,8 +365,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                var castValue = value as ConfiguredListParameter;
-                if (castValue == null)
+                if (!(value is ConfiguredListParameter castValue))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -406,6 +437,19 @@ namespace Autofac.Configuration.Test.Core
             public int Number { get; private set; }
 
             public Uri Url { get; set; }
+        }
+
+        public class HasInvariantCultureParameters
+        {
+            public HasInvariantCultureParameters(double min, double max)
+            {
+                Min = min;
+                Max = max;
+            }
+
+            public double Min { get; private set; }
+
+            public double Max { get; private set; }
         }
     }
 }

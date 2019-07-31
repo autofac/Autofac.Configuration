@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<autofac defaultAssembly="Autofac.Configuration.Test">
+        <components name="0">
+        <type>Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasInvariantCultureParameters</type>
+            <parameters>
+                <min>3.048</min>
+                <max>4.572</max>
+            </parameters>
+    </components>
+</autofac>

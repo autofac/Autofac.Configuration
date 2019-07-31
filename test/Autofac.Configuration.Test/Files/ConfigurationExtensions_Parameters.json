@@ -41,6 +41,13 @@
       }
     },
     {
+      "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasInvariantCultureParameters",
+      "parameters": {
+        "min": 3.048,
+        "max": 4.572
+      }
+    },
+    {
       "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasConvertibleParametersAndProperties",
       "parameters": {
         "parameter": 1

@@ -121,7 +121,7 @@ namespace Autofac.Configuration.Util
                 return value;
             }
 
-            var converter = (TypeConverter)null;
+            TypeConverter converter;
 
             // Try to get custom type converter information.
             if (converterAttribute != null && !string.IsNullOrEmpty(converterAttribute.ConverterTypeName))
@@ -144,6 +144,11 @@ namespace Autofac.Configuration.Util
             converter = TypeDescriptor.GetConverter(destinationType);
             if (converter.CanConvertFrom(value.GetType()))
             {
+                if (converter is BaseNumberConverter)
+                {
+                    value = value.ToString().ReplaceDecimalSeparator();
+                }
+
                 return converter.ConvertFrom(value);
             }
 
@@ -180,8 +185,7 @@ namespace Autofac.Configuration.Util
         private static TypeConverter GetTypeConverterFromName(string converterTypeName)
         {
             var converterType = Type.GetType(converterTypeName, true);
-            var converter = Activator.CreateInstance(converterType) as TypeConverter;
-            if (converter == null)
+            if (!(Activator.CreateInstance(converterType) is TypeConverter converter))
             {
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName));
             }

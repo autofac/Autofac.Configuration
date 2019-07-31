@@ -59,6 +59,15 @@ namespace Autofac.Configuration.Test.Util
             Assert.Equal(15, actual);
         }
 
+        [Fact]
+        public void ChangeToCompatibleType_InvariantCulture()
+        {
+            var param1 = TypeManipulation.ChangeToCompatibleType("3,048", typeof(double));
+            var param2 = TypeManipulation.ChangeToCompatibleType(string.Format(CultureInfo.InvariantCulture, "4,572"), typeof(double));
+            Assert.Equal(3.048, param1);
+            Assert.Equal(4.572, param2);
+        }
+
         public class Convertible
         {
             public int Value { get; set; }
@@ -78,8 +87,7 @@ namespace Autofac.Configuration.Test.Util
                     return null;
                 }
 
-                var str = value as String;
-                if (str == null)
+                if (!(value is string str))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
