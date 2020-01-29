@@ -26,8 +26,7 @@ namespace Autofac.Configuration.Test.Core
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_EnableAutoActivation.json");
             var container = builder.Build();
-            IComponentRegistration registration;
-            Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out registration), "The expected component was not registered.");
+            Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out IComponentRegistration registration), "The expected component was not registered.");
             Assert.True(registration.Services.Any(a => a.GetType().Name == "AutoActivateService"), "Auto activate service was not registered on the component");
         }
 
@@ -36,8 +35,7 @@ namespace Autofac.Configuration.Test.Core
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_EnableAutoActivation.json");
             var container = builder.Build();
-            IComponentRegistration registration;
-            Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("b", typeof(object)), out registration), "The expected component was not registered.");
+            Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("b", typeof(object)), out IComponentRegistration registration), "The expected component was not registered.");
             Assert.False(registration.Services.Any(a => a.GetType().Name == "AutoActivateService"), "Auto activate service was registered on the component when it shouldn't be.");
         }
 
@@ -55,8 +53,7 @@ namespace Autofac.Configuration.Test.Core
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_ExternalOwnership.json");
             var container = builder.Build();
-            IComponentRegistration registration;
-            Assert.True(container.ComponentRegistry.TryGetRegistration(new TypedService(typeof(SimpleComponent)), out registration), "The expected component was not registered.");
+            Assert.True(container.ComponentRegistry.TryGetRegistration(new TypedService(typeof(SimpleComponent)), out IComponentRegistration registration), "The expected component was not registered.");
             Assert.Equal(InstanceOwnership.ExternallyOwned, registration.Ownership);
         }
 
@@ -107,8 +104,7 @@ namespace Autofac.Configuration.Test.Core
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_ComponentWithMetadata.json");
             var container = builder.Build();
-            IComponentRegistration registration;
-            Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out registration), "The expected service wasn't registered.");
+            Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out IComponentRegistration registration), "The expected service wasn't registered.");
             Assert.Equal(42, (int)registration.Metadata["answer"]);
         }
 

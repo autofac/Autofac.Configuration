@@ -25,8 +25,7 @@ namespace Autofac.Configuration.Util
 
             public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
             {
-                var castValue = value as ConfiguredListParameter;
-                if (castValue != null)
+                if (value is ConfiguredListParameter castValue)
                 {
                     // 99% of the time this type of parameter will be associated
                     // with an ordinal list - List<T> or T[] sort of thing...

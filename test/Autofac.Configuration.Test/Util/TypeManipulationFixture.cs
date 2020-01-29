@@ -78,8 +78,7 @@ namespace Autofac.Configuration.Test.Util
                     return null;
                 }
 
-                var str = value as String;
-                if (str == null)
+                if (!(value is String str))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }

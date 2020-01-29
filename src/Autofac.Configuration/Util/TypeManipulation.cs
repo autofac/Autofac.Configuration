@@ -121,7 +121,7 @@ namespace Autofac.Configuration.Util
                 return value;
             }
 
-            var converter = (TypeConverter)null;
+            TypeConverter converter;
 
             // Try to get custom type converter information.
             if (converterAttribute != null && !string.IsNullOrEmpty(converterAttribute.ConverterTypeName))
@@ -150,7 +150,9 @@ namespace Autofac.Configuration.Util
             // Try a TryParse method.
             if (value is string)
             {
-                var parser = destinationType.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public);
+                // Some types in later frameworks have string TryParse and ReadOnlySpan<char> TryParse
+                // so they result in an AmbiguousMatchException unless we specify.
+                var parser = destinationType.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public, null, CallingConventions.Standard, new Type[] { typeof(string), destinationType.MakeByRefType() }, null);
                 if (parser != null)
                 {
                     var parameters = new[] { value, null };
@@ -180,8 +182,7 @@ namespace Autofac.Configuration.Util
         private static TypeConverter GetTypeConverterFromName(string converterTypeName)
         {
             var converterType = Type.GetType(converterTypeName, true);
-            var converter = Activator.CreateInstance(converterType) as TypeConverter;
-            if (converter == null)
+            if (!(Activator.CreateInstance(converterType) is TypeConverter converter))
             {
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName));
             }

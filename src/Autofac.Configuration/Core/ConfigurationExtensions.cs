@@ -164,8 +164,7 @@ namespace Autofac.Configuration.Core
                 yield return new ResolvedParameter(
                     (pi, c) =>
                 {
-                    PropertyInfo prop;
-                    return pi.TryGetDeclaringProperty(out prop) &&
+                    return pi.TryGetDeclaringProperty(out PropertyInfo prop) &&
 string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
                 },
                     (pi, c) =>
@@ -292,8 +291,7 @@ string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
                 return value.Value;
             }
 
-            int parsed;
-            if (subKeys.All(sk => int.TryParse(sk.Item1, out parsed)))
+            if (subKeys.All(sk => int.TryParse(sk.Item1, out int parsed)))
             {
                 int i = 0;
                 bool isList = true;

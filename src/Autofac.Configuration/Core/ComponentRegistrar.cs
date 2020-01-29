@@ -292,15 +292,15 @@ namespace Autofac.Configuration.Core
         /// By default, this implementation understands <see langword="null"/>, empty,
         /// or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
         /// to mean "not auto-activated" and <see langword="true"/>
-        /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "auto activation
-        /// should occur."
+        /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean auto activation
+        /// should occur.
         /// </para>
         /// <para>
         /// You may override this method to extend the available grammar for auto activation settings.
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         /// Thrown if the value for <c>autoActivate</c> is not part of the
@@ -310,6 +310,11 @@ namespace Autofac.Configuration.Core
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
             if (registrar == null)
             {
                 throw new ArgumentNullException(nameof(registrar));
@@ -337,7 +342,7 @@ namespace Autofac.Configuration.Core
         /// By default, this implementation understands <see langword="null"/> or empty
         /// values to be "default ownership model"; <c>lifetime-scope</c> or <c>LifetimeScope</c>
         /// is "owned by lifetime scope"; and <c>external</c> or <c>ExternallyOwned</c> is
-        /// "externally owned."
+        /// externally owned.
         /// </para>
         /// <para>
         /// By default, this implementation understands the following grammar:
@@ -365,7 +370,7 @@ namespace Autofac.Configuration.Core
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         /// Thrown if the value for <c>ownership</c> is not part of the
@@ -375,6 +380,11 @@ namespace Autofac.Configuration.Core
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
             if (registrar == null)
             {
                 throw new ArgumentNullException(nameof(registrar));
@@ -419,15 +429,15 @@ namespace Autofac.Configuration.Core
         /// By default, this implementation understands <see langword="null"/>, empty,
         /// or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
         /// to mean "no property injection" and <see langword="true"/>
-        /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "property injection
-        /// should occur."
+        /// values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean property injection
+        /// should occur.
         /// </para>
         /// <para>
         /// You may override this method to extend the available grammar for property injection settings.
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         /// Thrown if the value for <c>injectProperties</c> is not part of the
@@ -437,6 +447,11 @@ namespace Autofac.Configuration.Core
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
             if (registrar == null)
             {
                 throw new ArgumentNullException(nameof(registrar));
@@ -494,7 +509,7 @@ namespace Autofac.Configuration.Core
         /// </para>
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         /// Thrown if the value for lifetime scope is not part of the
@@ -505,6 +520,11 @@ namespace Autofac.Configuration.Core
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
             if (registrar == null)
             {
                 throw new ArgumentNullException(nameof(registrar));

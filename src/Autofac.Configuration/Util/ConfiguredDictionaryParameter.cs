@@ -18,8 +18,7 @@ namespace Autofac.Configuration.Util
             {
                 var instantiatableType = GetInstantiableType(destinationType);
 
-                var castValue = value as ConfiguredDictionaryParameter;
-                if (castValue != null && instantiatableType != null)
+                if (value is ConfiguredDictionaryParameter castValue && instantiatableType != null)
                 {
                     var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
                     var generics = instantiatableType.GetGenericArguments();

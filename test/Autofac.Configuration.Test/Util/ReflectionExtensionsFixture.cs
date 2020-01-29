@@ -12,8 +12,7 @@ namespace Autofac.Configuration.Test.Util
             var expected = typeof(HasProperty).GetProperty("Property");
             var setter = expected.GetSetMethod();
             var valueParameter = setter.GetParameters()[0];
-            PropertyInfo actual;
-            Assert.True(valueParameter.TryGetDeclaringProperty(out actual));
+            Assert.True(valueParameter.TryGetDeclaringProperty(out PropertyInfo actual));
             Assert.Equal(expected, actual);
         }
 
@@ -21,8 +20,7 @@ namespace Autofac.Configuration.Test.Util
         public void TryGetDeclaringProperty_FailsToFindProperty()
         {
             var valueParameter = typeof(HasProperty).GetMethod("NotSetter").GetParameters()[0];
-            PropertyInfo actual;
-            Assert.False(valueParameter.TryGetDeclaringProperty(out actual));
+            Assert.False(valueParameter.TryGetDeclaringProperty(out PropertyInfo actual));
             Assert.Null(actual);
         }
 

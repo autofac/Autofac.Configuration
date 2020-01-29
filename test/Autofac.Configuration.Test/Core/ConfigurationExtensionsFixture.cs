@@ -277,8 +277,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                string str = value as string;
-                if (str == null)
+                if (!(value is string str))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -302,8 +301,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                var castValue = value as ConfiguredDictionaryParameter;
-                if (castValue == null)
+                if (!(value is ConfiguredDictionaryParameter castValue))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -333,8 +331,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                var castValue = value as ConfiguredListParameter;
-                if (castValue == null)
+                if (!(value is ConfiguredListParameter castValue))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }

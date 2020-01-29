@@ -66,18 +66,8 @@ namespace Autofac.Configuration.Core
         /// </exception>
         public ConfigurationRegistrar(IComponentRegistrar componentRegistrar, IModuleRegistrar moduleRegistrar)
         {
-            if (componentRegistrar == null)
-            {
-                throw new ArgumentNullException(nameof(componentRegistrar));
-            }
-
-            if (moduleRegistrar == null)
-            {
-                throw new ArgumentNullException(nameof(moduleRegistrar));
-            }
-
-            this.ComponentRegistrar = componentRegistrar;
-            this.ModuleRegistrar = moduleRegistrar;
+            this.ComponentRegistrar = componentRegistrar ?? throw new ArgumentNullException(nameof(componentRegistrar));
+            this.ModuleRegistrar = moduleRegistrar ?? throw new ArgumentNullException(nameof(moduleRegistrar));
         }
 
         /// <summary>
