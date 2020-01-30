@@ -54,14 +54,14 @@ namespace Autofac.Configuration.Test.Core
             {
             }
 
-            public SimpleComponent(int input)
+            public SimpleComponent(double input)
             {
                 Input = input;
             }
 
             public bool ABool { get; set; }
 
-            public int Input { get; set; }
+            public double Input { get; set; }
 
             public string Message { get; set; }
         }

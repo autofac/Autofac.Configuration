@@ -109,7 +109,7 @@ namespace Autofac.Configuration.Test.Core
             var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
             var obj = container.Resolve<HasConvertibleParametersAndProperties>();
             Assert.NotNull(obj.Parameter);
-            Assert.Equal(1, obj.Parameter.Value);
+            Assert.Equal(1.234, obj.Parameter.Value);
         }
 
         [Theory]
@@ -152,10 +152,9 @@ namespace Autofac.Configuration.Test.Core
             Assert.NotNull(provider);
             var value = provider();
             Assert.NotNull(value);
-            Assert.IsType<Dictionary<string, int>>(value);
-            var dict = (Dictionary<string, int>)value;
-            Assert.Equal(1, dict["a"]);
-            Assert.Equal(2, dict["b"]);
+            var dict = Assert.IsType<Dictionary<string, double>>(value);
+            Assert.Equal(1.234, dict["a"]);
+            Assert.Equal(2.345, dict["b"]);
         }
 
         [Fact]
@@ -165,8 +164,8 @@ namespace Autofac.Configuration.Test.Core
             var obj = container.Resolve<HasDictionaryProperty>();
             Assert.NotNull(obj.Convertible);
             Assert.Equal(2, obj.Convertible.Count);
-            Assert.Equal(1, obj.Convertible["a"].Value);
-            Assert.Equal(2, obj.Convertible["b"].Value);
+            Assert.Equal(1.234, obj.Convertible["a"].Value);
+            Assert.Equal(2.345, obj.Convertible["b"].Value);
         }
 
         [Fact]
@@ -177,8 +176,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.NotNull(obj.Convertible);
             var convertible = obj.Convertible.ToArray();
             Assert.Equal(2, convertible.Length);
-            Assert.Equal(1, convertible[0].Value);
-            Assert.Equal(2, convertible[1].Value);
+            Assert.Equal(1.234, convertible[0].Value);
+            Assert.Equal(2.345, convertible[1].Value);
         }
 
         [Fact]
@@ -205,7 +204,7 @@ namespace Autofac.Configuration.Test.Core
             var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
             Assert.NotNull(parameter);
             Assert.NotNull(provider);
-            Assert.Equal(new List<int> { 1, 2 }, provider());
+            Assert.Equal(new List<double> { 1.234, 2.345 }, provider());
         }
 
         [Fact]
@@ -214,7 +213,7 @@ namespace Autofac.Configuration.Test.Core
             var container = EmbeddedConfiguration.ConfigureContainerWithJson("ConfigurationExtensions_Parameters.json").Build();
             var obj = container.Resolve<HasConvertibleParametersAndProperties>();
             Assert.NotNull(obj.Property);
-            Assert.Equal(2, obj.Property.Value);
+            Assert.Equal(2.345, obj.Property.Value);
         }
 
         [Theory]
@@ -233,7 +232,7 @@ namespace Autofac.Configuration.Test.Core
 
         public static IEnumerable<object[]> GetParameters_SimpleParameters_Source()
         {
-            yield return new object[] { "number", 1 };
+            yield return new object[] { "number", 1.234 };
             yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
         }
 
@@ -260,7 +259,7 @@ namespace Autofac.Configuration.Test.Core
 
         public class Convertible
         {
-            public int Value { get; set; }
+            public double Value { get; set; }
         }
 
         public class ConvertibleConverter : TypeConverter
@@ -282,8 +281,8 @@ namespace Autofac.Configuration.Test.Core
                     return base.ConvertFrom(context, culture, value);
                 }
 
-                var converter = TypeDescriptor.GetConverter(typeof(int));
-                return new Convertible { Value = (int)converter.ConvertFromString(context, culture, str) };
+                var converter = TypeDescriptor.GetConverter(typeof(double));
+                return new Convertible { Value = (double)converter.ConvertFromString(context, culture, str) };
             }
         }
 
@@ -365,9 +364,9 @@ namespace Autofac.Configuration.Test.Core
             [TypeConverter(typeof(ConvertibleDictionaryConverter))]
             public IDictionary<string, Convertible> Convertible { get; set; }
 
-            public Dictionary<string, int> Empty { get; set; }
+            public Dictionary<string, double> Empty { get; set; }
 
-            public Dictionary<string, int> Populated { get; set; }
+            public Dictionary<string, double> Populated { get; set; }
         }
 
         public class HasEnumerableParameter
@@ -385,14 +384,14 @@ namespace Autofac.Configuration.Test.Core
             [TypeConverter(typeof(ConvertibleListConverter))]
             public IEnumerable<Convertible> Convertible { get; set; }
 
-            public IEnumerable<int> Empty { get; set; }
+            public IEnumerable<double> Empty { get; set; }
 
-            public IEnumerable<int> Populated { get; set; }
+            public IEnumerable<double> Populated { get; set; }
         }
 
         public class HasSimpleParametersAndProperties : BaseSimpleParametersAndProperties
         {
-            public HasSimpleParametersAndProperties(int number, IPAddress ip)
+            public HasSimpleParametersAndProperties(double number, IPAddress ip)
             {
                 this.Number = number;
                 this.IP = ip;
@@ -400,7 +399,7 @@ namespace Autofac.Configuration.Test.Core
 
             public IPAddress IP { get; private set; }
 
-            public int Number { get; private set; }
+            public double Number { get; private set; }
 
             public Uri Url { get; set; }
         }

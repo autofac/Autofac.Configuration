@@ -14,7 +14,7 @@ This configuration file shows five concepts at once:
         <services name="0" type="System.Object, mscorlib" />
         <services name="1" type="Autofac.Configuration.Test.Core.ComponentRegistrarFixture+ITestComponent" />
         <parameters>
-            <input>1</input>
+            <input>1.234</input>
         </parameters>
         <properties>
             <Message>hello</Message>

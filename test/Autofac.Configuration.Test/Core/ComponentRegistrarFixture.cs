@@ -17,8 +17,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(2, collection.Count());
 
             // Test using Any() because we aren't necessarily guaranteed the order of resolution.
-            Assert.True(collection.Any(a => a.Input == 5), "The first registration (5) wasn't found.");
-            Assert.True(collection.Any(a => a.Input == 10), "The second registration (10) wasn't found.");
+            Assert.True(collection.Any(a => a.Input == 5.123), "The first registration (5.123) wasn't found.");
+            Assert.True(collection.Any(a => a.Input == 10.234), "The second registration (10.234) wasn't found.");
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Autofac.Configuration.Test.Core
             var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ComponentRegistrar_SingletonWithTwoServices.xml");
             var container = builder.Build();
             var cpt = (SimpleComponent)container.Resolve<ITestComponent>();
-            Assert.Equal(1, cpt.Input);
+            Assert.Equal(1.234, cpt.Input);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Autofac.Configuration.Test.Core
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_ComponentWithMetadata.json");
             var container = builder.Build();
             Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out IComponentRegistration registration), "The expected service wasn't registered.");
-            Assert.Equal(42, (int)registration.Metadata["answer"]);
+            Assert.Equal(42.42, (double)registration.Metadata["answer"]);
         }
 
         [Fact]
@@ -164,14 +164,14 @@ namespace Autofac.Configuration.Test.Core
             {
             }
 
-            public SimpleComponent(int input)
+            public SimpleComponent(double input)
             {
                 Input = input;
             }
 
             public bool ABool { get; set; }
 
-            public int Input { get; set; }
+            public double Input { get; set; }
         }
 
         private class BaseComponent

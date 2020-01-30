@@ -4,7 +4,7 @@
         <instanceScope>single-instance</instanceScope>
         <services name="0" type="System.Object, mscorlib" />
         <metadata>
-            <item name="0" type="System.Int32" value="42" />
+            <item name="0" type="System.Double" value="42.42" />
         </metadata>
     </components>
 </autofac>

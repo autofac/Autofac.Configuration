@@ -26,7 +26,7 @@ namespace Autofac.Configuration.Test.Core
 
         public class B
         {
-            public IList<int> List { get; set; }
+            public IList<double> List { get; set; }
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Autofac.Configuration.Test.Core
 
         public class D
         {
-            public int Num { get; set; }
+            public double Num { get; set; }
         }
 
         [Fact]
@@ -75,9 +75,9 @@ namespace Autofac.Configuration.Test.Core
 
         public class E
         {
-            public IList<int> List { get; set; }
+            public IList<double> List { get; set; }
 
-            public E(IList<int> list)
+            public E(IList<double> list)
             {
                 List = list;
             }
@@ -116,7 +116,7 @@ namespace Autofac.Configuration.Test.Core
 
         public class H
         {
-            public IEnumerable<int> Enumerable { get; set; }
+            public IEnumerable<double> Enumerable { get; set; }
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Autofac.Configuration.Test.Core
 
         public class I
         {
-            public ICollection<int> Collection { get; set; }
+            public ICollection<double> Collection { get; set; }
         }
 
         [Fact]

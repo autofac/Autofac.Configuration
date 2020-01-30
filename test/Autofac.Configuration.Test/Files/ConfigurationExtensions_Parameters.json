@@ -5,13 +5,13 @@
       "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasDictionaryProperty",
       "properties": {
         "populated": {
-          "a": 1,
-          "b": 2
+          "a": 1.234,
+          "b": 2.345
         },
         "empty": {},
         "convertible": {
-          "a": 1,
-          "b": 2
+          "a": 1.234,
+          "b": 2.345
         }
       }
     },
@@ -24,15 +24,15 @@
     {
       "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasEnumerableProperty",
       "properties": {
-        "populated": [ 1, 2 ],
+        "populated": [ 1.234, 2.345 ],
         "empty": [],
-        "convertible": [ 1, 2 ]
+        "convertible": [ 1.234, 2.345 ]
       }
     },
     {
       "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasSimpleParametersAndProperties",
       "parameters": {
-        "number": 1,
+        "number": 1.234,
         "ip": "127.0.0.1"
       },
       "properties": {
@@ -43,10 +43,10 @@
     {
       "type": "Autofac.Configuration.Test.Core.ConfigurationExtensionsFixture+HasConvertibleParametersAndProperties",
       "parameters": {
-        "parameter": 1
+        "parameter": 1.234
       },
       "properties": {
-        "Property": 2
+        "Property": 2.345
       }
     }
   ]

@@ -4,13 +4,13 @@
         {
             "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
             "parameters": {
-                "input": 5
+                "input": 5.123
             }
         },
         {
             "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
             "parameters": {
-                "input": 10
+                "input": 10.234
             }
         }
     ]

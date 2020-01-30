@@ -12,8 +12,8 @@
             "metadata": [
                 {
                     "key": "answer",
-                    "value": 42,
-                    "type": "System.Int32"
+                    "value": 42.42,
+                    "type": "System.Double"
                 }
             ]
         }
