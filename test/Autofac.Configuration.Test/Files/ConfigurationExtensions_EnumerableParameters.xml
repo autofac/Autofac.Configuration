@@ -10,28 +10,28 @@
     <components name="1">
         <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+B</type>
         <properties>
-            <List name="0">1</List>
-            <List name="1">2</List>
+            <List name="0">1.234</List>
+            <List name="1">2.345</List>
         </properties>
     </components>
     <components name="2">
         <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+C</type>
         <properties>
-            <List name="0">1</List>
-            <List name="1">2</List>
+            <List name="0">1.234</List>
+            <List name="1">2.345</List>
         </properties>
     </components>
     <components name="3">
         <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+D</type>
         <properties>
-            <Num>123</Num>
+            <Num>123.456</Num>
         </properties>
     </components>
     <components name="4">
         <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+E</type>
         <parameters>
-            <List name="0">1</List>
-            <List name="1">2</List>
+            <List name="0">1.234</List>
+            <List name="1">2.345</List>
         </parameters>
     </components>
     <!--
@@ -54,15 +54,15 @@
     <components name="7">
         <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+H</type>
         <properties>
-            <Enumerable name="0">1</Enumerable>
-            <Enumerable name="1">2</Enumerable>
+            <Enumerable name="0">1.234</Enumerable>
+            <Enumerable name="1">2.345</Enumerable>
         </properties>
     </components>
     <components name="8">
         <type>Autofac.Configuration.Test.Core.ConfigurationExtensions_EnumerableParametersFixture+I</type>
         <properties>
-            <Collection name="0">1</Collection>
-            <Collection name="1">2</Collection>
+            <Collection name="0">1.234</Collection>
+            <Collection name="1">2.345</Collection>
         </properties>
     </components>
     <components name="9">

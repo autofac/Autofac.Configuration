@@ -129,7 +129,7 @@ namespace Autofac.Configuration.Util
                 converter = GetTypeConverterFromName(converterAttribute.ConverterTypeName);
                 if (converter.CanConvertFrom(value.GetType()))
                 {
-                    return converter.ConvertFrom(value);
+                    return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
                 }
             }
 
@@ -137,14 +137,14 @@ namespace Autofac.Configuration.Util
             converter = TypeDescriptor.GetConverter(value.GetType());
             if (converter.CanConvertTo(destinationType))
             {
-                return converter.ConvertTo(value, destinationType);
+                return converter.ConvertTo(null, CultureInfo.InvariantCulture, value, destinationType);
             }
 
             // Try explicit opposite conversion.
             converter = TypeDescriptor.GetConverter(destinationType);
             if (converter.CanConvertFrom(value.GetType()))
             {
-                return converter.ConvertFrom(value);
+                return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
             }
 
             // Try a TryParse method.

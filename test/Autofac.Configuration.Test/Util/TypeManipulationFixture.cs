@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -57,6 +58,27 @@ namespace Autofac.Configuration.Test.Util
         {
             var actual = TypeManipulation.ChangeToCompatibleType(15, typeof(Int32));
             Assert.Equal(15, actual);
+        }
+
+        [Theory]
+        [MemberData(nameof(ParsingCultures))]
+        public void ChangeToCompatibleType_UsesInvariantCulture(CultureInfo culture)
+        {
+            TestCulture.With(
+                culture,
+                () =>
+                {
+                    var actual = TypeManipulation.ChangeToCompatibleType("123.456", typeof(double));
+                    Assert.Equal(123.456, actual);
+                });
+        }
+
+        public static IEnumerable<object[]> ParsingCultures()
+        {
+            yield return new object[] { new CultureInfo("en-US") };
+            yield return new object[] { new CultureInfo("es-MX") };
+            yield return new object[] { new CultureInfo("it-IT") };
+            yield return new object[] { CultureInfo.InvariantCulture };
         }
 
         public class Convertible
