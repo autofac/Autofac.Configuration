@@ -1,0 +1,21 @@
+{
+    "defaultAssembly": "Autofac.Configuration.Test",
+    "modules": [
+        {
+            "type": "Autofac.Configuration.Test.Core.ModuleConfiguration_ComplexTypeFixture+ComplexParameterTypeModule",
+            "parameters": {
+                "ComplexType": {
+                    "List": [ "Val1", "Val2" ]
+                }
+            }
+        },
+        {
+            "type": "Autofac.Configuration.Test.Core.ModuleConfiguration_ComplexTypeFixture+ComplexPropertyTypeModule",
+            "properties": {
+                "ComplexType": {
+                    "List": [ "Val3", "Val4" ]
+                }
+            }
+        }
+    ]
+}
