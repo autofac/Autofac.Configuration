@@ -25,6 +25,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using Autofac.Core;
 using Autofac.Core.Activators.Reflection;
 using Microsoft.Extensions.Configuration;
@@ -75,19 +76,44 @@ namespace Autofac.Configuration.Core
             foreach (var moduleElement in configuration.GetOrderedSubsections("modules"))
             {
                 var moduleType = moduleElement.GetType("type", defaultAssembly);
-                var module = (IModule)null;
-                using (var moduleActivator = new ReflectionActivator(
-                    moduleType,
-                    new DefaultConstructorFinder(),
-                    new MostParametersConstructorSelector(),
-                    moduleElement.GetParameters("parameters"),
-                    moduleElement.GetProperties("properties")))
-                {
-                    module = (IModule)moduleActivator.ActivateInstance(new ContainerBuilder().Build(), Enumerable.Empty<Parameter>());
-                }
+
+                var module = CreateModule(moduleType, moduleElement);
 
                 builder.RegisterModule(module);
             }
+        }
+
+        private IModule CreateModule(Type type, IConfiguration moduleElement)
+        {
+            var constructor = GetMostParametersConstructor(type);
+
+            var parametersElement = moduleElement.GetSection("parameters");
+
+            var parameters = constructor.GetParameters()
+                .Select(p => parametersElement.GetSection(p.Name).Get(p.ParameterType))
+                .ToArray();
+
+            var module = constructor.Invoke(parameters) as IModule;
+
+            var propertiesElement = moduleElement.GetSection("properties");
+
+            propertiesElement.Bind(module);
+
+            return module;
+        }
+
+        private static ConstructorInfo GetMostParametersConstructor(Type type)
+        {
+            var container = new ContainerBuilder().Build();
+
+            var constructors = new DefaultConstructorFinder()
+                .FindConstructors(type)
+                .Select(c => new ConstructorParameterBinding(c, Enumerable.Empty<Parameter>(), container))
+                .ToArray();
+
+            return new MostParametersConstructorSelector()
+                .SelectConstructorBinding(constructors, Enumerable.Empty<Parameter>())
+                .TargetConstructor;
         }
     }
 }
