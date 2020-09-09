@@ -1,0 +1,11 @@
+{
+    "defaultAssembly": "Autofac.Configuration.Test",
+    "modules": [
+        {
+            "type": "Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ProtectedModule",
+            "parameters": {
+                "message": "First"
+            }
+        }
+    ]
+}

@@ -29,6 +29,14 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("The 'modules' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. 'modules' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.", exception.Message);
         }
 
+        [Fact]
+        public void RegisterConfiguredComponents_ModuleWithNoPublicConstructor_ThrowsInvalidOperation()
+        {
+            var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_ModuleWithNoPublicConstructor.json");
+            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
+            Assert.Equal("Specified module Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ProtectedModule has no public constructors.", exception.Message);
+        }
+
         private class ParameterizedModule : Module
         {
             public ParameterizedModule(string message)
@@ -42,6 +50,16 @@ namespace Autofac.Configuration.Test.Core
             {
                 builder.RegisterType<SimpleComponent>().WithProperty("Message", this.Message);
             }
+        }
+
+        private class ProtectedModule : Module
+        {
+            protected ProtectedModule(string message)
+            {
+                this.Message = message;
+            }
+
+            public string Message { get; private set; }
         }
 
         private interface ITestComponent

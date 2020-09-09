@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{32285FA4-6B46-4D6B-A840-2B13E4C8B58E}"
 EndProject
@@ -10,6 +10,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Configuration", "src\Autofac.Configuration\Autofac.Configuration.csproj", "{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Configuration.Test", "test\Autofac.Configuration.Test\Autofac.Configuration.Test.csproj", "{4AF3EB56-F763-4CF7-BEAC-8A86487F0883}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5ED4AA21-A1C8-4A0A-AF40-6C45EC71F617}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		global.json = global.json
+		NuGet.Config = NuGet.Config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,5 +59,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{614EF0F2-C00B-4A34-8D13-A778EDE4CA2F} = {32285FA4-6B46-4D6B-A840-2B13E4C8B58E}
 		{4AF3EB56-F763-4CF7-BEAC-8A86487F0883} = {3BA657BF-28B1-42DA-B5B0-1C4601FCF7B1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2642836D-6510-4756-8615-9B34C9FB9211}
 	EndGlobalSection
 EndGlobal
