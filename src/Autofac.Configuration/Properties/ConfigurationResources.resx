@@ -126,9 +126,6 @@
   <data name="DictionaryKeyMayNotBeNullOrEmpty" xml:space="preserve">
     <value>Key cannot be null or empty in a dictionary parameter.</value>
   </data>
-  <data name="ModuleRequiresPublicConstructor" xml:space="preserve">
-    <value>Specified module {0} has no public constructors.</value>
-  </data>
   <data name="ServiceTypeMustBeSpecified" xml:space="preserve">
     <value>If 'name' is specified, 'service' must also be specified (component name='{0}'.)</value>
   </data>

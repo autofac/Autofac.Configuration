@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac.Core.Activators.Reflection;
 using Xunit;
 
 namespace Autofac.Configuration.Test.Core
@@ -33,8 +34,7 @@ namespace Autofac.Configuration.Test.Core
         public void RegisterConfiguredComponents_ModuleWithNoPublicConstructor_ThrowsInvalidOperation()
         {
             var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_ModuleWithNoPublicConstructor.json");
-            var exception = Assert.Throws<InvalidOperationException>(() => builder.Build());
-            Assert.Equal("Specified module Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ProtectedModule has no public constructors.", exception.Message);
+            Assert.Throws<NoConstructorsFoundException>(() => builder.Build());
         }
 
         private class ParameterizedModule : Module

@@ -156,14 +156,6 @@ namespace Autofac.Configuration
         }
 
         /// <summary>
-        /// Specified module {0} has no public constructors.
-        /// </summary>
-        internal static string ModuleRequiresPublicConstructor(Type typeName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ModuleRequiresPublicConstructor"), typeName.FullName);
-        }
-
-        /// <summary>
         /// The '{0}' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. '{1}' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.
         /// </summary>
         internal static string FormatCollectionMustBeOrderedByName(object p0, object p1)

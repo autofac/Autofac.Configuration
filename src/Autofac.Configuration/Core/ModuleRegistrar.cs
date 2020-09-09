@@ -88,11 +88,6 @@ namespace Autofac.Configuration.Core
         {
             var constructor = GetMostParametersConstructor(type);
 
-            if (constructor is null)
-            {
-                throw new InvalidOperationException(ConfigurationResources.ModuleRequiresPublicConstructor(type));
-            }
-
             var parametersElement = moduleElement.GetSection("parameters");
 
             var parameters = constructor.GetParameters()
