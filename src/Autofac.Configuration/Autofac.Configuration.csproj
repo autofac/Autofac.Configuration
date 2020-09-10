@@ -20,7 +20,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/autofac/Autofac.Configuration</RepositoryUrl>
     <AssemblyTitle>Autofac.Configuration</AssemblyTitle>
-    <NeutralLanguage>en-GB</NeutralLanguage>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <CodeAnalysisRuleSet>../../build/Analyzers.ruleset</CodeAnalysisRuleSet>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedAllSources>true</EmbedAllSources>
