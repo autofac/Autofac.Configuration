@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net461;netcoreapp2.0</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1591;SA1602;SA1611</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Autofac.Configuration.Test</AssemblyName>
@@ -17,13 +16,33 @@
 
   <ItemGroup>
     <EmbeddedResource Include="**\*.resx" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <EmbeddedResource Include="Files\*.*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_ComponentsMissingName.xml" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_ComponentWithMetadata.json" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_EnableAutoActivation.json" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_EnablePropertyInjection.json" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_ExternalOwnership.json" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_InstancePerDependency.json" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_MetadataMissingName.xml" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_SameTypeRegisteredMultipleTimes.json" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_ServicesMissingName.xml" />
+    <EmbeddedResource Include="Files\ComponentRegistrar_SingletonWithTwoServices.xml" />
+    <EmbeddedResource Include="Files\ConfigurationExtensions_DictionaryParameters.xml" />
+    <EmbeddedResource Include="Files\ConfigurationExtensions_EnumerableParameters.xml" />
+    <EmbeddedResource Include="Files\ConfigurationExtensions_Parameters.json" />
+    <EmbeddedResource Include="Files\ModuleConfiguration_ComplexType.json" />
+    <EmbeddedResource Include="Files\ModuleRegistrar_ModulesMissingName.xml" />
+    <EmbeddedResource Include="Files\ModuleRegistrar_ModuleWithNoPublicConstructor.json" />
+    <EmbeddedResource Include="Files\ModuleRegistrar_SameModuleRegisteredMultipleTimes.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="TestResults\**" />
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="TestResults\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Files\ModuleRegistrar_ModuleWithNoPublicConstructor.json" />
   </ItemGroup>
   
   <ItemGroup>

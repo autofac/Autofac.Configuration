@@ -376,6 +376,7 @@ namespace Autofac.Configuration.Core
         /// Thrown if the value for <c>ownership</c> is not part of the
         /// recognized grammar.
         /// </exception>
+        [SuppressMessage("Globalization", "CA1307:Specify StringComparison", Justification = "Do not need/want different code for ns2.1 vs ns2.0.")]
         protected virtual void SetComponentOwnership<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
@@ -516,6 +517,7 @@ namespace Autofac.Configuration.Core
         /// recognized grammar.
         /// </exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "The cyclomatic complexity is in extension methods. This method is actually pretty simple.")]
+        [SuppressMessage("Globalization", "CA1307:Specify StringComparison", Justification = "Do not need/want different code for ns2.1 vs ns2.0.")]
         protected virtual void SetLifetimeScope<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle

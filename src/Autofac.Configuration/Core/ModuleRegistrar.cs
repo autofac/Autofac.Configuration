@@ -24,6 +24,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Autofac.Core;
@@ -104,16 +105,11 @@ namespace Autofac.Configuration.Core
 
         private static ConstructorInfo GetMostParametersConstructor(Type type)
         {
-            var container = new ContainerBuilder().Build();
+            var finder = new DefaultConstructorFinder();
 
-            var constructors = new DefaultConstructorFinder()
-                .FindConstructors(type)
-                .Select(c => new ConstructorParameterBinding(c, Enumerable.Empty<Parameter>(), container))
-                .ToArray();
+            var publicConstructors = finder.FindConstructors(type);
 
-            return new MostParametersConstructorSelector()
-                .SelectConstructorBinding(constructors, Enumerable.Empty<Parameter>())
-                .TargetConstructor;
+            return publicConstructors.OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
         }
     }
 }
