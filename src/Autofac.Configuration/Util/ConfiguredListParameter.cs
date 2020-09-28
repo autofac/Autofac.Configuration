@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,9 +9,15 @@ using System.Reflection;
 
 namespace Autofac.Configuration.Util
 {
+    /// <summary>
+    /// Configuration settings that provide a list parameter to a registration.
+    /// </summary>
     [TypeConverter(typeof(ListTypeConverter))]
     internal class ConfiguredListParameter
     {
+        /// <summary>
+        /// Gets or sets the list of raw values.
+        /// </summary>
         public string[] List { get; set; }
 
         private class ListTypeConverter : TypeConverter

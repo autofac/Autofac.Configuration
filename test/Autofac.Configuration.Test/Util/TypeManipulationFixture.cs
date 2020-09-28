@@ -1,10 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using Autofac.Configuration.Util;
 using Xunit;
 
@@ -42,21 +44,21 @@ namespace Autofac.Configuration.Test.Util
         [Fact]
         public void ChangeToCompatibleType_NullReferenceType()
         {
-            var actual = TypeManipulation.ChangeToCompatibleType(null, typeof(String));
+            var actual = TypeManipulation.ChangeToCompatibleType(null, typeof(string));
             Assert.Null(actual);
         }
 
         [Fact]
         public void ChangeToCompatibleType_NullValueType()
         {
-            var actual = TypeManipulation.ChangeToCompatibleType(null, typeof(Int32));
+            var actual = TypeManipulation.ChangeToCompatibleType(null, typeof(int));
             Assert.Equal(0, actual);
         }
 
         [Fact]
         public void ChangeToCompatibleType_NoConversionNeeded()
         {
-            var actual = TypeManipulation.ChangeToCompatibleType(15, typeof(Int32));
+            var actual = TypeManipulation.ChangeToCompatibleType(15, typeof(int));
             Assert.Equal(15, actual);
         }
 
@@ -100,7 +102,7 @@ namespace Autofac.Configuration.Test.Util
                     return null;
                 }
 
-                if (!(value is String str))
+                if (!(value is string str))
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -114,7 +116,7 @@ namespace Autofac.Configuration.Test.Util
         {
             public HasTypeConverterAttributes([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
             {
-                this.Property = parameter;
+                Property = parameter;
             }
 
             [TypeConverter(typeof(ConvertibleConverter))]

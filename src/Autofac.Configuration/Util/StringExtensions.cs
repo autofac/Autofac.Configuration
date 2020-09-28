@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Globalization;
 
 namespace Autofac.Configuration.Util
@@ -10,17 +13,17 @@ namespace Autofac.Configuration.Util
     {
         /// <summary>
         /// Uses a flexible parsing routine to convert a text value into
-        /// a <see cref="Boolean"/>.
+        /// a <see cref="bool"/>.
         /// </summary>
         /// <param name="value">
-        /// The value to parse into a <see cref="Boolean"/>.
+        /// The value to parse into a <see cref="bool"/>.
         /// </param>
         /// <returns>
         /// <see langword="true" /> or <see langword="false" /> based on the
         /// content of the <paramref name="value" />.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <paramref name="value" /> can't be parsed into a <see cref="Boolean"/>.
+        /// Thrown if <paramref name="value" /> can't be parsed into a <see cref="bool"/>.
         /// </exception>
         public static bool ToFlexibleBoolean(this string value)
         {

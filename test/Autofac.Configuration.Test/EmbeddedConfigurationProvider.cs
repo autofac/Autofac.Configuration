@@ -1,8 +1,8 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 
@@ -23,18 +23,18 @@ namespace Autofac.Configuration.Test
         public EmbeddedConfigurationProvider(Stream fileStream)
         {
             var source = new TSource();
-            this._provider = source.Build(new ConfigurationBuilder()) as FileConfigurationProvider;
-            this._provider.Load(fileStream);
+            _provider = source.Build(new ConfigurationBuilder()) as FileConfigurationProvider;
+            _provider.Load(fileStream);
         }
 
         public IEnumerable<string> GetChildKeys(IEnumerable<string> earlierKeys, string parentPath)
         {
-            return this._provider.GetChildKeys(earlierKeys, parentPath);
+            return _provider.GetChildKeys(earlierKeys, parentPath);
         }
 
         public IChangeToken GetReloadToken()
         {
-            return this._provider.GetReloadToken();
+            return _provider.GetReloadToken();
         }
 
         public void Load()
@@ -44,12 +44,12 @@ namespace Autofac.Configuration.Test
 
         public void Set(string key, string value)
         {
-            this._provider.Set(key, value);
+            _provider.Set(key, value);
         }
 
         public bool TryGet(string key, out string value)
         {
-            return this._provider.TryGet(key, out value);
+            return _provider.TryGet(key, out value);
         }
     }
 }

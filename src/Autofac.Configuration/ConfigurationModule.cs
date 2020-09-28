@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using Autofac.Configuration.Core;
 using Microsoft.Extensions.Configuration;
 
@@ -21,7 +24,7 @@ namespace Autofac.Configuration
         /// </exception>
         public ConfigurationModule(IConfiguration configuration)
         {
-            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>
@@ -71,8 +74,8 @@ namespace Autofac.Configuration
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            var registrar = this.ConfigurationRegistrar ?? new ConfigurationRegistrar();
-            registrar.RegisterConfiguration(builder, this.Configuration);
+            var registrar = ConfigurationRegistrar ?? new ConfigurationRegistrar();
+            registrar.RegisterConfiguration(builder, Configuration);
         }
     }
 }

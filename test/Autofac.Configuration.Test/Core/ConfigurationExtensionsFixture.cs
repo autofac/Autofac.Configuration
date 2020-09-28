@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -350,7 +353,7 @@ namespace Autofac.Configuration.Test.Core
         {
             public HasConvertibleParametersAndProperties([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
             {
-                this.Parameter = parameter;
+                Parameter = parameter;
             }
 
             public Convertible Parameter { get; set; }
@@ -373,7 +376,7 @@ namespace Autofac.Configuration.Test.Core
         {
             public HasEnumerableParameter(IList<string> list)
             {
-                this.List = list;
+                List = list;
             }
 
             public IList<string> List { get; private set; }
@@ -393,8 +396,8 @@ namespace Autofac.Configuration.Test.Core
         {
             public HasSimpleParametersAndProperties(double number, IPAddress ip)
             {
-                this.Number = number;
-                this.IP = ip;
+                Number = number;
+                IP = ip;
             }
 
             public IPAddress IP { get; private set; }

@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -176,7 +179,7 @@ namespace Autofac.Configuration.Test.Core
         {
             public J(IList<string> list)
             {
-                this.List = list;
+                List = list;
             }
 
             public IList<string> List { get; private set; }
@@ -198,7 +201,7 @@ namespace Autofac.Configuration.Test.Core
         {
             public K(IList<string> list = null)
             {
-                this.List = list;
+                List = list;
             }
 
             public IList<string> List { get; private set; }
@@ -220,12 +223,12 @@ namespace Autofac.Configuration.Test.Core
         {
             public L()
             {
-                this.List = new List<string>();
+                List = new List<string>();
             }
 
             public L(IList<string> list = null)
             {
-                this.List = list;
+                List = list;
             }
 
             public IList<string> List { get; private set; }
@@ -245,7 +248,7 @@ namespace Autofac.Configuration.Test.Core
 
         public class M
         {
-            public M(IList<string> list) => this.List = list;
+            public M(IList<string> list) => List = list;
 
             public IList<string> List { get; }
         }

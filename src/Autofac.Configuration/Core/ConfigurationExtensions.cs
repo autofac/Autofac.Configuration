@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -42,7 +45,7 @@ namespace Autofac.Configuration.Core
         /// should be read.
         /// </param>
         /// <param name="key">
-        /// The <see cref="String"/> key in configuration where the assembly name
+        /// The <see cref="string"/> key in configuration where the assembly name
         /// is specified.
         /// </param>
         /// <returns>
@@ -90,7 +93,7 @@ namespace Autofac.Configuration.Core
         /// with defined parameters.
         /// </param>
         /// <param name="key">
-        /// The <see cref="String"/> key indicating the sub-element with the
+        /// The <see cref="string"/> key indicating the sub-element with the
         /// parameters. Usually this is <c>parameters</c>.
         /// </param>
         /// <returns>
@@ -133,7 +136,7 @@ namespace Autofac.Configuration.Core
         /// with defined properties.
         /// </param>
         /// <param name="key">
-        /// The <see cref="String"/> key indicating the sub-element with the
+        /// The <see cref="string"/> key indicating the sub-element with the
         /// propeties. Usually this is <c>properties</c>.
         /// </param>
         /// <returns>
@@ -250,7 +253,7 @@ string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
             var configurationSection = configuration.GetSection(key);
             foreach (var section in configurationSection.GetChildren())
             {
-                if (Int32.TryParse(section.Key, out var _))
+                if (int.TryParse(section.Key, out var _))
                 {
                     yield return section;
                 }

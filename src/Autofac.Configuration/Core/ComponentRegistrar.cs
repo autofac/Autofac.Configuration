@@ -1,15 +1,5 @@
-﻿// This software is part of the Autofac IoC container
-// Copyright (c) 2013 Autofac Contributors
-// https://autofac.org
-//
-// Permission is hereby granted, free of charge, to any person
-// obtaining a copy of this software and associated documentation
-// files (the "Software"), to deal in the Software without
-// restriction, including without limitation the rights to use,
-// copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following
-// conditions:
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -72,14 +62,14 @@ namespace Autofac.Configuration.Core
             foreach (var component in configuration.GetOrderedSubsections("components"))
             {
                 var registrar = builder.RegisterType(component.GetType("type", defaultAssembly));
-                this.RegisterComponentServices(component, registrar, defaultAssembly);
-                this.RegisterComponentParameters(component, registrar);
-                this.RegisterComponentProperties(component, registrar);
-                this.RegisterComponentMetadata(component, registrar, defaultAssembly);
-                this.SetLifetimeScope(component, registrar);
-                this.SetComponentOwnership(component, registrar);
-                this.SetInjectProperties(component, registrar);
-                this.SetAutoActivate(component, registrar);
+                RegisterComponentServices(component, registrar, defaultAssembly);
+                RegisterComponentParameters(component, registrar);
+                RegisterComponentProperties(component, registrar);
+                RegisterComponentMetadata(component, registrar, defaultAssembly);
+                SetLifetimeScope(component, registrar);
+                SetComponentOwnership(component, registrar);
+                SetInjectProperties(component, registrar);
+                SetAutoActivate(component, registrar);
             }
         }
 
@@ -132,6 +122,8 @@ namespace Autofac.Configuration.Core
         /// Reads configuration data for a component's metadata
         /// and updates the component registration as needed.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>metadata</c>
         /// content will be read from this configuration object and used
@@ -171,6 +163,8 @@ namespace Autofac.Configuration.Core
         /// Reads configuration data for a component's configured constructor parameter values
         /// and updates the component registration as needed.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>parameters</c>
         /// content will be read from this configuration object and used
@@ -206,6 +200,8 @@ namespace Autofac.Configuration.Core
         /// Reads configuration data for a component's configured property values
         /// and updates the component registration as needed.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>properties</c>
         /// content will be read from this configuration object and used
@@ -241,6 +237,8 @@ namespace Autofac.Configuration.Core
         /// Reads configuration data for a component's exposed services
         /// and updates the component registration as needed.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>services</c>
         /// content will be read from this configuration object and used
@@ -270,7 +268,7 @@ namespace Autofac.Configuration.Core
                 throw new ArgumentNullException(nameof(registrar));
             }
 
-            foreach (var service in this.EnumerateComponentServices(component, defaultAssembly))
+            foreach (var service in EnumerateComponentServices(component, defaultAssembly))
             {
                 registrar.As(service);
             }
@@ -279,6 +277,8 @@ namespace Autofac.Configuration.Core
         /// <summary>
         /// Sets the auto activation mode for the component.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>autoActivate</c>
         /// content will be read from this configuration object and used
@@ -329,6 +329,8 @@ namespace Autofac.Configuration.Core
         /// <summary>
         /// Sets the ownership model for the component.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>ownership</c>
         /// content will be read from this configuration object and used
@@ -417,6 +419,8 @@ namespace Autofac.Configuration.Core
         /// <summary>
         /// Sets the property injection mode for the component.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>injectProperties</c>
         /// content will be read from this configuration object and used
@@ -467,6 +471,8 @@ namespace Autofac.Configuration.Core
         /// <summary>
         /// Sets the lifetime scope for the component.
         /// </summary>
+        /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="component">
         /// The configuration data containing the component. The <c>instanceScope</c>
         /// content will be read from this configuration object and used

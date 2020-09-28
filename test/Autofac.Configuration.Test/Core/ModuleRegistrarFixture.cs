@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac.Core.Activators.Reflection;
@@ -41,14 +44,14 @@ namespace Autofac.Configuration.Test.Core
         {
             public ParameterizedModule(string message)
             {
-                this.Message = message;
+                Message = message;
             }
 
             public string Message { get; private set; }
 
             protected override void Load(ContainerBuilder builder)
             {
-                builder.RegisterType<SimpleComponent>().WithProperty("Message", this.Message);
+                builder.RegisterType<SimpleComponent>().WithProperty("Message", Message);
             }
         }
 
@@ -56,7 +59,7 @@ namespace Autofac.Configuration.Test.Core
         {
             protected ProtectedModule(string message)
             {
-                this.Message = message;
+                Message = message;
             }
 
             public string Message { get; private set; }

@@ -1,15 +1,23 @@
-﻿using System;
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Reflection;
 
 namespace Autofac.Configuration.Util
 {
+    /// <summary>
+    /// Configuration settings that provide a dictionary parameter to a registration.
+    /// </summary>
     [TypeConverter(typeof(DictionaryTypeConverter))]
     internal class ConfiguredDictionaryParameter
     {
+        /// <summary>
+        /// Gets or sets the dictionary of raw values.
+        /// </summary>
         public Dictionary<string, string> Dictionary { get; set; }
 
         private class DictionaryTypeConverter : TypeConverter
@@ -25,7 +33,7 @@ namespace Autofac.Configuration.Util
 
                     foreach (var item in castValue.Dictionary)
                     {
-                        if (String.IsNullOrEmpty(item.Key))
+                        if (string.IsNullOrEmpty(item.Key))
                         {
                             throw new FormatException(ConfigurationResources.DictionaryKeyMayNotBeNullOrEmpty);
                         }

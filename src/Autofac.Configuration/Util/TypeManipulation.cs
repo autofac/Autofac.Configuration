@@ -1,27 +1,5 @@
-﻿// This software is part of the Autofac IoC container
-// Copyright © 2011 Autofac Contributors
-// https://autofac.org
-//
-// Permission is hereby granted, free of charge, to any person
-// obtaining a copy of this software and associated documentation
-// files (the "Software"), to deal in the Software without
-// restriction, including without limitation the rights to use,
-// copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following
-// conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System;
 using System.ComponentModel;
@@ -43,7 +21,7 @@ namespace Autofac.Configuration.Util
         /// <param name="destinationType">The destination <see cref="Type"/> to which <paramref name="value"/> should be converted.</param>
         /// <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
         /// <returns>
-        /// An <see cref="Object"/> of type <paramref name="destinationType"/>, converted using
+        /// An <see cref="object"/> of type <paramref name="destinationType"/>, converted using
         /// type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
         /// is <see langword="null"/> then the output will be <see langword="null"/> for reference
         /// types and the default value for value types.
@@ -69,7 +47,7 @@ namespace Autofac.Configuration.Util
         /// <param name="destinationType">The destination <see cref="Type"/> to which <paramref name="value"/> should be converted.</param>
         /// <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
         /// <returns>
-        /// An <see cref="Object"/> of type <paramref name="destinationType"/>, converted using
+        /// An <see cref="object"/> of type <paramref name="destinationType"/>, converted using
         /// type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
         /// is <see langword="null"/> then the output will be <see langword="null"/> for reference
         /// types and the default value for value types.
@@ -95,7 +73,7 @@ namespace Autofac.Configuration.Util
         /// <param name="destinationType">The destination <see cref="Type"/> to which <paramref name="value"/> should be converted.</param>
         /// <param name="converterAttribute">A <see cref="TypeConverterAttribute"/>, if available, specifying the type of converter to use.<paramref name="value"/> is being converted.</param>
         /// <returns>
-        /// An <see cref="Object"/> of type <paramref name="destinationType"/>, converted using
+        /// An <see cref="object"/> of type <paramref name="destinationType"/>, converted using
         /// any type converters specified in <paramref name="converterAttribute"/> if available. If <paramref name="value"/>
         /// is <see langword="null"/> then the output will be <see langword="null"/> for reference
         /// types and the default value for value types.
