@@ -21,9 +21,9 @@ internal class ConfiguredListParameter
     {
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            return GetInstantiableListType(destinationType) != null || GetInstantiableDictionaryType(destinationType) != null
-                ? true
-                : base.CanConvertTo(context, destinationType);
+            return GetInstantiableListType(destinationType) != null ||
+                    GetInstantiableDictionaryType(destinationType) != null ||
+                    base.CanConvertTo(context, destinationType);
         }
 
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)

@@ -53,7 +53,7 @@ internal class ConfiguredDictionaryParameter
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            return GetInstantiableType(destinationType) != null ? true : base.CanConvertTo(context, destinationType);
+            return GetInstantiableType(destinationType) != null || base.CanConvertTo(context, destinationType);
         }
 
         private static Type? GetInstantiableType(Type destinationType)
