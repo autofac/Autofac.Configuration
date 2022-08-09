@@ -18,7 +18,7 @@ public class ConfigurationModule : Module
     /// An <see cref="IConfiguration"/> containing the definition for
     /// modules and components to register with the container.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="configuration"/> is <see langword="null"/>.
     /// </exception>
     public ConfigurationModule(IConfiguration configuration)
@@ -39,10 +39,10 @@ public class ConfigurationModule : Module
     /// Gets or sets the configuration registrar.
     /// </summary>
     /// <value>
-    /// An <see cref="Autofac.Configuration.IConfigurationRegistrar"/> that will be used as the
-    /// strategy for converting the <see cref="ConfigurationModule.Configuration"/>
+    /// An <see cref="IConfigurationRegistrar"/> that will be used as the
+    /// strategy for converting the <see cref="Configuration"/>
     /// into component registrations. If this value is <see langword="null" />, the registrar
-    /// will be a <see cref="Autofac.Configuration.Core.ConfigurationRegistrar"/>.
+    /// will be a <see cref="Core.ConfigurationRegistrar"/>.
     /// </value>
     public IConfigurationRegistrar? ConfigurationRegistrar { get; set; }
 
@@ -50,20 +50,20 @@ public class ConfigurationModule : Module
     /// Executes the conversion of configuration data into component registrations.
     /// </summary>
     /// <param name="builder">
-    /// The <see cref="Autofac.ContainerBuilder"/> into which registrations will be placed.
+    /// The <see cref="ContainerBuilder"/> into which registrations will be placed.
     /// </param>
     /// <remarks>
     /// <para>
-    /// This override uses the <see cref="ConfigurationModule.ConfigurationRegistrar"/>
-    /// to convert the <see cref="ConfigurationModule.Configuration"/>
+    /// This override uses the <see cref="ConfigurationRegistrar"/>
+    /// to convert the <see cref="Configuration"/>
     /// into component registrations in the provided <paramref name="builder" />.
     /// </para>
     /// <para>
-    /// If no specific <see cref="ConfigurationModule.ConfigurationRegistrar"/>
-    /// is set, the default <see cref="Autofac.Configuration.Core.ConfigurationRegistrar"/> type will be used.
+    /// If no specific <see cref="ConfigurationRegistrar"/>
+    /// is set, the default <see cref="Core.ConfigurationRegistrar"/> type will be used.
     /// </para>
     /// </remarks>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="builder" /> is <see langword="null" />.
     /// </exception>
     protected override void Load(ContainerBuilder builder)

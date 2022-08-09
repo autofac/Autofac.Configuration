@@ -20,15 +20,15 @@ public class ComponentRegistrar : IComponentRegistrar
     /// Registers individual configured components into a container builder.
     /// </summary>
     /// <param name="builder">
-    /// The <see cref="Autofac.ContainerBuilder"/> that should receive the configured registrations.
+    /// The <see cref="ContainerBuilder"/> that should receive the configured registrations.
     /// </param>
     /// <param name="configuration">
     /// The <see cref="IConfiguration"/> containing the configured registrations.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if there is any issue in parsing the component configuration into registrations.
     /// </exception>
     /// <remarks>
@@ -85,7 +85,7 @@ public class ComponentRegistrar : IComponentRegistrar
     /// An <seealso cref="IEnumerable{T}"/> of <seealso cref="Service"/>
     /// objects associated with the <paramref name="component" />.
     /// </returns>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="component" /> is <see langword="null" />.
     /// </exception>
     protected virtual IEnumerable<Service> EnumerateComponentServices(IConfiguration component, Assembly? defaultAssembly)
@@ -132,7 +132,7 @@ public class ComponentRegistrar : IComponentRegistrar
     /// The default assembly, if any, from which unqualified type names
     /// should be resolved into types.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
     /// </exception>
     protected virtual void RegisterComponentMetadata<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, Assembly? defaultAssembly)
@@ -169,7 +169,7 @@ public class ComponentRegistrar : IComponentRegistrar
     /// <param name="registrar">
     /// The component registration to update with constructor parameter injection.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
     /// </exception>
     protected virtual void RegisterComponentParameters<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
@@ -206,7 +206,7 @@ public class ComponentRegistrar : IComponentRegistrar
     /// <param name="registrar">
     /// The component registration to update with property injection.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
     /// </exception>
     protected virtual void RegisterComponentProperties<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar)
@@ -247,7 +247,7 @@ public class ComponentRegistrar : IComponentRegistrar
     /// The default assembly, if any, from which unqualified type names
     /// should be resolved into types.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
     /// </exception>
     protected virtual void RegisterComponentServices<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, Assembly? defaultAssembly)
@@ -295,10 +295,10 @@ public class ComponentRegistrar : IComponentRegistrar
     /// You may override this method to extend the available grammar for auto activation settings.
     /// </para>
     /// </remarks>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the value for <c>autoActivate</c> is not part of the
     /// recognized grammar.
     /// </exception>
@@ -367,10 +367,10 @@ public class ComponentRegistrar : IComponentRegistrar
     /// You may override this method to extend the available grammar for component ownership.
     /// </para>
     /// </remarks>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the value for <c>ownership</c> is not part of the
     /// recognized grammar.
     /// </exception>
@@ -437,10 +437,10 @@ public class ComponentRegistrar : IComponentRegistrar
     /// You may override this method to extend the available grammar for property injection settings.
     /// </para>
     /// </remarks>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the value for <c>injectProperties</c> is not part of the
     /// recognized grammar.
     /// </exception>
@@ -511,10 +511,10 @@ public class ComponentRegistrar : IComponentRegistrar
     /// You may override this method to extend the available grammar for lifetime scope.
     /// </para>
     /// </remarks>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="registrar"/> or <paramref name="component"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the value for lifetime scope is not part of the
     /// recognized grammar.
     /// </exception>

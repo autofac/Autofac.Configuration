@@ -182,21 +182,21 @@ public static class ConfigurationExtensions
     /// The <see cref="IConfiguration"/> object containing the type value to load.
     /// </param>
     /// <param name="key">
-    /// Name of the <see cref="System.Type"/> to load. This may be a partial type name or a fully-qualified type name.
+    /// Name of the <see cref="Type"/> to load. This may be a partial type name or a fully-qualified type name.
     /// </param>
     /// <param name="defaultAssembly">
-    /// The default <see cref="System.Reflection.Assembly"/> to use in type resolution if <paramref name="key"/>
+    /// The default <see cref="Assembly"/> to use in type resolution if <paramref name="key"/>
     /// is a partial type name.
     /// </param>
     /// <returns>
-    /// The resolved <see cref="System.Type"/> based on the specified name.
+    /// The resolved <see cref="Type"/> based on the specified name.
     /// </returns>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="configuration"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the specified <paramref name="key"/> can't be resolved as a fully-qualified type name and
-    /// isn't a partial type name for a <see cref="System.Type"/> found in the <paramref name="defaultAssembly"/>.
+    /// isn't a partial type name for a <see cref="Type"/> found in the <paramref name="defaultAssembly"/>.
     /// </exception>
     public static Type GetType(this IConfiguration configuration, string key, Assembly? defaultAssembly)
     {
@@ -228,10 +228,10 @@ public static class ConfigurationExtensions
     /// <param name="configuration">The configuration item containing the list.</param>
     /// <param name="key">The subsection from which to get the ordered list of children.</param>
     /// <returns>The desired list of configuration subsections.</returns>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="configuration"/> or <paramref name="key"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if any of the subsections lack an  integer-valued <see cref="IConfigurationSection.Key"/>.
     /// </exception>
     internal static IEnumerable<IConfigurationSection> GetOrderedSubsections(this IConfiguration configuration, string key)

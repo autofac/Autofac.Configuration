@@ -10,13 +10,13 @@ namespace Autofac.Configuration.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// This default implementation of <see cref="Autofac.Configuration.IConfigurationRegistrar"/>
+/// This default implementation of <see cref="IConfigurationRegistrar"/>
 /// processes <see cref="IConfiguration"/> contents into registrations for
-/// a <see cref="Autofac.ContainerBuilder"/>. You may derive and override to extend the functionality
-/// or you may implement your own <see cref="Autofac.Configuration.IConfigurationRegistrar"/>.
+/// a <see cref="ContainerBuilder"/>. You may derive and override to extend the functionality
+/// or you may implement your own <see cref="IConfigurationRegistrar"/>.
 /// </para>
 /// </remarks>
-/// <seealso cref="Autofac.Configuration.IConfigurationRegistrar"/>
+/// <seealso cref="IConfigurationRegistrar"/>
 public class ConfigurationRegistrar : IConfigurationRegistrar
 {
     /// <summary>
@@ -38,7 +38,7 @@ public class ConfigurationRegistrar : IConfigurationRegistrar
     /// The <see cref="IModuleRegistrar"/> that will be used to parse
     /// configuration values into module registrations.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="componentRegistrar" /> or <paramref name="moduleRegistrar" /> is <see langword="null" />.
     /// </exception>
     public ConfigurationRegistrar(IComponentRegistrar componentRegistrar, IModuleRegistrar moduleRegistrar)
@@ -69,12 +69,12 @@ public class ConfigurationRegistrar : IConfigurationRegistrar
     /// Registers the contents of a configuration section into a container builder.
     /// </summary>
     /// <param name="builder">
-    /// The <see cref="Autofac.ContainerBuilder"/> that should receive the configured registrations.
+    /// The <see cref="ContainerBuilder"/> that should receive the configured registrations.
     /// </param>
     /// <param name="configuration">
     /// The <see cref="IConfiguration"/> containing the configured registrations.
     /// </param>
-    /// <exception cref="System.ArgumentNullException">
+    /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.
     /// </exception>
     /// <remarks>

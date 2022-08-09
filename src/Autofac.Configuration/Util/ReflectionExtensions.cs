@@ -19,7 +19,7 @@ internal static class ReflectionExtensions
     public static bool TryGetDeclaringProperty(this ParameterInfo pi, [NotNullWhen(true)] out PropertyInfo? prop)
     {
         var mi = pi.Member as MethodInfo;
-        if (mi != null && mi.IsSpecialName && mi.Name.StartsWith("set_", System.StringComparison.Ordinal))
+        if (mi != null && mi.IsSpecialName && mi.Name.StartsWith("set_", StringComparison.Ordinal))
         {
             prop = mi.DeclaringType.GetProperty(mi.Name.Substring(4));
             return true;
