@@ -209,9 +209,7 @@ public static class ConfigurationExtensions
             type = defaultAssembly.GetType(typeName, false, true);
         }
 
-        return type == null
-            ? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName))
-            : type;
+        return type ?? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
     }
 
     /// <summary>
