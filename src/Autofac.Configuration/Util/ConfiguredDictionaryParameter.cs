@@ -18,30 +18,33 @@ namespace Autofac.Configuration.Util
         /// <summary>
         /// Gets or sets the dictionary of raw values.
         /// </summary>
-        public Dictionary<string, string> Dictionary { get; set; }
+        public Dictionary<string, string>? Dictionary { get; set; }
 
         private class DictionaryTypeConverter : TypeConverter
         {
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
             {
-                var instantiatableType = GetInstantiableType(destinationType);
+                var instantiableType = GetInstantiableType(destinationType);
 
-                if (value is ConfiguredDictionaryParameter castValue && instantiatableType != null)
+                if (value is ConfiguredDictionaryParameter castValue && instantiableType != null)
                 {
-                    var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
-                    var generics = instantiatableType.GetGenericArguments();
+                    var dictionary = (IDictionary)Activator.CreateInstance(instantiableType);
+                    var generics = instantiableType.GetGenericArguments();
 
-                    foreach (var item in castValue.Dictionary)
+                    if (castValue.Dictionary != null)
                     {
-                        if (string.IsNullOrEmpty(item.Key))
+                        foreach (var item in castValue.Dictionary)
                         {
-                            throw new FormatException(ConfigurationResources.DictionaryKeyMayNotBeNullOrEmpty);
+                            if (string.IsNullOrEmpty(item.Key))
+                            {
+                                throw new FormatException(ConfigurationResources.DictionaryKeyMayNotBeNullOrEmpty);
+                            }
+
+                            var convertedKey = TypeManipulation.ChangeToCompatibleType(item.Key, generics[0]);
+                            var convertedValue = TypeManipulation.ChangeToCompatibleType(item.Value, generics[1]);
+
+                            dictionary.Add(convertedKey, convertedValue);
                         }
-
-                        var convertedKey = TypeManipulation.ChangeToCompatibleType(item.Key, generics[0]);
-                        var convertedValue = TypeManipulation.ChangeToCompatibleType(item.Value, generics[1]);
-
-                        dictionary.Add(convertedKey, convertedValue);
                     }
 
                     return dictionary;
@@ -60,7 +63,7 @@ namespace Autofac.Configuration.Util
                 return base.CanConvertTo(context, destinationType);
             }
 
-            private static Type GetInstantiableType(Type destinationType)
+            private static Type? GetInstantiableType(Type destinationType)
             {
                 if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
                     (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))

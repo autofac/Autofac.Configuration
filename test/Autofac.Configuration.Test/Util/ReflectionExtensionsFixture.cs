@@ -27,6 +27,7 @@ namespace Autofac.Configuration.Test.Util
             Assert.Null(actual);
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class HasProperty
         {
             public string NotSetter(string value)

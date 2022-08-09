@@ -45,7 +45,7 @@ namespace Autofac.Configuration
         /// into component registrations. If this value is <see langword="null" />, the registrar
         /// will be a <see cref="Autofac.Configuration.Core.ConfigurationRegistrar"/>.
         /// </value>
-        public IConfigurationRegistrar ConfigurationRegistrar { get; set; }
+        public IConfigurationRegistrar? ConfigurationRegistrar { get; set; }
 
         /// <summary>
         /// Executes the conversion of configuration data into component registrations.

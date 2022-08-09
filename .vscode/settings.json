@@ -2,6 +2,12 @@
   "cSpell.words": [
     "autofac",
     "cref",
+    "cyclomatic",
+    "langword",
+    "listheader",
+    "paramref",
+    "seealso",
+    "typeparam",
     "xunit"
   ],
   "dotnet-test-explorer.testProjectPath": "test/**/*Test.csproj",

@@ -18,7 +18,7 @@ namespace Autofac.Configuration.Test.Core
 
             var poco = container.Resolve<ComplexParameterComponent>();
 
-            Assert.Equal(2, poco.List.Count());
+            Assert.Equal(2, poco.List.Count);
             Assert.Equal("Val1", poco.List[0]);
             Assert.Equal("Val2", poco.List[1]);
         }
@@ -31,11 +31,12 @@ namespace Autofac.Configuration.Test.Core
 
             var poco = container.Resolve<ComplexPropertyComponent>();
 
-            Assert.Equal(2, poco.List.Count());
+            Assert.Equal(2, poco.List.Count);
             Assert.Equal("Val3", poco.List[0]);
             Assert.Equal("Val4", poco.List[1]);
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ComplexParameterTypeModule : Module
         {
             public ComplexType ComplexType { get; set; }
@@ -51,6 +52,7 @@ namespace Autofac.Configuration.Test.Core
             }
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ComplexPropertyTypeModule : Module
         {
             public ComplexType ComplexType { get; set; }
@@ -61,16 +63,19 @@ namespace Autofac.Configuration.Test.Core
             }
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ComplexType
         {
             public IList<string> List { get; set; }
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ComplexParameterComponent
         {
             public IList<string> List { get; set; }
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ComplexPropertyComponent
         {
             public IList<string> List { get; set; }

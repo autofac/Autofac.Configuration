@@ -18,7 +18,7 @@ namespace Autofac.Configuration.Util
         /// <summary>
         /// Gets or sets the list of raw values.
         /// </summary>
-        public string[] List { get; set; }
+        public string[]? List { get; set; }
 
         private class ListTypeConverter : TypeConverter
         {
@@ -38,14 +38,17 @@ namespace Autofac.Configuration.Util
                 {
                     // 99% of the time this type of parameter will be associated
                     // with an ordinal list - List<T> or T[] sort of thing...
-                    var instantiatableType = GetInstantiableListType(destinationType);
-                    if (instantiatableType != null)
+                    var instantiableType = GetInstantiableListType(destinationType);
+                    if (instantiableType != null)
                     {
-                        var generics = instantiatableType.GetGenericArguments();
-                        var collection = (IList)Activator.CreateInstance(instantiatableType);
-                        foreach (string item in castValue.List)
+                        var collection = (IList)Activator.CreateInstance(instantiableType);
+                        if (castValue.List != null)
                         {
-                            collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
+                            var generics = instantiableType.GetGenericArguments();
+                            foreach (string item in castValue.List)
+                            {
+                                collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
+                            }
                         }
 
                         return collection;
@@ -56,18 +59,20 @@ namespace Autofac.Configuration.Util
                     // that one edge case. We should only have gotten here if
                     // ConfigurationExtensions.GetConfiguredParameterValue saw
                     // a 0-based configuration dictionary.
-                    instantiatableType = GetInstantiableDictionaryType(destinationType);
-                    if (instantiatableType != null)
+                    instantiableType = GetInstantiableDictionaryType(destinationType);
+                    if (instantiableType != null)
                     {
-                        var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
-                        var generics = instantiatableType.GetGenericArguments();
-
-                        for (int i = 0; i < castValue.List.Length; i++)
+                        var dictionary = (IDictionary)Activator.CreateInstance(instantiableType);
+                        if (castValue.List != null)
                         {
-                            var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
-                            var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);
+                            var generics = instantiableType.GetGenericArguments();
+                            for (int i = 0; i < castValue.List.Length; i++)
+                            {
+                                var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
+                                var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);
 
-                            dictionary.Add(convertedKey, convertedValue);
+                                dictionary.Add(convertedKey, convertedValue);
+                            }
                         }
 
                         return dictionary;
@@ -87,7 +92,7 @@ namespace Autofac.Configuration.Util
             /// <returns>
             /// A dictionary type where the key can be numeric.
             /// </returns>
-            private static Type GetInstantiableDictionaryType(Type destinationType)
+            private static Type? GetInstantiableDictionaryType(Type destinationType)
             {
                 if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
                     (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
@@ -117,7 +122,7 @@ namespace Autofac.Configuration.Util
             /// <returns>
             /// A list type compatible with the data values.
             /// </returns>
-            private static Type GetInstantiableListType(Type destinationType)
+            private static Type? GetInstantiableListType(Type destinationType)
             {
                 if (typeof(IEnumerable).IsAssignableFrom(destinationType))
                 {

@@ -11,7 +11,8 @@ namespace Autofac.Configuration.Test.Core
 {
     public class ConfigurationExtensions_EnumerableParametersFixture
     {
-        public class A
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class A
         {
             public IList<string> List { get; set; }
         }
@@ -28,7 +29,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.List[1]);
         }
 
-        public class B
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class B
         {
             public IList<double> List { get; set; }
         }
@@ -45,7 +47,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(2.345, poco.List[1]);
         }
 
-        public class C
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class C
         {
             public IList List { get; set; }
         }
@@ -62,7 +65,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("2.345", poco.List[1]);
         }
 
-        public class D
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class D
         {
             public double Num { get; set; }
         }
@@ -77,7 +81,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(123.456, poco.Num);
         }
 
-        public class E
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class E
         {
             public IList<double> List { get; set; }
 
@@ -119,7 +124,8 @@ namespace Autofac.Configuration.Test.Core
                 });
         }
 
-        public class G
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class G
         {
             public IEnumerable Enumerable { get; set; }
         }
@@ -138,7 +144,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", enumerable[1]);
         }
 
-        public class H
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class H
         {
             public IEnumerable<double> Enumerable { get; set; }
         }
@@ -157,7 +164,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(2.345, enumerable[1]);
         }
 
-        public class I
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class I
         {
             public ICollection<double> Collection { get; set; }
         }
@@ -175,7 +183,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(2.345, poco.Collection.Last());
         }
 
-        public class J
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class J
         {
             public J(IList<string> list)
             {
@@ -197,7 +206,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.List[1]);
         }
 
-        public class K
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class K
         {
             public K(IList<string> list = null)
             {
@@ -219,7 +229,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.List[1]);
         }
 
-        public class L
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class L
         {
             public L()
             {
@@ -246,7 +257,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.List[1]);
         }
 
-        public class M
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class M
         {
             public M(IList<string> list) => List = list;
 

@@ -92,7 +92,7 @@ namespace Autofac.Configuration.Core
         /// <exception cref="System.ArgumentNullException">
         /// Thrown if <paramref name="component" /> is <see langword="null" />.
         /// </exception>
-        protected virtual IEnumerable<Service> EnumerateComponentServices(IConfiguration component, Assembly defaultAssembly)
+        protected virtual IEnumerable<Service> EnumerateComponentServices(IConfiguration component, Assembly? defaultAssembly)
         {
             if (component == null)
             {
@@ -139,7 +139,7 @@ namespace Autofac.Configuration.Core
         /// <exception cref="System.ArgumentNullException">
         /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
         /// </exception>
-        protected virtual void RegisterComponentMetadata<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, Assembly defaultAssembly)
+        protected virtual void RegisterComponentMetadata<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, Assembly? defaultAssembly)
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {
@@ -254,7 +254,7 @@ namespace Autofac.Configuration.Core
         /// <exception cref="System.ArgumentNullException">
         /// Thrown if <paramref name="component" /> or <paramref name="registrar" /> is <see langword="null" />.
         /// </exception>
-        protected virtual void RegisterComponentServices<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, Assembly defaultAssembly)
+        protected virtual void RegisterComponentServices<TReflectionActivatorData, TSingleRegistrationStyle>(IConfiguration component, IRegistrationBuilder<object, TReflectionActivatorData, TSingleRegistrationStyle> registrar, Assembly? defaultAssembly)
             where TReflectionActivatorData : ReflectionActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {

@@ -146,6 +146,7 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("The 'metadata' collection should be ordinal (like an array) with items that have numeric names to indicate the index in the collection. 'components:0:metadata' didn't have a numeric name so couldn't be parsed. Check https://autofac.readthedocs.io/en/latest/configuration/xml.html for configuration examples.", exception.Message);
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ComponentConsumer : BaseComponentConsumer
         {
             public ITestComponent Component { get; set; }
@@ -161,6 +162,7 @@ namespace Autofac.Configuration.Test.Core
         {
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class SimpleComponent : BaseComponent, ITestComponent
         {
             public SimpleComponent()

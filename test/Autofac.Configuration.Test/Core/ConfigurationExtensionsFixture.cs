@@ -65,7 +65,7 @@ namespace Autofac.Configuration.Test.Core
             // target framework. We have to calculate it and truncate
             // the full assembly name at the first comma.
             var expected = typeof(string).GetTypeInfo().Assembly;
-            var fullName = expected.FullName.Substring(0, expected.FullName.IndexOf(','));
+            var fullName = expected.FullName.Substring(0, expected.FullName.IndexOf(',', StringComparison.Ordinal));
             var config = SetUpDefaultAssembly(fullName);
             Assert.Equal(expected, config.DefaultAssembly());
         }
@@ -239,6 +239,7 @@ namespace Autofac.Configuration.Test.Core
             yield return new object[] { "ip", IPAddress.Parse("127.0.0.1") };
         }
 
+        [SuppressMessage("CA1024", "CA1024", Justification = "Data sources must be methods.")]
         public static IEnumerable<object[]> GetProperties_SimpleProperties_Source()
         {
             yield return new object[] { "Text", "text" };
@@ -254,18 +255,21 @@ namespace Autofac.Configuration.Test.Core
             return new ConfigurationBuilder().AddInMemoryCollection(data).Build();
         }
 
-        public class BaseSimpleParametersAndProperties
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class BaseSimpleParametersAndProperties
         {
             // Issue #2 - Ensure properties in base classes can be set by config.
             public string Text { get; set; }
         }
 
-        public class Convertible
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class Convertible
         {
             public double Value { get; set; }
         }
 
-        public class ConvertibleConverter : TypeConverter
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class ConvertibleConverter : TypeConverter
         {
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
@@ -279,7 +283,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                if (!(value is string str))
+                if (value is not string str)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -289,7 +293,8 @@ namespace Autofac.Configuration.Test.Core
             }
         }
 
-        public class ConvertibleDictionaryConverter : TypeConverter
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class ConvertibleDictionaryConverter : TypeConverter
         {
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
@@ -303,7 +308,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                if (!(value is ConfiguredDictionaryParameter castValue))
+                if (value is not ConfiguredDictionaryParameter castValue)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -319,7 +324,8 @@ namespace Autofac.Configuration.Test.Core
             }
         }
 
-        public class ConvertibleListConverter : TypeConverter
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class ConvertibleListConverter : TypeConverter
         {
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
@@ -333,7 +339,7 @@ namespace Autofac.Configuration.Test.Core
                     return null;
                 }
 
-                if (!(value is ConfiguredListParameter castValue))
+                if (value is not ConfiguredListParameter castValue)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -349,7 +355,8 @@ namespace Autofac.Configuration.Test.Core
             }
         }
 
-        public class HasConvertibleParametersAndProperties
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class HasConvertibleParametersAndProperties
         {
             public HasConvertibleParametersAndProperties([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
             {
@@ -362,7 +369,8 @@ namespace Autofac.Configuration.Test.Core
             public Convertible Property { get; set; }
         }
 
-        public class HasDictionaryProperty
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class HasDictionaryProperty
         {
             [TypeConverter(typeof(ConvertibleDictionaryConverter))]
             public IDictionary<string, Convertible> Convertible { get; set; }
@@ -372,7 +380,8 @@ namespace Autofac.Configuration.Test.Core
             public Dictionary<string, double> Populated { get; set; }
         }
 
-        public class HasEnumerableParameter
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class HasEnumerableParameter
         {
             public HasEnumerableParameter(IList<string> list)
             {
@@ -382,7 +391,8 @@ namespace Autofac.Configuration.Test.Core
             public IList<string> List { get; private set; }
         }
 
-        public class HasEnumerableProperty
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class HasEnumerableProperty
         {
             [TypeConverter(typeof(ConvertibleListConverter))]
             public IEnumerable<Convertible> Convertible { get; set; }
@@ -392,7 +402,8 @@ namespace Autofac.Configuration.Test.Core
             public IEnumerable<double> Populated { get; set; }
         }
 
-        public class HasSimpleParametersAndProperties : BaseSimpleParametersAndProperties
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class HasSimpleParametersAndProperties : BaseSimpleParametersAndProperties
         {
             public HasSimpleParametersAndProperties(double number, IPAddress ip)
             {

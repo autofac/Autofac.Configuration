@@ -19,7 +19,7 @@ namespace Autofac.Configuration.Test
             CultureInfo.CurrentUICulture.ClearCachedData();
             try
             {
-                test();
+                test?.Invoke();
             }
             finally
             {

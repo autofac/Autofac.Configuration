@@ -9,7 +9,8 @@ namespace Autofac.Configuration.Test.Core
 {
     public class ConfigurationExtensions_DictionaryParametersFixture
     {
-        public class A
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class A
         {
             public IDictionary<string, string> Dictionary { get; set; }
         }
@@ -28,7 +29,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.Dictionary["Key2"]);
         }
 
-        public class B
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class B
         {
             public IDictionary<string, string> Dictionary { get; set; }
 
@@ -52,7 +54,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.Dictionary["Key2"]);
         }
 
-        public class C
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class C
         {
             public IDictionary Dictionary { get; set; }
         }
@@ -71,7 +74,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.Dictionary["Key2"]);
         }
 
-        public class D
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class D
         {
             public Dictionary<string, string> Dictionary { get; set; }
         }
@@ -90,7 +94,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.Dictionary["Key2"]);
         }
 
-        public class E
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class E
         {
             public IDictionary<int, string> Dictionary { get; set; }
         }
@@ -109,7 +114,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal("Val2", poco.Dictionary[1]);
         }
 
-        public class F
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class F
         {
             public IDictionary<string, int> Dictionary { get; set; }
         }
@@ -128,7 +134,8 @@ namespace Autofac.Configuration.Test.Core
             Assert.Equal(2, poco.Dictionary["Key2"]);
         }
 
-        public class G
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class G
         {
             public IDictionary<int, string> Dictionary { get; set; }
         }

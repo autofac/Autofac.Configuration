@@ -29,9 +29,9 @@ namespace Autofac.Configuration.Util
         /// <exception cref="InvalidOperationException">
         /// Thrown if conversion of the value fails.
         /// </exception>
-        public static object ChangeToCompatibleType(object value, Type destinationType, ParameterInfo memberInfo)
+        public static object? ChangeToCompatibleType(object value, Type destinationType, ParameterInfo memberInfo)
         {
-            var attrib = (TypeConverterAttribute)null;
+            TypeConverterAttribute? attrib = null;
             if (memberInfo != null)
             {
                 attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
@@ -55,9 +55,9 @@ namespace Autofac.Configuration.Util
         /// <exception cref="InvalidOperationException">
         /// Thrown if conversion of the value fails.
         /// </exception>
-        public static object ChangeToCompatibleType(object value, Type destinationType, MemberInfo memberInfo)
+        public static object? ChangeToCompatibleType(object value, Type destinationType, MemberInfo memberInfo)
         {
-            var attrib = (TypeConverterAttribute)null;
+            TypeConverterAttribute? attrib = null;
             if (memberInfo != null)
             {
                 attrib = memberInfo.GetCustomAttributes(typeof(TypeConverterAttribute), true).Cast<TypeConverterAttribute>().FirstOrDefault();
@@ -81,7 +81,7 @@ namespace Autofac.Configuration.Util
         /// <exception cref="InvalidOperationException">
         /// Thrown if conversion of the value fails.
         /// </exception>
-        public static object ChangeToCompatibleType(object value, Type destinationType, TypeConverterAttribute converterAttribute = null)
+        public static object? ChangeToCompatibleType(object value, Type destinationType, TypeConverterAttribute? converterAttribute = null)
         {
             if (destinationType == null)
             {

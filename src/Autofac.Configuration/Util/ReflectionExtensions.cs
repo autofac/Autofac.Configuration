@@ -16,7 +16,7 @@ namespace Autofac.Configuration.Util
         /// <param name="pi">Parameter to the property setter.</param>
         /// <param name="prop">The property info on which the setter is specified.</param>
         /// <returns>True if the parameter is a property setter.</returns>
-        public static bool TryGetDeclaringProperty(this ParameterInfo pi, out PropertyInfo prop)
+        public static bool TryGetDeclaringProperty(this ParameterInfo pi, [NotNullWhen(true)] out PropertyInfo? prop)
         {
             var mi = pi.Member as MethodInfo;
             if (mi != null && mi.IsSpecialName && mi.Name.StartsWith("set_", System.StringComparison.Ordinal))

@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="Moq" />
     <Using Include="Xunit" />
   </ItemGroup>

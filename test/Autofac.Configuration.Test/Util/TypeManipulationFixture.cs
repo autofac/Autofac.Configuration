@@ -83,12 +83,14 @@ namespace Autofac.Configuration.Test.Util
             yield return new object[] { CultureInfo.InvariantCulture };
         }
 
-        public class Convertible
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class Convertible
         {
             public int Value { get; set; }
         }
 
-        public class ConvertibleConverter : TypeConverter
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class ConvertibleConverter : TypeConverter
         {
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
@@ -102,7 +104,7 @@ namespace Autofac.Configuration.Test.Util
                     return null;
                 }
 
-                if (!(value is string str))
+                if (value is not string str)
                 {
                     return base.ConvertFrom(context, culture, value);
                 }
@@ -112,7 +114,8 @@ namespace Autofac.Configuration.Test.Util
             }
         }
 
-        public class HasTypeConverterAttributes
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+        private class HasTypeConverterAttributes
         {
             public HasTypeConverterAttributes([TypeConverter(typeof(ConvertibleConverter))] Convertible parameter)
             {

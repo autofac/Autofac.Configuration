@@ -62,7 +62,7 @@ namespace Autofac.Configuration.Core
             }
         }
 
-        private IModule CreateModule(Type type, IConfiguration moduleElement)
+        private static IModule CreateModule(Type type, IConfiguration moduleElement)
         {
             var constructor = GetMostParametersConstructor(type);
 
@@ -72,7 +72,7 @@ namespace Autofac.Configuration.Core
                 .Select(p => parametersElement.GetSection(p.Name).Get(p.ParameterType))
                 .ToArray();
 
-            var module = constructor.Invoke(parameters) as IModule;
+            var module = (IModule)constructor.Invoke(parameters);
 
             var propertiesElement = moduleElement.GetSection("properties");
 

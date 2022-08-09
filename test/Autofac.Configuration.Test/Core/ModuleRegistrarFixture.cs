@@ -40,6 +40,7 @@ namespace Autofac.Configuration.Test.Core
             Assert.Throws<NoConstructorsFoundException>(() => builder.Build());
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ParameterizedModule : Module
         {
             public ParameterizedModule(string message)
@@ -51,10 +52,11 @@ namespace Autofac.Configuration.Test.Core
 
             protected override void Load(ContainerBuilder builder)
             {
-                builder.RegisterType<SimpleComponent>().WithProperty("Message", Message);
+                builder.RegisterType<SimpleComponent>().WithProperty(nameof(Message), Message);
             }
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class ProtectedModule : Module
         {
             protected ProtectedModule(string message)
@@ -69,6 +71,7 @@ namespace Autofac.Configuration.Test.Core
         {
         }
 
+        [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
         private class SimpleComponent : ITestComponent
         {
             public SimpleComponent()

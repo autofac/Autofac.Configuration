@@ -32,7 +32,7 @@ namespace Autofac.Configuration.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="configuration"/> is <see langword="null"/>.
         /// </exception>
-        public static Assembly DefaultAssembly(this IConfiguration configuration)
+        public static Assembly? DefaultAssembly(this IConfiguration configuration)
         {
             return configuration.GetAssembly("defaultAssembly");
         }
@@ -58,7 +58,7 @@ namespace Autofac.Configuration.Core
         /// <exception cref="ArgumentException">
         /// Thrown if <paramref name="key"/> is empty or whitespace.
         /// </exception>
-        public static Assembly GetAssembly(this IConfiguration configuration, string key)
+        public static Assembly? GetAssembly(this IConfiguration configuration, string key)
         {
             if (configuration == null)
             {
@@ -166,16 +166,15 @@ namespace Autofac.Configuration.Core
                 string parameterName = GetKeyName(propertyElement.Key);
                 yield return new ResolvedParameter(
                     (pi, c) =>
-                {
-                    return pi.TryGetDeclaringProperty(out PropertyInfo prop) &&
-string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
-                },
+                    {
+                        return pi.TryGetDeclaringProperty(out PropertyInfo? prop) &&
+                            string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
+                    },
                     (pi, c) =>
-                {
-                    var prop = (PropertyInfo)null;
-                    pi.TryGetDeclaringProperty(out prop);
-                    return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop);
-                });
+                    {
+                        pi.TryGetDeclaringProperty(out PropertyInfo? prop);
+                        return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop!);
+                    });
             }
         }
 
@@ -202,7 +201,7 @@ string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
         /// Thrown if the specified <paramref name="key"/> can't be resolved as a fully-qualified type name and
         /// isn't a partial type name for a <see cref="System.Type"/> found in the <paramref name="defaultAssembly"/>.
         /// </exception>
-        public static Type GetType(this IConfiguration configuration, string key, Assembly defaultAssembly)
+        public static Type GetType(this IConfiguration configuration, string key, Assembly? defaultAssembly)
         {
             if (configuration == null)
             {
