@@ -73,12 +73,7 @@ public static class ConfigurationExtensions
         }
 
         string assemblyName = configuration[key];
-        if (string.IsNullOrWhiteSpace(assemblyName))
-        {
-            return null;
-        }
-
-        return Assembly.Load(new AssemblyName(assemblyName));
+        return string.IsNullOrWhiteSpace(assemblyName) ? null : Assembly.Load(new AssemblyName(assemblyName));
     }
 
     /// <summary>
@@ -214,12 +209,9 @@ public static class ConfigurationExtensions
             type = defaultAssembly.GetType(typeName, false, true);
         }
 
-        if (type == null)
-        {
-            throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName));
-        }
-
-        return type;
+        return type == null
+            ? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, typeName))
+            : type;
     }
 
     /// <summary>
@@ -249,14 +241,9 @@ public static class ConfigurationExtensions
         var configurationSection = configuration.GetSection(key);
         foreach (var section in configurationSection.GetChildren())
         {
-            if (int.TryParse(section.Key, out var _))
-            {
-                yield return section;
-            }
-            else
-            {
-                throw new InvalidOperationException(ConfigurationResources.FormatCollectionMustBeOrderedByName(key, configurationSection.Path));
-            }
+            yield return int.TryParse(section.Key, out var _)
+                ? section
+                : throw new InvalidOperationException(ConfigurationResources.FormatCollectionMustBeOrderedByName(key, configurationSection.Path));
         }
     }
 
@@ -338,11 +325,6 @@ public static class ConfigurationExtensions
     private static string GetKeyName(string fullKey)
     {
         int index = fullKey.LastIndexOf(':');
-        if (index < 0)
-        {
-            return fullKey;
-        }
-
-        return fullKey.Substring(index + 1);
+        return index < 0 ? fullKey : fullKey.Substring(index + 1);
     }
 }

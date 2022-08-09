@@ -103,14 +103,7 @@ public class ComponentRegistrar : IComponentRegistrar
             // instead, it must be "key."
             var serviceType = serviceDefinition.GetType("type", defaultAssembly);
             string serviceKey = serviceDefinition["key"];
-            if (!string.IsNullOrEmpty(serviceKey))
-            {
-                yield return new KeyedService(serviceKey, serviceType);
-            }
-            else
-            {
-                yield return new TypedService(serviceType);
-            }
+            yield return !string.IsNullOrEmpty(serviceKey) ? new KeyedService(serviceKey, serviceType) : new TypedService(serviceType);
         }
     }
 
