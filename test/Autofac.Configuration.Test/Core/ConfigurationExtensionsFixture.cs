@@ -1,19 +1,14 @@
 ﻿// Copyright (c) Autofac Project. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using Autofac.Configuration.Core;
 using Autofac.Configuration.Util;
 using Autofac.Core;
 using Microsoft.Extensions.Configuration;
-using Xunit;
 
 namespace Autofac.Configuration.Test.Core
 {

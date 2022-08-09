@@ -3,7 +3,6 @@
 
 using System.Reflection;
 using Autofac.Configuration.Util;
-using Xunit;
 
 namespace Autofac.Configuration.Test.Util
 {
