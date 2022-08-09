@@ -158,7 +158,7 @@ internal class TypeManipulation
     private static TypeConverter GetTypeConverterFromName(string converterTypeName)
     {
         var converterType = Type.GetType(converterTypeName, true);
-        return !(Activator.CreateInstance(converterType) is TypeConverter converter)
+        return Activator.CreateInstance(converterType) is not TypeConverter converter
             ? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName))
             : converter;
     }
