@@ -3,22 +3,21 @@
 
 using Microsoft.Extensions.Configuration;
 
-namespace Autofac.Configuration
+namespace Autofac.Configuration;
+
+/// <summary>
+/// A service for adding configured registrations to a container.
+/// </summary>
+public interface IConfigurationRegistrar
 {
     /// <summary>
-    /// A service for adding configured registrations to a container.
+    /// Registers the contents of a configuration object into a container builder.
     /// </summary>
-    public interface IConfigurationRegistrar
-    {
-        /// <summary>
-        /// Registers the contents of a configuration object into a container builder.
-        /// </summary>
-        /// <param name="builder">
-        /// The <see cref="ContainerBuilder"/> that should receive the configured registrations.
-        /// </param>
-        /// <param name="configuration">
-        /// The <see cref="IConfiguration"/> containing the configured registrations.
-        /// </param>
-        void RegisterConfiguration(ContainerBuilder builder, IConfiguration configuration);
-    }
+    /// <param name="builder">
+    /// The <see cref="ContainerBuilder"/> that should receive the configured registrations.
+    /// </param>
+    /// <param name="configuration">
+    /// The <see cref="IConfiguration"/> containing the configured registrations.
+    /// </param>
+    void RegisterConfiguration(ContainerBuilder builder, IConfiguration configuration);
 }

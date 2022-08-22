@@ -1,36 +1,36 @@
 ﻿// Copyright (c) Autofac Project. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Autofac.Configuration.Util
+namespace Autofac.Configuration.Util;
+
+/// <summary>
+/// Configuration settings that provide a dictionary parameter to a registration.
+/// </summary>
+[TypeConverter(typeof(DictionaryTypeConverter))]
+internal class ConfiguredDictionaryParameter
 {
     /// <summary>
-    /// Configuration settings that provide a dictionary parameter to a registration.
+    /// Gets or sets the dictionary of raw values.
     /// </summary>
-    [TypeConverter(typeof(DictionaryTypeConverter))]
-    internal class ConfiguredDictionaryParameter
+    public Dictionary<string, string>? Dictionary { get; set; }
+
+    private class DictionaryTypeConverter : TypeConverter
     {
-        /// <summary>
-        /// Gets or sets the dictionary of raw values.
-        /// </summary>
-        public Dictionary<string, string> Dictionary { get; set; }
-
-        private class DictionaryTypeConverter : TypeConverter
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+            var instantiableType = GetInstantiableType(destinationType);
+
+            if (value is ConfiguredDictionaryParameter castValue && instantiableType != null)
             {
-                var instantiatableType = GetInstantiableType(destinationType);
+                var dictionary = (IDictionary)Activator.CreateInstance(instantiableType);
+                var generics = instantiableType.GetGenericArguments();
 
-                if (value is ConfiguredDictionaryParameter castValue && instantiatableType != null)
+                if (castValue.Dictionary != null)
                 {
-                    var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
-                    var generics = instantiatableType.GetGenericArguments();
-
                     foreach (var item in castValue.Dictionary)
                     {
                         if (string.IsNullOrEmpty(item.Key))
@@ -43,43 +43,38 @@ namespace Autofac.Configuration.Util
 
                         dictionary.Add(convertedKey, convertedValue);
                     }
-
-                    return dictionary;
                 }
 
-                return base.ConvertTo(context, culture, value, destinationType);
+                return dictionary;
             }
 
-            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return GetInstantiableType(destinationType) != null || base.CanConvertTo(context, destinationType);
+        }
+
+        private static Type? GetInstantiableType(Type destinationType)
+        {
+            if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
+                (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
             {
-                if (GetInstantiableType(destinationType) != null)
+                var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(string), typeof(object) };
+                if (generics.Length != 2)
                 {
-                    return true;
+                    return null;
                 }
 
-                return base.CanConvertTo(context, destinationType);
-            }
-
-            private static Type GetInstantiableType(Type destinationType)
-            {
-                if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
-                    (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
+                var dictType = typeof(Dictionary<,>).MakeGenericType(generics);
+                if (destinationType.IsAssignableFrom(dictType))
                 {
-                    var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(string), typeof(object) };
-                    if (generics.Length != 2)
-                    {
-                        return null;
-                    }
-
-                    var dictType = typeof(Dictionary<,>).MakeGenericType(generics);
-                    if (destinationType.IsAssignableFrom(dictType))
-                    {
-                        return dictType;
-                    }
+                    return dictType;
                 }
-
-                return null;
             }
+
+            return null;
         }
     }
 }

@@ -1,67 +1,65 @@
 ﻿// Copyright (c) Autofac Project. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 
-namespace Autofac.Configuration.Util
+namespace Autofac.Configuration.Util;
+
+/// <summary>
+/// Configuration settings that provide a list parameter to a registration.
+/// </summary>
+[TypeConverter(typeof(ListTypeConverter))]
+internal class ConfiguredListParameter
 {
     /// <summary>
-    /// Configuration settings that provide a list parameter to a registration.
+    /// Gets or sets the list of raw values.
     /// </summary>
-    [TypeConverter(typeof(ListTypeConverter))]
-    internal class ConfiguredListParameter
+    public string[]? List { get; set; }
+
+    private class ListTypeConverter : TypeConverter
     {
-        /// <summary>
-        /// Gets or sets the list of raw values.
-        /// </summary>
-        public string[] List { get; set; }
-
-        private class ListTypeConverter : TypeConverter
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-            {
-                if (GetInstantiableListType(destinationType) != null || GetInstantiableDictionaryType(destinationType) != null)
-                {
-                    return true;
-                }
+            return GetInstantiableListType(destinationType) != null ||
+                    GetInstantiableDictionaryType(destinationType) != null ||
+                    base.CanConvertTo(context, destinationType);
+        }
 
-                return base.CanConvertTo(context, destinationType);
-            }
-
-            public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (value is ConfiguredListParameter castValue)
             {
-                if (value is ConfiguredListParameter castValue)
+                // 99% of the time this type of parameter will be associated
+                // with an ordinal list - List<T> or T[] sort of thing...
+                var instantiableType = GetInstantiableListType(destinationType);
+                if (instantiableType != null)
                 {
-                    // 99% of the time this type of parameter will be associated
-                    // with an ordinal list - List<T> or T[] sort of thing...
-                    var instantiatableType = GetInstantiableListType(destinationType);
-                    if (instantiatableType != null)
+                    var collection = (IList)Activator.CreateInstance(instantiableType);
+                    if (castValue.List != null)
                     {
-                        var generics = instantiatableType.GetGenericArguments();
-                        var collection = (IList)Activator.CreateInstance(instantiatableType);
+                        var generics = instantiableType.GetGenericArguments();
                         foreach (string item in castValue.List)
                         {
                             collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
                         }
-
-                        return collection;
                     }
 
-                    // ...but there is a very small chance this is a Dictionary<int, T> where
-                    // the keys are all 0-based and ordinal. This clause checks for
-                    // that one edge case. We should only have gotten here if
-                    // ConfigurationExtensions.GetConfiguredParameterValue saw
-                    // a 0-based configuration dictionary.
-                    instantiatableType = GetInstantiableDictionaryType(destinationType);
-                    if (instantiatableType != null)
-                    {
-                        var dictionary = (IDictionary)Activator.CreateInstance(instantiatableType);
-                        var generics = instantiatableType.GetGenericArguments();
+                    return collection;
+                }
 
+                // ...but there is a very small chance this is a Dictionary<int, T> where
+                // the keys are all 0-based and ordinal. This clause checks for
+                // that one edge case. We should only have gotten here if
+                // ConfigurationExtensions.GetConfiguredParameterValue saw
+                // a 0-based configuration dictionary.
+                instantiableType = GetInstantiableDictionaryType(destinationType);
+                if (instantiableType != null)
+                {
+                    var dictionary = (IDictionary)Activator.CreateInstance(instantiableType);
+                    if (castValue.List != null)
+                    {
+                        var generics = instantiableType.GetGenericArguments();
                         for (int i = 0; i < castValue.List.Length; i++)
                         {
                             var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
@@ -69,74 +67,74 @@ namespace Autofac.Configuration.Util
 
                             dictionary.Add(convertedKey, convertedValue);
                         }
-
-                        return dictionary;
                     }
-                }
 
-                return base.ConvertTo(context, culture, value, destinationType);
+                    return dictionary;
+                }
             }
 
-            /// <summary>
-            /// Handles type determination for the case where the dictionary
-            /// has numeric/ordinal keys.
-            /// </summary>
-            /// <param name="destinationType">
-            /// The type to which the list content should be converted.
-            /// </param>
-            /// <returns>
-            /// A dictionary type where the key can be numeric.
-            /// </returns>
-            private static Type GetInstantiableDictionaryType(Type destinationType)
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+
+        /// <summary>
+        /// Handles type determination for the case where the dictionary
+        /// has numeric/ordinal keys.
+        /// </summary>
+        /// <param name="destinationType">
+        /// The type to which the list content should be converted.
+        /// </param>
+        /// <returns>
+        /// A dictionary type where the key can be numeric.
+        /// </returns>
+        private static Type? GetInstantiableDictionaryType(Type destinationType)
+        {
+            if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
+                (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
             {
-                if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
-                    (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
+                var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(int), typeof(object) };
+                if (generics.Length != 2)
                 {
-                    var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(int), typeof(object) };
-                    if (generics.Length != 2)
-                    {
-                        return null;
-                    }
-
-                    var dictType = typeof(Dictionary<,>).MakeGenericType(generics);
-                    if (destinationType.IsAssignableFrom(dictType))
-                    {
-                        return dictType;
-                    }
+                    return null;
                 }
 
-                return null;
+                var dictType = typeof(Dictionary<,>).MakeGenericType(generics);
+                if (destinationType.IsAssignableFrom(dictType))
+                {
+                    return dictType;
+                }
             }
 
-            /// <summary>
-            /// Handles type determination list conversion.
-            /// </summary>
-            /// <param name="destinationType">
-            /// The type to which the list content should be converted.
-            /// </param>
-            /// <returns>
-            /// A list type compatible with the data values.
-            /// </returns>
-            private static Type GetInstantiableListType(Type destinationType)
+            return null;
+        }
+
+        /// <summary>
+        /// Handles type determination list conversion.
+        /// </summary>
+        /// <param name="destinationType">
+        /// The type to which the list content should be converted.
+        /// </param>
+        /// <returns>
+        /// A list type compatible with the data values.
+        /// </returns>
+        private static Type? GetInstantiableListType(Type destinationType)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(destinationType))
             {
-                if (typeof(IEnumerable).IsAssignableFrom(destinationType))
+                var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(object) };
+                if (generics.Length != 1)
                 {
-                    var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(object) };
-                    if (generics.Length != 1)
-                    {
-                        return null;
-                    }
-
-                    var listType = typeof(List<>).MakeGenericType(generics);
-
-                    if (destinationType.IsAssignableFrom(listType))
-                    {
-                        return listType;
-                    }
+                    return null;
                 }
 
-                return null;
+                var listType = typeof(List<>).MakeGenericType(generics);
+
+                if (destinationType.IsAssignableFrom(listType))
+                {
+                    return listType;
+                }
             }
+
+            return null;
         }
     }
 }

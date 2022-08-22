@@ -2,278 +2,286 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Xunit;
 
-namespace Autofac.Configuration.Test.Core
+namespace Autofac.Configuration.Test.Core;
+
+public class ConfigurationExtensions_EnumerableParametersFixture
 {
-    public class ConfigurationExtensions_EnumerableParametersFixture
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class A
     {
-        public class A
+        public IList<string> List { get; set; }
+    }
+
+    [Fact]
+    public void PropertyStringListInjection()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<A>();
+
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal("Val1", poco.List[0]);
+        Assert.Equal("Val2", poco.List[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class B
+    {
+        public IList<double> List { get; set; }
+    }
+
+    [Fact]
+    public void ConvertsTypeInList()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<B>();
+
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal(1.234, poco.List[0]);
+        Assert.Equal(2.345, poco.List[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class C
+    {
+        public IList List { get; set; }
+    }
+
+    [Fact]
+    public void FillsNonGenericListWithString()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<C>();
+
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal("1.234", poco.List[0]);
+        Assert.Equal("2.345", poco.List[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class D
+    {
+        public double Num { get; set; }
+    }
+
+    [Fact]
+    public void InjectsSingleValueWithConversion()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<D>();
+
+        Assert.Equal(123.456, poco.Num);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class E
+    {
+        public IList<double> List { get; set; }
+
+        public E(IList<double> list)
         {
-            public IList<string> List { get; set; }
+            List = list;
         }
+    }
 
-        [Fact]
-        public void PropertyStringListInjection()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+    [Fact]
+    public void InjectsConstructorParameter()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
-            var poco = container.Resolve<A>();
+        var poco = container.Resolve<E>();
 
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal("Val1", poco.List[0]);
-            Assert.Equal("Val2", poco.List[1]);
-        }
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal(1.234, poco.List[0]);
+        Assert.Equal(2.345, poco.List[1]);
+    }
 
-        public class B
-        {
-            public IList<double> List { get; set; }
-        }
-
-        [Fact]
-        public void ConvertsTypeInList()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<B>();
-
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal(1.234, poco.List[0]);
-            Assert.Equal(2.345, poco.List[1]);
-        }
-
-        public class C
-        {
-            public IList List { get; set; }
-        }
-
-        [Fact]
-        public void FillsNonGenericListWithString()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<C>();
-
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal("1.234", poco.List[0]);
-            Assert.Equal("2.345", poco.List[1]);
-        }
-
-        public class D
-        {
-            public double Num { get; set; }
-        }
-
-        [Fact]
-        public void InjectsSingleValueWithConversion()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<D>();
-
-            Assert.Equal(123.456, poco.Num);
-        }
-
-        public class E
-        {
-            public IList<double> List { get; set; }
-
-            public E(IList<double> list)
+    [Theory]
+    [MemberData(nameof(ParsingCultures))]
+    public void TypeConversionsAreCaseInvariant(CultureInfo culture)
+    {
+        // Issue #26 - parsing needs to be InvariantCulture or config fails
+        // when it's moved from machine to machine.
+        TestCulture.With(
+            culture,
+            () =>
             {
-                List = list;
-            }
-        }
+                var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
-        [Fact]
-        public void InjectsConstructorParameter()
+                var poco = container.Resolve<E>();
+
+                Assert.True(poco.List.Count == 2);
+                Assert.Equal(1.234, poco.List[0]);
+                Assert.Equal(2.345, poco.List[1]);
+            });
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class G
+    {
+        public IEnumerable Enumerable { get; set; }
+    }
+
+    [Fact]
+    public void InjectsIEnumerable()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<G>();
+
+        Assert.NotNull(poco.Enumerable);
+        var enumerable = poco.Enumerable.Cast<string>().ToList();
+        Assert.True(enumerable.Count == 2);
+        Assert.Equal("Val1", enumerable[0]);
+        Assert.Equal("Val2", enumerable[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class H
+    {
+        public IEnumerable<double> Enumerable { get; set; }
+    }
+
+    [Fact]
+    public void InjectsGenericIEnumerable()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<H>();
+
+        Assert.NotNull(poco.Enumerable);
+        var enumerable = poco.Enumerable.ToList();
+        Assert.True(enumerable.Count == 2);
+        Assert.Equal(1.234, enumerable[0]);
+        Assert.Equal(2.345, enumerable[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class I
+    {
+        public ICollection<double> Collection { get; set; }
+    }
+
+    [Fact]
+    public void InjectsGenericCollection()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<I>();
+
+        Assert.NotNull(poco.Collection);
+        Assert.True(poco.Collection.Count == 2);
+        Assert.Equal(1.234, poco.Collection.First());
+        Assert.Equal(2.345, poco.Collection.Last());
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class J
+    {
+        public J(IList<string> list)
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<E>();
-
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal(1.234, poco.List[0]);
-            Assert.Equal(2.345, poco.List[1]);
+            List = list;
         }
 
-        [Theory]
-        [MemberData(nameof(ParsingCultures))]
-        public void TypeConversionsAreCaseInvariant(CultureInfo culture)
+        public IList<string> List { get; private set; }
+    }
+
+    [Fact]
+    public void ParameterStringListInjection()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<J>();
+
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal("Val1", poco.List[0]);
+        Assert.Equal("Val2", poco.List[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class K
+    {
+        public K(IList<string> list = null)
         {
-            // Issue #26 - parsing needs to be InvariantCulture or config fails
-            // when it's moved from machine to machine.
-            TestCulture.With(
-                culture,
-                () =>
-                {
-                    var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-                    var poco = container.Resolve<E>();
-
-                    Assert.True(poco.List.Count == 2);
-                    Assert.Equal(1.234, poco.List[0]);
-                    Assert.Equal(2.345, poco.List[1]);
-                });
+            List = list;
         }
 
-        public class G
+        public IList<string> List { get; private set; }
+    }
+
+    [Fact]
+    public void ParameterStringListInjectionOptionalParameter()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+
+        var poco = container.Resolve<K>();
+
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal("Val1", poco.List[0]);
+        Assert.Equal("Val2", poco.List[1]);
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class L
+    {
+        public L()
         {
-            public IEnumerable Enumerable { get; set; }
+            List = new List<string>();
         }
 
-        [Fact]
-        public void InjectsIEnumerable()
+        public L(IList<string> list = null)
         {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<G>();
-
-            Assert.NotNull(poco.Enumerable);
-            var enumerable = poco.Enumerable.Cast<string>().ToList();
-            Assert.True(enumerable.Count == 2);
-            Assert.Equal("Val1", enumerable[0]);
-            Assert.Equal("Val2", enumerable[1]);
+            List = list;
         }
 
-        public class H
-        {
-            public IEnumerable<double> Enumerable { get; set; }
-        }
+        public IList<string> List { get; private set; }
+    }
 
-        [Fact]
-        public void InjectsGenericIEnumerable()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+    [Fact]
+    public void ParameterStringListInjectionMultipleConstructors()
+    {
+        var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
-            var poco = container.Resolve<H>();
+        var poco = container.Resolve<L>();
 
-            Assert.NotNull(poco.Enumerable);
-            var enumerable = poco.Enumerable.ToList();
-            Assert.True(enumerable.Count == 2);
-            Assert.Equal(1.234, enumerable[0]);
-            Assert.Equal(2.345, enumerable[1]);
-        }
+        Assert.True(poco.List.Count == 2);
+        Assert.Equal("Val1", poco.List[0]);
+        Assert.Equal("Val2", poco.List[1]);
+    }
 
-        public class I
-        {
-            public ICollection<double> Collection { get; set; }
-        }
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class M
+    {
+        public M(IList<string> list) => List = list;
 
-        [Fact]
-        public void InjectsGenericCollection()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
+        public IList<string> List { get; }
+    }
 
-            var poco = container.Resolve<I>();
+    /// <summary>
+    /// A characterization test, not intended to express desired behavior, but to capture the current behavior.
+    /// </summary>
+    [Fact]
+    public void ParameterStringListInjectionSecondElementHasNoName()
+    {
+        var container = EmbeddedConfiguration
+            .ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
 
-            Assert.NotNull(poco.Collection);
-            Assert.True(poco.Collection.Count == 2);
-            Assert.Equal(1.234, poco.Collection.First());
-            Assert.Equal(2.345, poco.Collection.Last());
-        }
+        var poco = container.Resolve<M>();
 
-        public class J
-        {
-            public J(IList<string> list)
-            {
-                List = list;
-            }
+        // Val2 is dropped from the configuration when it's parsed.
+        Assert.Collection(poco.List, v => Assert.Equal("Val1", v));
+    }
 
-            public IList<string> List { get; private set; }
-        }
-
-        [Fact]
-        public void ParameterStringListInjection()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<J>();
-
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal("Val1", poco.List[0]);
-            Assert.Equal("Val2", poco.List[1]);
-        }
-
-        public class K
-        {
-            public K(IList<string> list = null)
-            {
-                List = list;
-            }
-
-            public IList<string> List { get; private set; }
-        }
-
-        [Fact]
-        public void ParameterStringListInjectionOptionalParameter()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<K>();
-
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal("Val1", poco.List[0]);
-            Assert.Equal("Val2", poco.List[1]);
-        }
-
-        public class L
-        {
-            public L()
-            {
-                List = new List<string>();
-            }
-
-            public L(IList<string> list = null)
-            {
-                List = list;
-            }
-
-            public IList<string> List { get; private set; }
-        }
-
-        [Fact]
-        public void ParameterStringListInjectionMultipleConstructors()
-        {
-            var container = EmbeddedConfiguration.ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<L>();
-
-            Assert.True(poco.List.Count == 2);
-            Assert.Equal("Val1", poco.List[0]);
-            Assert.Equal("Val2", poco.List[1]);
-        }
-
-        public class M
-        {
-            public M(IList<string> list) => List = list;
-
-            public IList<string> List { get; }
-        }
-
-        /// <summary>
-        /// A characterization test, not intended to express desired behaviour, but to capture the current behaviour.
-        /// </summary>
-        [Fact]
-        public void ParameterStringListInjectionSecondElementHasNoName()
-        {
-            var container = EmbeddedConfiguration
-                .ConfigureContainerWithXml("ConfigurationExtensions_EnumerableParameters.xml").Build();
-
-            var poco = container.Resolve<M>();
-
-            // Val2 is dropped from the configuration when it's parsed.
-            Assert.Collection(poco.List, v => Assert.Equal("Val1", v));
-        }
-
-        public static IEnumerable<object[]> ParsingCultures()
-        {
-            yield return new object[] { new CultureInfo("en-US") };
-            yield return new object[] { new CultureInfo("es-MX") };
-            yield return new object[] { new CultureInfo("it-IT") };
-            yield return new object[] { CultureInfo.InvariantCulture };
-        }
+    public static IEnumerable<object[]> ParsingCultures()
+    {
+        yield return new object[] { new CultureInfo("en-US") };
+        yield return new object[] { new CultureInfo("es-MX") };
+        yield return new object[] { new CultureInfo("it-IT") };
+        yield return new object[] { CultureInfo.InvariantCulture };
     }
 }

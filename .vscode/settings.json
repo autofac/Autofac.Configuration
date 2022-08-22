@@ -1,6 +1,16 @@
 {
-  "dotnet-test-explorer.runInParallel": true,
-  "dotnet-test-explorer.testProjectPath": "test/**/*.Test.csproj",
+  "cSpell.words": [
+    "autofac",
+    "cref",
+    "cyclomatic",
+    "langword",
+    "listheader",
+    "paramref",
+    "seealso",
+    "typeparam",
+    "xunit"
+  ],
+  "dotnet-test-explorer.testProjectPath": "test/**/*Test.csproj",
   "omnisharp.enableEditorConfigSupport": true,
   "omnisharp.enableRoslynAnalyzers": true
 }
