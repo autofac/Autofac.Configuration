@@ -61,13 +61,13 @@ public class ModuleRegistrar : IModuleRegistrar
 
     private static IModule CreateModule(Type type, IConfiguration moduleElement)
     {
-        var constructor = GetMostParametersConstructor(type);
-
         var parametersElement = moduleElement.GetSection("parameters");
+        var parameterNames = parametersElement.GetChildren().Select(section => section.Key);
+        var constructor = GetConstructorMatchingParameterNames(type, parameterNames) ?? GetMostParametersConstructor(type);
 
         var parameters = constructor.GetParameters()
-            .Select(p => parametersElement.GetSection(p.Name).Get(p.ParameterType))
-            .ToArray();
+                                    .Select(p => parametersElement.GetSection(p.Name).Get(p.ParameterType))
+                                    .ToArray();
 
         var module = (IModule)constructor.Invoke(parameters);
 
@@ -76,6 +76,19 @@ public class ModuleRegistrar : IModuleRegistrar
         propertiesElement.Bind(module);
 
         return module;
+    }
+
+    private static ConstructorInfo GetConstructorMatchingParameterNames(Type type, IEnumerable<string> parameterNames)
+    {
+        var finder = new DefaultConstructorFinder();
+
+        var publicConstructors = finder.FindConstructors(type);
+
+        return publicConstructors.Where(constructorInfo => constructorInfo.GetParameters()
+                                                                          .Select(pInfo => pInfo.Name)
+                                                                          .OrderBy(name => name)
+                                                                          .SequenceEqual(parameterNames.OrderBy(s => s), StringComparer.OrdinalIgnoreCase))
+                                                                          .FirstOrDefault();
     }
 
     private static ConstructorInfo GetMostParametersConstructor(Type type)
