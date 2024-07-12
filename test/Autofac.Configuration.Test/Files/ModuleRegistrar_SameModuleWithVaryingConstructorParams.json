@@ -1,0 +1,34 @@
+{
+  "defaultAssembly": "Autofac.Configuration.Test",
+  "modules": [
+    {
+      "type": "Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ModuleWithMultipleValidConstructors",
+      "parameters": {
+        "aBool": "true"
+      }
+    },
+    {
+      "type": "Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ModuleWithMultipleValidConstructors",
+      "parameters": {
+        "aBool": "true",
+        "input": "3.14"
+      }
+    },
+    {
+      "type": "Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ModuleWithMultipleValidConstructors",
+      "parameters": {
+        "aBool": "true",
+        "input": "3.1415",
+        "message": "Third"
+      }
+    },
+    {
+      "type": "Autofac.Configuration.Test.Core.ModuleRegistrarFixture+ModuleWithMultipleValidConstructors",
+      "parameters": {
+        "x": "true",
+        "y": "3.1415",
+        "z": "Third"
+      }
+    }
+  ]
+}

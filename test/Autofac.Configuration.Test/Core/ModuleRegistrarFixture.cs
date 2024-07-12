@@ -22,6 +22,21 @@ public class ModuleRegistrarFixture
     }
 
     [Fact]
+    public void RegisterConfiguredModules_ConstructsModulesUsingTheBestAvailableConstructor()
+    {
+        // Issue #44: Loading new modules via ConfigurationRegistrar always constructs modules using the constructor with most parameters.
+        var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_SameModuleWithVaryingConstructorParams.json");
+        var container = builder.Build();
+        var collection = container.Resolve<IEnumerable<AnotherSimpleComponent>>();
+        Assert.Equal(4, collection.Count());
+
+        Assert.Equal(1, collection.Count(component => component.ABool != null && component.Input == null && component.Message == null));
+        Assert.Equal(1, collection.Count(component => component.ABool != null && component.Input != null && component.Message == null));
+        Assert.Equal(1, collection.Count(component => component.ABool != null && component.Input != null && component.Message != null));
+        Assert.Equal(1, collection.Count(component => component.ABool == null && component.Input == null && component.Message == null)); // Fallback case
+    }
+
+    [Fact]
     public void RegisterConfiguredComponents_MetadataMissingName_ThrowsInvalidOperation()
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithXml("ModuleRegistrar_ModulesMissingName.xml");
@@ -49,6 +64,42 @@ public class ModuleRegistrarFixture
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<SimpleComponent>().WithProperty(nameof(Message), Message);
+        }
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class ModuleWithMultipleValidConstructors : Module
+    {
+        public ModuleWithMultipleValidConstructors(bool? aBool)
+        {
+            ABool = aBool;
+        }
+
+        public ModuleWithMultipleValidConstructors(bool? aBool, double? input)
+        {
+            ABool = aBool;
+            Input = input;
+        }
+
+        public ModuleWithMultipleValidConstructors(bool? aBool, double? input, string message)
+        {
+            ABool = aBool;
+            Input = input;
+            Message = message;
+        }
+
+        public bool? ABool { get; set; }
+
+        public double? Input { get; set; }
+
+        public string Message { get; set; }
+
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<AnotherSimpleComponent>()
+                   .WithProperty(nameof(ABool), ABool)
+                   .WithProperty(nameof(Input), Input)
+                   .WithProperty(nameof(Message), Message);
         }
     }
 
@@ -82,6 +133,20 @@ public class ModuleRegistrarFixture
         public bool ABool { get; set; }
 
         public double Input { get; set; }
+
+        public string Message { get; set; }
+    }
+
+    [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
+    private class AnotherSimpleComponent : ITestComponent
+    {
+        public AnotherSimpleComponent()
+        {
+        }
+
+        public bool? ABool { get; set; }
+
+        public double? Input { get; set; }
 
         public string Message { get; set; }
     }
