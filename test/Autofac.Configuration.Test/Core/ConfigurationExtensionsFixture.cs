@@ -133,9 +133,11 @@ public class ConfigurationExtensionsFixture
         var provider = (Func<object>)null;
         var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
 
-        // Gotcha in ConfigurationModel - if the list/dictionary is empty
-        // then configuration won't see it or add the key to the list.
-        Assert.Null(parameter);
+        // In older .NET there was a gotcha in ConfigurationModel - if the
+        // list/dictionary was empty then configuration wouldn't see it or add
+        // the key to the list. In later .NET this was fixed and empty lists are
+        // now included.
+        Assert.NotNull(parameter);
     }
 
     [Fact]
@@ -187,9 +189,11 @@ public class ConfigurationExtensionsFixture
         var provider = (Func<object>)null;
         var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
 
-        // Gotcha in ConfigurationModel - if the list/dictionary is empty
-        // then configuration won't see it or add the key to the list.
-        Assert.Null(parameter);
+        // In older .NET there was a gotcha in ConfigurationModel - if the
+        // list/dictionary was empty then configuration wouldn't see it or add
+        // the key to the list. In later .NET this was fixed and empty lists are
+        // now included.
+        Assert.NotNull(parameter);
     }
 
     [Fact]
