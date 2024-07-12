@@ -292,10 +292,10 @@ public static class ConfigurationExtensions
 
             if (isList)
             {
-                var list = new List<string?>();
-                foreach (var subKey in subKeys)
+                var list = new List<string>();
+                foreach (var subKey in subKeys.Where(s => s.Item2 is not null))
                 {
-                    list.Add(subKey.Item2);
+                    list.Add(subKey.Item2!);
                 }
 
                 return new ConfiguredListParameter { List = list.ToArray() };
@@ -303,10 +303,10 @@ public static class ConfigurationExtensions
         }
 
         // There are sub-keys but not all zero-based sequential numbers - it's a dictionary.
-        var dict = new Dictionary<string, string?>();
-        foreach (var subKey in subKeys)
+        var dict = new Dictionary<string, string>();
+        foreach (var subKey in subKeys.Where(s => s.Item2 is not null))
         {
-            dict[subKey.Item1] = subKey.Item2;
+            dict[subKey.Item1] = subKey.Item2!;
         }
 
         return new ConfiguredDictionaryParameter { Dictionary = dict };

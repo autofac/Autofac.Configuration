@@ -126,6 +126,9 @@
   <data name="DictionaryKeyMayNotBeNullOrEmpty" xml:space="preserve">
     <value>Key cannot be null or empty in a dictionary parameter.</value>
   </data>
+  <data name="NoConstructorsFound" xml:space="preserve">
+    <value>No constructors on type '{0}' can be found. Make sure your type has at least one public constructor.</value>
+  </data>
   <data name="ServiceTypeMustBeSpecified" xml:space="preserve">
     <value>If 'name' is specified, 'service' must also be specified (component name='{0}'.)</value>
   </data>

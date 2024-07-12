@@ -15,7 +15,7 @@ internal class ConfiguredListParameter
     /// <summary>
     /// Gets or sets the list of raw values.
     /// </summary>
-    public string?[]? List { get; set; }
+    public string[]? List { get; set; }
 
     private class ListTypeConverter : TypeConverter
     {

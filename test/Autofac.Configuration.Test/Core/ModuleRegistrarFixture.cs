@@ -45,7 +45,7 @@ public class ModuleRegistrarFixture
     }
 
     [Fact]
-    public void RegisterConfiguredComponents_ModuleWithNoPublicConstructor_ThrowsInvalidOperation()
+    public void RegisterConfiguredComponents_ModuleWithNoPublicConstructor_ThrowsNoConstructorsFound()
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_ModuleWithNoPublicConstructor.json");
         Assert.Throws<NoConstructorsFoundException>(() => builder.Build());

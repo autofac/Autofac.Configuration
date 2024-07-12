@@ -16,7 +16,7 @@ internal class ConfiguredDictionaryParameter
     /// <summary>
     /// Gets or sets the dictionary of raw values.
     /// </summary>
-    public Dictionary<string, string?>? Dictionary { get; set; }
+    public Dictionary<string, string>? Dictionary { get; set; }
 
     private class DictionaryTypeConverter : TypeConverter
     {
