@@ -7,7 +7,7 @@
       "cwd": "${workspaceFolder}/test/Autofac.Configuration.Test",
       "name": ".NET Core Launch (console)",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/test/Autofac.Configuration.Test/bin/Debug/netcoreapp2.0/Autofac.Configuration.Test.dll",
+      "program": "${workspaceFolder}/test/Autofac.Configuration.Test/bin/Debug/net8.0/Autofac.Configuration.Test.dll",
       "request": "launch",
       "stopAtEntry": false,
       "type": "coreclr"

@@ -12,8 +12,8 @@ public class ComponentRegistrarFixture
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_SameTypeRegisteredMultipleTimes.json");
         var container = builder.Build();
-        var collection = container.Resolve<IEnumerable<SimpleComponent>>();
-        Assert.Equal(2, collection.Count());
+        var collection = container.Resolve<IEnumerable<SimpleComponent>>().ToList();
+        Assert.Equal(2, collection.Count);
 
         // Test using Any() because we aren't necessarily guaranteed the order of resolution.
         Assert.True(collection.Any(a => a.Input == 5.123), "The first registration (5.123) wasn't found.");

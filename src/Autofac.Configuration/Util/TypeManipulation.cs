@@ -27,7 +27,7 @@ internal class TypeManipulation
     /// <exception cref="InvalidOperationException">
     /// Thrown if conversion of the value fails.
     /// </exception>
-    public static object? ChangeToCompatibleType(object value, Type destinationType, ParameterInfo memberInfo)
+    public static object? ChangeToCompatibleType(object? value, Type destinationType, ParameterInfo memberInfo)
     {
         TypeConverterAttribute? attrib = null;
         if (memberInfo != null)
@@ -53,7 +53,7 @@ internal class TypeManipulation
     /// <exception cref="InvalidOperationException">
     /// Thrown if conversion of the value fails.
     /// </exception>
-    public static object? ChangeToCompatibleType(object value, Type destinationType, MemberInfo memberInfo)
+    public static object? ChangeToCompatibleType(object? value, Type destinationType, MemberInfo memberInfo)
     {
         TypeConverterAttribute? attrib = null;
         if (memberInfo != null)
@@ -79,7 +79,7 @@ internal class TypeManipulation
     /// <exception cref="InvalidOperationException">
     /// Thrown if conversion of the value fails.
     /// </exception>
-    public static object? ChangeToCompatibleType(object value, Type destinationType, TypeConverterAttribute? converterAttribute = null)
+    public static object? ChangeToCompatibleType(object? value, Type destinationType, TypeConverterAttribute? converterAttribute = null)
     {
         if (destinationType == null)
         {
