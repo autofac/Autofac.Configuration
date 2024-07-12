@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Autofac Project. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using Autofac.Configuration.Core;
 using Autofac.Core;
+using Microsoft.Extensions.Configuration;
 
 namespace Autofac.Configuration.Test.Core;
 
@@ -84,6 +86,22 @@ public class ComponentRegistrarFixture
 
         // Issue #2 - Ensure properties in base classes can be set by config.
         Assert.Equal("hello", e.Message);
+    }
+
+    [Fact]
+    public void RegisterConfiguredComponents_NullConfiguration()
+    {
+        var registrar = new ComponentRegistrar();
+        var builder = new ContainerBuilder();
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguredComponents(builder, null));
+    }
+
+    [Fact]
+    public void RegisterConfiguredComponents_NullContainerBuilder()
+    {
+        var registrar = new ComponentRegistrar();
+        var config = new ConfigurationBuilder().Build();
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguredComponents(null, config));
     }
 
     [Fact]

@@ -226,16 +226,6 @@ public static class ConfigurationExtensions
     /// </exception>
     internal static IEnumerable<IConfigurationSection> GetOrderedSubsections(this IConfiguration configuration, string key)
     {
-        if (configuration == null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
-
-        if (key == null)
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
-
         var configurationSection = configuration.GetSection(key);
         foreach (var section in configurationSection.GetChildren())
         {

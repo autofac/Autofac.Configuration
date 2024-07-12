@@ -11,6 +11,10 @@
     "typeparam",
     "xunit"
   ],
+  "coverage-gutters.coverageBaseDir": "artifacts/coverage/**",
+  "coverage-gutters.coverageFileNames": [
+    "coverage.info"
+  ],
   "dotnet-test-explorer.runInParallel": true,
   "dotnet-test-explorer.testProjectPath": "test/**/*Test.csproj",
   "dotnet.unitTestDebuggingOptions": {

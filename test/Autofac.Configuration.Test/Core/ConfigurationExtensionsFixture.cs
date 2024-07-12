@@ -88,6 +88,15 @@ public class ConfigurationExtensionsFixture
         Assert.Throws<ArgumentNullException>(() => config.GetAssembly(null));
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void GetParameters_EmptyKey(string key)
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentException>(() => config.GetParameters(key).ToList());
+    }
+
     [Fact]
     public void GetParameters_ListParameterPopulated()
     {
@@ -99,6 +108,19 @@ public class ConfigurationExtensionsFixture
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<string> { "a", "b" }, provider());
+    }
+
+    [Fact]
+    public void GetParameters_NullConfiguration()
+    {
+        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null).GetParameters("parameters").ToList());
+    }
+
+    [Fact]
+    public void GetParameters_NullKey()
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentNullException>(() => config.GetParameters(null).ToList());
     }
 
     [Fact]
@@ -168,6 +190,15 @@ public class ConfigurationExtensionsFixture
         Assert.Equal(2.345, obj.Convertible["b"].Value);
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void GetProperties_EmptyKey(string key)
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentException>(() => config.GetProperties(key).ToList());
+    }
+
     [Fact]
     public void GetProperties_ListConversionUsesTypeConverterAttribute()
     {
@@ -207,6 +238,19 @@ public class ConfigurationExtensionsFixture
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<double> { 1.234, 2.345 }, provider());
+    }
+
+    [Fact]
+    public void GetProperties_NullConfiguration()
+    {
+        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null).GetProperties("parameters").ToList());
+    }
+
+    [Fact]
+    public void GetProperties_NullKey()
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentNullException>(() => config.GetProperties(null).ToList());
     }
 
     [Fact]
