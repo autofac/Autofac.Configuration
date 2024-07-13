@@ -72,7 +72,7 @@ public static class ConfigurationExtensions
             throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.ArgumentMayNotBeEmpty, "configuration key"), nameof(key));
         }
 
-        string assemblyName = configuration[key];
+        var assemblyName = configuration[key];
         return string.IsNullOrWhiteSpace(assemblyName) ? null : Assembly.Load(new AssemblyName(assemblyName));
     }
 
@@ -129,7 +129,7 @@ public static class ConfigurationExtensions
     /// </param>
     /// <param name="key">
     /// The <see cref="string"/> key indicating the sub-element with the
-    /// propeties. Usually this is <c>properties</c>.
+    /// properties. Usually this is <c>properties</c>.
     /// </param>
     /// <returns>
     /// An <see cref="IEnumerable{T}"/> of <see cref="Parameter"/> values
@@ -200,7 +200,7 @@ public static class ConfigurationExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        string typeName = configuration[key];
+        var typeName = configuration[key];
         var type = Type.GetType(typeName);
 
         if (type == null && defaultAssembly != null)
@@ -226,22 +226,12 @@ public static class ConfigurationExtensions
     /// </exception>
     internal static IEnumerable<IConfigurationSection> GetOrderedSubsections(this IConfiguration configuration, string key)
     {
-        if (configuration == null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
-
-        if (key == null)
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
-
         var configurationSection = configuration.GetSection(key);
         foreach (var section in configurationSection.GetChildren())
         {
             yield return int.TryParse(section.Key, out var _)
                 ? section
-                : throw new InvalidOperationException(ConfigurationResources.FormatCollectionMustBeOrderedByName(key, configurationSection.Path));
+                : throw new InvalidOperationException(string.Format(ConfigurationResources.CollectionMustBeOrderedByName, key, configurationSection.Path));
         }
     }
 
@@ -266,12 +256,12 @@ public static class ConfigurationExtensions
     /// sequential, zero-based numeric keys.
     /// </para>
     /// </remarks>
-    private static object GetConfiguredParameterValue(IConfigurationSection value)
+    private static object? GetConfiguredParameterValue(IConfigurationSection value)
     {
-        var subKeys = value.GetChildren().Select(sk => new Tuple<string, string>(GetKeyName(sk.Key), sk.Value)).ToArray();
+        Tuple<string, string?>[] subKeys = value.GetChildren().Select(sk => new Tuple<string, string?>(GetKeyName(sk.Key), sk.Value)).ToArray();
         if (subKeys.Length == 0)
         {
-            // No subkeys indicates a scalar value.
+            // No sub-keys indicates a scalar value.
             return value.Value;
         }
 
@@ -293,20 +283,20 @@ public static class ConfigurationExtensions
             if (isList)
             {
                 var list = new List<string>();
-                foreach (var subKey in subKeys)
+                foreach (var subKey in subKeys.Where(s => s.Item2 is not null))
                 {
-                    list.Add(subKey.Item2);
+                    list.Add(subKey.Item2!);
                 }
 
                 return new ConfiguredListParameter { List = list.ToArray() };
             }
         }
 
-        // There are subkeys but not all zero-based sequential numbers - it's a dictionary.
+        // There are sub-keys but not all zero-based sequential numbers - it's a dictionary.
         var dict = new Dictionary<string, string>();
-        foreach (var subKey in subKeys)
+        foreach (var subKey in subKeys.Where(s => s.Item2 is not null))
         {
-            dict[subKey.Item1] = subKey.Item2;
+            dict[subKey.Item1] = subKey.Item2!;
         }
 
         return new ConfiguredDictionaryParameter { Dictionary = dict };

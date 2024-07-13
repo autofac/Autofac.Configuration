@@ -102,7 +102,7 @@ public class ComponentRegistrar : IComponentRegistrar
             // sources, we can't use "name" as the keyed service identifier;
             // instead, it must be "key."
             var serviceType = serviceDefinition.GetType("type", defaultAssembly);
-            string serviceKey = serviceDefinition["key"];
+            var serviceKey = serviceDefinition["key"];
             yield return !string.IsNullOrEmpty(serviceKey) ? new KeyedService(serviceKey, serviceType) : new TypedService(serviceType);
         }
     }
@@ -144,7 +144,11 @@ public class ComponentRegistrar : IComponentRegistrar
 
         foreach (var ep in component.GetOrderedSubsections("metadata"))
         {
-            registrar.WithMetadata(ep["key"], TypeManipulation.ChangeToCompatibleType(ep["value"], ep.GetType("type", defaultAssembly)));
+            var key = ep["key"];
+            if (key is not null)
+            {
+                registrar.WithMetadata(key, TypeManipulation.ChangeToCompatibleType(ep["value"], ep.GetType("type", defaultAssembly)));
+            }
         }
     }
 
@@ -382,7 +386,7 @@ public class ComponentRegistrar : IComponentRegistrar
             throw new ArgumentNullException(nameof(registrar));
         }
 
-        string ownership = component["ownership"];
+        var ownership = component["ownership"];
         if (string.IsNullOrWhiteSpace(ownership))
         {
             return;
@@ -402,7 +406,7 @@ public class ComponentRegistrar : IComponentRegistrar
             return;
         }
 
-        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognisedOwnership, ownership));
+        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognizedOwnership, ownership));
     }
 
     /// <summary>
@@ -527,7 +531,7 @@ public class ComponentRegistrar : IComponentRegistrar
             throw new ArgumentNullException(nameof(registrar));
         }
 
-        string lifetimeScope = component["instanceScope"];
+        var lifetimeScope = component["instanceScope"];
         if (string.IsNullOrWhiteSpace(lifetimeScope))
         {
             return;
@@ -561,6 +565,6 @@ public class ComponentRegistrar : IComponentRegistrar
             return;
         }
 
-        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognisedScope, lifetimeScope));
+        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognizedScope, lifetimeScope));
     }
 }

@@ -63,8 +63,15 @@ public class ModuleRegistrar : IModuleRegistrar
     {
         var parametersElement = moduleElement.GetSection("parameters");
         var parameterNames = parametersElement.GetChildren().Select(section => section.Key);
-        var constructor = GetConstructorMatchingParameterNames(type, parameterNames) ?? GetMostParametersConstructor(type);
 
+        var constructorFinder = new DefaultConstructorFinder();
+        var publicConstructors = constructorFinder.FindConstructors(type);
+        if (publicConstructors.Length == 0)
+        {
+            throw new NoConstructorsFoundException(type, constructorFinder);
+        }
+
+        var constructor = GetConstructorMatchingParameterNames(publicConstructors, parameterNames) ?? GetMostParametersConstructor(publicConstructors);
         var parameters = constructor.GetParameters()
                                     .Select(p => parametersElement.GetSection(p.Name).Get(p.ParameterType))
                                     .ToArray();
@@ -78,25 +85,17 @@ public class ModuleRegistrar : IModuleRegistrar
         return module;
     }
 
-    private static ConstructorInfo GetConstructorMatchingParameterNames(Type type, IEnumerable<string> parameterNames)
+    private static ConstructorInfo GetConstructorMatchingParameterNames(ConstructorInfo[] constructors, IEnumerable<string> parameterNames)
     {
-        var finder = new DefaultConstructorFinder();
-
-        var publicConstructors = finder.FindConstructors(type);
-
-        return publicConstructors.Where(constructorInfo => constructorInfo.GetParameters()
-                                                                          .Select(pInfo => pInfo.Name)
-                                                                          .OrderBy(name => name)
-                                                                          .SequenceEqual(parameterNames.OrderBy(s => s), StringComparer.OrdinalIgnoreCase))
-                                                                          .FirstOrDefault();
+        return constructors.Where(constructorInfo => constructorInfo.GetParameters()
+                                                                    .Select(pInfo => pInfo.Name)
+                                                                    .OrderBy(name => name)
+                                                                    .SequenceEqual(parameterNames.OrderBy(s => s), StringComparer.OrdinalIgnoreCase))
+                                                                    .FirstOrDefault();
     }
 
-    private static ConstructorInfo GetMostParametersConstructor(Type type)
+    private static ConstructorInfo GetMostParametersConstructor(ConstructorInfo[] constructors)
     {
-        var finder = new DefaultConstructorFinder();
-
-        var publicConstructors = finder.FindConstructors(type);
-
-        return publicConstructors.OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
+        return constructors.OrderByDescending(x => x.GetParameters().Length).First();
     }
 }

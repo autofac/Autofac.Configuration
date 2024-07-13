@@ -88,6 +88,15 @@ public class ConfigurationExtensionsFixture
         Assert.Throws<ArgumentNullException>(() => config.GetAssembly(null));
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void GetParameters_EmptyKey(string key)
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentException>(() => config.GetParameters(key).ToList());
+    }
+
     [Fact]
     public void GetParameters_ListParameterPopulated()
     {
@@ -99,6 +108,19 @@ public class ConfigurationExtensionsFixture
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<string> { "a", "b" }, provider());
+    }
+
+    [Fact]
+    public void GetParameters_NullConfiguration()
+    {
+        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null).GetParameters("parameters").ToList());
+    }
+
+    [Fact]
+    public void GetParameters_NullKey()
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentNullException>(() => config.GetParameters(null).ToList());
     }
 
     [Fact]
@@ -133,9 +155,11 @@ public class ConfigurationExtensionsFixture
         var provider = (Func<object>)null;
         var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
 
-        // Gotcha in ConfigurationModel - if the list/dictionary is empty
-        // then configuration won't see it or add the key to the list.
-        Assert.Null(parameter);
+        // In older .NET there was a gotcha in ConfigurationModel - if the
+        // list/dictionary was empty then configuration wouldn't see it or add
+        // the key to the list. In later .NET this was fixed and empty lists are
+        // now included.
+        Assert.NotNull(parameter);
     }
 
     [Fact]
@@ -166,6 +190,15 @@ public class ConfigurationExtensionsFixture
         Assert.Equal(2.345, obj.Convertible["b"].Value);
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void GetProperties_EmptyKey(string key)
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentException>(() => config.GetProperties(key).ToList());
+    }
+
     [Fact]
     public void GetProperties_ListConversionUsesTypeConverterAttribute()
     {
@@ -187,9 +220,11 @@ public class ConfigurationExtensionsFixture
         var provider = (Func<object>)null;
         var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
 
-        // Gotcha in ConfigurationModel - if the list/dictionary is empty
-        // then configuration won't see it or add the key to the list.
-        Assert.Null(parameter);
+        // In older .NET there was a gotcha in ConfigurationModel - if the
+        // list/dictionary was empty then configuration wouldn't see it or add
+        // the key to the list. In later .NET this was fixed and empty lists are
+        // now included.
+        Assert.NotNull(parameter);
     }
 
     [Fact]
@@ -203,6 +238,19 @@ public class ConfigurationExtensionsFixture
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<double> { 1.234, 2.345 }, provider());
+    }
+
+    [Fact]
+    public void GetProperties_NullConfiguration()
+    {
+        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null).GetProperties("parameters").ToList());
+    }
+
+    [Fact]
+    public void GetProperties_NullKey()
+    {
+        var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
+        Assert.Throws<ArgumentNullException>(() => config.GetProperties(null).ToList());
     }
 
     [Fact]

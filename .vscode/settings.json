@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "autofac",
+    "autowired",
     "cref",
     "cyclomatic",
     "langword",
@@ -10,7 +11,24 @@
     "typeparam",
     "xunit"
   ],
+  "coverage-gutters.coverageBaseDir": "artifacts/coverage/**",
+  "coverage-gutters.coverageFileNames": [
+    "coverage.info"
+  ],
+  "dotnet-test-explorer.runInParallel": true,
   "dotnet-test-explorer.testProjectPath": "test/**/*Test.csproj",
-  "omnisharp.enableEditorConfigSupport": true,
-  "omnisharp.enableRoslynAnalyzers": true
+  "dotnet.unitTestDebuggingOptions": {
+    "enableStepFiltering": false,
+    "justMyCode": false,
+    "requireExactSource": false,
+    "sourceLinkOptions": {
+      "*": {
+        "enabled": true
+      }
+    },
+    "suppressJITOptimizations": true,
+    "symbolOptions": {
+      "searchNuGetOrgSymbolServer": true
+    }
+  }
 }

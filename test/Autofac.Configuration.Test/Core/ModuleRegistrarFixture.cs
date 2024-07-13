@@ -13,8 +13,8 @@ public class ModuleRegistrarFixture
         // Issue #271: Could not register more than one module with the same type but different parameters in XmlConfiguration.
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_SameModuleRegisteredMultipleTimes.json");
         var container = builder.Build();
-        var collection = container.Resolve<IEnumerable<SimpleComponent>>();
-        Assert.Equal(2, collection.Count());
+        var collection = container.Resolve<IEnumerable<SimpleComponent>>().ToList();
+        Assert.Equal(2, collection.Count);
 
         // Test using Any() because we aren't necessarily guaranteed the order of resolution.
         Assert.True(collection.Any(a => a.Message == "First"), "The first registration wasn't found.");
@@ -27,13 +27,13 @@ public class ModuleRegistrarFixture
         // Issue #44: Loading new modules via ConfigurationRegistrar always constructs modules using the constructor with most parameters.
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_SameModuleWithVaryingConstructorParams.json");
         var container = builder.Build();
-        var collection = container.Resolve<IEnumerable<AnotherSimpleComponent>>();
-        Assert.Equal(4, collection.Count());
+        var collection = container.Resolve<IEnumerable<AnotherSimpleComponent>>().ToList();
+        Assert.Equal(4, collection.Count);
 
-        Assert.Equal(1, collection.Count(component => component.ABool != null && component.Input == null && component.Message == null));
-        Assert.Equal(1, collection.Count(component => component.ABool != null && component.Input != null && component.Message == null));
-        Assert.Equal(1, collection.Count(component => component.ABool != null && component.Input != null && component.Message != null));
-        Assert.Equal(1, collection.Count(component => component.ABool == null && component.Input == null && component.Message == null)); // Fallback case
+        Assert.Single(collection, component => component.ABool != null && component.Input == null && component.Message == null);
+        Assert.Single(collection, component => component.ABool != null && component.Input != null && component.Message == null);
+        Assert.Single(collection, component => component.ABool != null && component.Input != null && component.Message != null);
+        Assert.Single(collection, component => component.ABool == null && component.Input == null && component.Message == null); // Fallback case
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class ModuleRegistrarFixture
     }
 
     [Fact]
-    public void RegisterConfiguredComponents_ModuleWithNoPublicConstructor_ThrowsInvalidOperation()
+    public void RegisterConfiguredComponents_ModuleWithNoPublicConstructor_ThrowsNoConstructorsFound()
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ModuleRegistrar_ModuleWithNoPublicConstructor.json");
         Assert.Throws<NoConstructorsFoundException>(() => builder.Build());

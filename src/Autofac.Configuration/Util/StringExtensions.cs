@@ -24,7 +24,7 @@ public static class StringExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown if <paramref name="value" /> can't be parsed into a <see cref="bool"/>.
     /// </exception>
-    public static bool ToFlexibleBoolean(this string value)
+    public static bool ToFlexibleBoolean(this string? value)
     {
         if (string.IsNullOrWhiteSpace(value) ||
             value.Equals("false", StringComparison.OrdinalIgnoreCase) ||
@@ -42,6 +42,6 @@ public static class StringExtensions
             return true;
         }
 
-        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognisedBoolean, value));
+        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.UnrecognizedBoolean, value));
     }
 }

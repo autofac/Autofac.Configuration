@@ -39,7 +39,7 @@ internal class ConfiguredListParameter
                     if (castValue.List != null)
                     {
                         var generics = instantiableType.GetGenericArguments();
-                        foreach (string item in castValue.List)
+                        foreach (var item in castValue.List)
                         {
                             collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
                         }
