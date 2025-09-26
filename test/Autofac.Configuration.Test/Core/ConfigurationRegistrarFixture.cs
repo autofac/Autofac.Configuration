@@ -11,9 +11,9 @@ public class ConfigurationRegistrarFixture
     [Fact]
     public void RegisterConfiguration_NullBuilder()
     {
-        var configuration = new Mock<IConfiguration>();
+        var configuration = new ConfigurationBuilder().Build();
         var registrar = new ConfigurationRegistrar();
-        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(null, configuration.Object));
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(null, configuration));
     }
 
     [Fact]
