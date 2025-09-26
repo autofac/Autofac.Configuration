@@ -11,12 +11,11 @@
     "typeparam",
     "xunit"
   ],
-  "coverage-gutters.coverageBaseDir": "artifacts/coverage/**",
+  "coverage-gutters.coverageBaseDir": "artifacts/logs",
   "coverage-gutters.coverageFileNames": [
-    "coverage.info"
+    "**/coverage.cobertura.xml"
   ],
-  "dotnet-test-explorer.runInParallel": true,
-  "dotnet-test-explorer.testProjectPath": "test/**/*Test.csproj",
+  "dotnet.defaultSolution": "Autofac.Configuration.sln",
   "dotnet.unitTestDebuggingOptions": {
     "enableStepFiltering": false,
     "justMyCode": false,
@@ -30,5 +29,12 @@
     "symbolOptions": {
       "searchNuGetOrgSymbolServer": true
     }
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.resx": "$(capture).*.resx, $(capture).designer.cs, $(capture).designer.vb"
+  },
+  "files.watcherExclude": {
+    "**/target": true
   }
 }

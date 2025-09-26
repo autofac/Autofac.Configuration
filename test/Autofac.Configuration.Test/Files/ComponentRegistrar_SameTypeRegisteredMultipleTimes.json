@@ -1,17 +1,17 @@
 {
-    "defaultAssembly": "Autofac.Configuration.Test",
-    "components": [
-        {
-            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
-            "parameters": {
-                "input": 5.123
-            }
-        },
-        {
-            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
-            "parameters": {
-                "input": 10.234
-            }
-        }
-    ]
+  "components": [
+    {
+      "parameters": {
+        "input": 5.123
+      },
+      "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent"
+    },
+    {
+      "parameters": {
+        "input": 10.234
+      },
+      "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent"
+    }
+  ],
+  "defaultAssembly": "Autofac.Configuration.Test"
 }

@@ -1,24 +1,24 @@
-﻿{
-    "defaultAssembly": "mscorlib",
-    "components": [
+{
+  "components": [
+    {
+      "autoActivate": true,
+      "services": [
         {
-            "type": "System.Object",
-            "services": [
-                {
-                    "type": "System.Object",
-                    "key": "a"
-                }
-            ],
-            "autoActivate": true
-        },
-        {
-            "type": "System.Object",
-            "services": [
-                {
-                    "type": "System.Object",
-                    "key": "b"
-                }
-            ]
+          "key": "a",
+          "type": "System.Object"
         }
-    ]
+      ],
+      "type": "System.Object"
+    },
+    {
+      "services": [
+        {
+          "key": "b",
+          "type": "System.Object"
+        }
+      ],
+      "type": "System.Object"
+    }
+  ],
+  "defaultAssembly": "mscorlib"
 }
