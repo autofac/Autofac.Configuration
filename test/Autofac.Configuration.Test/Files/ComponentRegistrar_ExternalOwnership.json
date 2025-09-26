@@ -1,9 +1,9 @@
-﻿{
-    "defaultAssembly": "Autofac.Configuration.Test",
-    "components": [
-        {
-            "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent",
-            "ownership": "external"
-        }
-    ]
+{
+  "components": [
+    {
+      "ownership": "external",
+      "type": "Autofac.Configuration.Test.Core.ComponentRegistrarFixture+SimpleComponent"
+    }
+  ],
+  "defaultAssembly": "Autofac.Configuration.Test"
 }

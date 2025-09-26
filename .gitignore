@@ -83,11 +83,6 @@ _TeamCity*
 # DotCover is a Code Coverage Tool
 *.dotCover
 
-# Coverage
-coverage.*
-codecov.sh
-coverage/
-
 # NCrunch
 *.ncrunch*
 .*crunch*.local.xml
@@ -113,7 +108,6 @@ publish/
 *.pubxml
 
 # NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
 packages/
 
 # Windows Azure Build Output
@@ -138,6 +132,7 @@ node_modules/
 bower_components/
 wwwroot/
 project.lock.json
+*.Designer.cs
 
 # RIA/Silverlight projects
 Generated_Code/
