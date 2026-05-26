@@ -82,7 +82,10 @@ public class TypeManipulationFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class Convertible
     {
-        public int Value { get; set; }
+        public int Value
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -119,6 +122,9 @@ public class TypeManipulationFixture
         }
 
         [TypeConverter(typeof(ConvertibleConverter))]
-        public Convertible Property { get; set; }
+        public Convertible Property
+        {
+            get; set;
+        }
     }
 }

@@ -59,7 +59,10 @@ public class ModuleRegistrarFixture
             Message = message;
         }
 
-        public string Message { get; private set; }
+        public string Message
+        {
+            get; private set;
+        }
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -88,11 +91,20 @@ public class ModuleRegistrarFixture
             Message = message;
         }
 
-        public bool? ABool { get; set; }
+        public bool? ABool
+        {
+            get; set;
+        }
 
-        public double? Input { get; set; }
+        public double? Input
+        {
+            get; set;
+        }
 
-        public string Message { get; set; }
+        public string Message
+        {
+            get; set;
+        }
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -111,7 +123,10 @@ public class ModuleRegistrarFixture
             Message = message;
         }
 
-        public string Message { get; private set; }
+        public string Message
+        {
+            get; private set;
+        }
     }
 
     private interface ITestComponent
@@ -130,11 +145,20 @@ public class ModuleRegistrarFixture
             Input = input;
         }
 
-        public bool ABool { get; set; }
+        public bool ABool
+        {
+            get; set;
+        }
 
-        public double Input { get; set; }
+        public double Input
+        {
+            get; set;
+        }
 
-        public string Message { get; set; }
+        public string Message
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -144,10 +168,19 @@ public class ModuleRegistrarFixture
         {
         }
 
-        public bool? ABool { get; set; }
+        public bool? ABool
+        {
+            get; set;
+        }
 
-        public double? Input { get; set; }
+        public double? Input
+        {
+            get; set;
+        }
 
-        public string Message { get; set; }
+        public string Message
+        {
+            get; set;
+        }
     }
 }

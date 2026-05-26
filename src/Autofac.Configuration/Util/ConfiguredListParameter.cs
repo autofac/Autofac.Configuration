@@ -15,7 +15,10 @@ internal class ConfiguredListParameter
     /// <summary>
     /// Gets or sets the list of raw values.
     /// </summary>
-    public string[]? List { get; set; }
+    public string[]? List
+    {
+        get; set;
+    }
 
     private class ListTypeConverter : TypeConverter
     {
@@ -60,7 +63,7 @@ internal class ConfiguredListParameter
                     if (castValue.List != null)
                     {
                         var generics = instantiableType.GetGenericArguments();
-                        for (int i = 0; i < castValue.List.Length; i++)
+                        for (var i = 0; i < castValue.List.Length; i++)
                         {
                             var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
                             var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);

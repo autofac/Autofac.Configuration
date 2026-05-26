@@ -302,13 +302,19 @@ public class ConfigurationExtensionsFixture
     private class BaseSimpleParametersAndProperties
     {
         // Issue #2 - Ensure properties in base classes can be set by config.
-        public string Text { get; set; }
+        public string Text
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class Convertible
     {
-        public double Value { get; set; }
+        public double Value
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -389,7 +395,7 @@ public class ConfigurationExtensionsFixture
 
             var list = new List<Convertible>();
             var converter = new ConvertibleConverter();
-            foreach (string item in castValue.List)
+            foreach (var item in castValue.List)
             {
                 list.Add((Convertible)converter.ConvertFrom(item));
             }
@@ -406,21 +412,36 @@ public class ConfigurationExtensionsFixture
             Parameter = parameter;
         }
 
-        public Convertible Parameter { get; set; }
+        public Convertible Parameter
+        {
+            get; set;
+        }
 
         [TypeConverter(typeof(ConvertibleConverter))]
-        public Convertible Property { get; set; }
+        public Convertible Property
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class HasDictionaryProperty
     {
         [TypeConverter(typeof(ConvertibleDictionaryConverter))]
-        public IDictionary<string, Convertible> Convertible { get; set; }
+        public IDictionary<string, Convertible> Convertible
+        {
+            get; set;
+        }
 
-        public Dictionary<string, double> Empty { get; set; }
+        public Dictionary<string, double> Empty
+        {
+            get; set;
+        }
 
-        public Dictionary<string, double> Populated { get; set; }
+        public Dictionary<string, double> Populated
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -431,18 +452,30 @@ public class ConfigurationExtensionsFixture
             List = list;
         }
 
-        public IList<string> List { get; private set; }
+        public IList<string> List
+        {
+            get; private set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class HasEnumerableProperty
     {
         [TypeConverter(typeof(ConvertibleListConverter))]
-        public IEnumerable<Convertible> Convertible { get; set; }
+        public IEnumerable<Convertible> Convertible
+        {
+            get; set;
+        }
 
-        public IEnumerable<double> Empty { get; set; }
+        public IEnumerable<double> Empty
+        {
+            get; set;
+        }
 
-        public IEnumerable<double> Populated { get; set; }
+        public IEnumerable<double> Populated
+        {
+            get; set;
+        }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -454,10 +487,19 @@ public class ConfigurationExtensionsFixture
             IP = ip;
         }
 
-        public IPAddress IP { get; private set; }
+        public IPAddress IP
+        {
+            get; private set;
+        }
 
-        public double Number { get; private set; }
+        public double Number
+        {
+            get; private set;
+        }
 
-        public Uri Url { get; set; }
+        public Uri Url
+        {
+            get; set;
+        }
     }
 }
