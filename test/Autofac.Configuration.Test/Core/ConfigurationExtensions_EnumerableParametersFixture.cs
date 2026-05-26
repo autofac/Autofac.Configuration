@@ -11,7 +11,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class A
     {
-        public IList<string> List { get; set; }
+        public IList<string> List
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -29,7 +32,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class B
     {
-        public IList<double> List { get; set; }
+        public IList<double> List
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -47,7 +53,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class C
     {
-        public IList List { get; set; }
+        public IList List
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -65,7 +74,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class D
     {
-        public double Num { get; set; }
+        public double Num
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -81,7 +93,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class E
     {
-        public IList<double> List { get; set; }
+        public IList<double> List
+        {
+            get; set;
+        }
 
         public E(IList<double> list)
         {
@@ -124,7 +139,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class G
     {
-        public IEnumerable Enumerable { get; set; }
+        public IEnumerable Enumerable
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -144,7 +162,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class H
     {
-        public IEnumerable<double> Enumerable { get; set; }
+        public IEnumerable<double> Enumerable
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -164,7 +185,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class I
     {
-        public ICollection<double> Collection { get; set; }
+        public ICollection<double> Collection
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -188,7 +212,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
             List = list;
         }
 
-        public IList<string> List { get; private set; }
+        public IList<string> List
+        {
+            get; private set;
+        }
     }
 
     [Fact]
@@ -211,7 +238,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
             List = list;
         }
 
-        public IList<string> List { get; private set; }
+        public IList<string> List
+        {
+            get; private set;
+        }
     }
 
     [Fact]
@@ -239,7 +269,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
             List = list;
         }
 
-        public IList<string> List { get; private set; }
+        public IList<string> List
+        {
+            get; private set;
+        }
     }
 
     [Fact]
@@ -259,7 +292,10 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     {
         public M(IList<string> list) => List = list;
 
-        public IList<string> List { get; }
+        public IList<string> List
+        {
+            get;
+        }
     }
 
     /// <summary>

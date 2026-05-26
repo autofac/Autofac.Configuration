@@ -27,7 +27,7 @@ public class ComponentRegistrarFixture
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_EnableAutoActivation.json");
         var container = builder.Build();
-        Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out IComponentRegistration registration), "The expected component was not registered.");
+        Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out var registration), "The expected component was not registered.");
         Assert.True(registration.Services.Any(a => a.GetType().Name == "AutoActivateService"), "Auto activate service was not registered on the component");
     }
 
@@ -36,7 +36,7 @@ public class ComponentRegistrarFixture
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_EnableAutoActivation.json");
         var container = builder.Build();
-        Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("b", typeof(object)), out IComponentRegistration registration), "The expected component was not registered.");
+        Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("b", typeof(object)), out var registration), "The expected component was not registered.");
         Assert.False(registration.Services.Any(a => a.GetType().Name == "AutoActivateService"), "Auto activate service was registered on the component when it shouldn't be.");
     }
 
@@ -54,7 +54,7 @@ public class ComponentRegistrarFixture
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_ExternalOwnership.json");
         var container = builder.Build();
-        Assert.True(container.ComponentRegistry.TryGetRegistration(new TypedService(typeof(SimpleComponent)), out IComponentRegistration registration), "The expected component was not registered.");
+        Assert.True(container.ComponentRegistry.TryGetRegistration(new TypedService(typeof(SimpleComponent)), out var registration), "The expected component was not registered.");
         Assert.Equal(InstanceOwnership.ExternallyOwned, registration.Ownership);
     }
 
@@ -121,7 +121,7 @@ public class ComponentRegistrarFixture
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_ComponentWithMetadata.json");
         var container = builder.Build();
-        Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out IComponentRegistration registration), "The expected service wasn't registered.");
+        Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out var registration), "The expected service wasn't registered.");
         Assert.Equal(42.42, (double)registration.Metadata["answer"]);
     }
 
@@ -163,13 +163,19 @@ public class ComponentRegistrarFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComponentConsumer : BaseComponentConsumer
     {
-        public ITestComponent Component { get; set; }
+        public ITestComponent Component
+        {
+            get; set;
+        }
     }
 
     private class BaseComponentConsumer
     {
         // Issue #2 - Ensure properties in base classes can be set by config.
-        public string Message { get; set; }
+        public string Message
+        {
+            get; set;
+        }
     }
 
     private interface ITestComponent
@@ -188,14 +194,23 @@ public class ComponentRegistrarFixture
             Input = input;
         }
 
-        public bool ABool { get; set; }
+        public bool ABool
+        {
+            get; set;
+        }
 
-        public double Input { get; set; }
+        public double Input
+        {
+            get; set;
+        }
     }
 
     private class BaseComponent
     {
         // Issue #2 - Ensure properties in base classes can be set by config.
-        public string Message { get; set; }
+        public string Message
+        {
+            get; set;
+        }
     }
 }

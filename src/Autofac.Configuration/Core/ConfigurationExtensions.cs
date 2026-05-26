@@ -112,7 +112,7 @@ public static class ConfigurationExtensions
         foreach (var parameterElement in configuration.GetSection(key).GetChildren())
         {
             var parameterValue = GetConfiguredParameterValue(parameterElement);
-            string parameterName = GetKeyName(parameterElement.Key);
+            var parameterName = GetKeyName(parameterElement.Key);
             yield return new ResolvedParameter(
                 (pi, c) => string.Equals(pi.Name, parameterName, StringComparison.OrdinalIgnoreCase),
                 (pi, c) => TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, pi));
@@ -155,16 +155,16 @@ public static class ConfigurationExtensions
         foreach (var propertyElement in configuration.GetSection(key).GetChildren())
         {
             var parameterValue = GetConfiguredParameterValue(propertyElement);
-            string parameterName = GetKeyName(propertyElement.Key);
+            var parameterName = GetKeyName(propertyElement.Key);
             yield return new ResolvedParameter(
                 (pi, c) =>
                 {
-                    return pi.TryGetDeclaringProperty(out PropertyInfo? prop) &&
+                    return pi.TryGetDeclaringProperty(out var prop) &&
                         string.Equals(prop.Name, parameterName, StringComparison.OrdinalIgnoreCase);
                 },
                 (pi, c) =>
                 {
-                    pi.TryGetDeclaringProperty(out PropertyInfo? prop);
+                    pi.TryGetDeclaringProperty(out var prop);
                     return TypeManipulation.ChangeToCompatibleType(parameterValue, pi.ParameterType, prop!);
                 });
         }
@@ -258,18 +258,18 @@ public static class ConfigurationExtensions
     /// </remarks>
     private static object? GetConfiguredParameterValue(IConfigurationSection value)
     {
-        Tuple<string, string?>[] subKeys = value.GetChildren().Select(sk => new Tuple<string, string?>(GetKeyName(sk.Key), sk.Value)).ToArray();
+        var subKeys = value.GetChildren().Select(sk => new Tuple<string, string?>(GetKeyName(sk.Key), sk.Value)).ToArray();
         if (subKeys.Length == 0)
         {
             // No sub-keys indicates a scalar value.
             return value.Value;
         }
 
-        if (subKeys.All(sk => int.TryParse(sk.Item1, out int parsed)))
+        if (subKeys.All(sk => int.TryParse(sk.Item1, out var parsed)))
         {
-            int i = 0;
-            bool isList = true;
-            foreach (int subKey in subKeys.Select(sk => int.Parse(sk.Item1, CultureInfo.InvariantCulture)))
+            var i = 0;
+            var isList = true;
+            foreach (var subKey in subKeys.Select(sk => int.Parse(sk.Item1, CultureInfo.InvariantCulture)))
             {
                 if (subKey != i)
                 {
@@ -312,7 +312,7 @@ public static class ConfigurationExtensions
     /// </returns>
     private static string GetKeyName(string fullKey)
     {
-        int index = fullKey.LastIndexOf(':');
+        var index = fullKey.LastIndexOf(':');
         return index < 0 ? fullKey : fullKey.Substring(index + 1);
     }
 }

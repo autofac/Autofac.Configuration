@@ -33,7 +33,10 @@ public class ConfigurationModule : Module
     /// An <see cref="IConfiguration"/> containing the definition for
     /// modules and components to register with the container.
     /// </value>
-    public IConfiguration Configuration { get; private set; }
+    public IConfiguration Configuration
+    {
+        get; private set;
+    }
 
     /// <summary>
     /// Gets or sets the configuration registrar.
@@ -44,7 +47,10 @@ public class ConfigurationModule : Module
     /// into component registrations. If this value is <see langword="null" />, the registrar
     /// will be a <see cref="Core.ConfigurationRegistrar"/>.
     /// </value>
-    public IConfigurationRegistrar? ConfigurationRegistrar { get; set; }
+    public IConfigurationRegistrar? ConfigurationRegistrar
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Executes the conversion of configuration data into component registrations.

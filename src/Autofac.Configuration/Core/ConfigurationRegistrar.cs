@@ -54,7 +54,10 @@ public class ConfigurationRegistrar : IConfigurationRegistrar
     /// The <see cref="IComponentRegistrar"/> that will be used to parse
     /// configuration values into component registrations.
     /// </value>
-    public IComponentRegistrar ComponentRegistrar { get; private set; }
+    public IComponentRegistrar ComponentRegistrar
+    {
+        get; private set;
+    }
 
     /// <summary>
     /// Gets the module registration parser.
@@ -63,7 +66,10 @@ public class ConfigurationRegistrar : IConfigurationRegistrar
     /// The <see cref="IModuleRegistrar"/> that will be used to parse
     /// configuration values into module registrations.
     /// </value>
-    public IModuleRegistrar ModuleRegistrar { get; private set; }
+    public IModuleRegistrar ModuleRegistrar
+    {
+        get; private set;
+    }
 
     /// <summary>
     /// Registers the contents of a configuration section into a container builder.

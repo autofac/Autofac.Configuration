@@ -10,7 +10,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class A
     {
-        public IDictionary<string, string> Dictionary { get; set; }
+        public IDictionary<string, string> Dictionary
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -30,7 +33,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class B
     {
-        public IDictionary<string, string> Dictionary { get; set; }
+        public IDictionary<string, string> Dictionary
+        {
+            get; set;
+        }
 
         public B(IDictionary<string, string> dictionary)
         {
@@ -55,7 +61,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class C
     {
-        public IDictionary Dictionary { get; set; }
+        public IDictionary Dictionary
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -75,7 +84,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class D
     {
-        public Dictionary<string, string> Dictionary { get; set; }
+        public Dictionary<string, string> Dictionary
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -95,7 +107,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class E
     {
-        public IDictionary<int, string> Dictionary { get; set; }
+        public IDictionary<int, string> Dictionary
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -115,7 +130,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class F
     {
-        public IDictionary<string, int> Dictionary { get; set; }
+        public IDictionary<string, int> Dictionary
+        {
+            get; set;
+        }
     }
 
     [Fact]
@@ -135,7 +153,10 @@ public class ConfigurationExtensions_DictionaryParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class G
     {
-        public IDictionary<int, string> Dictionary { get; set; }
+        public IDictionary<int, string> Dictionary
+        {
+            get; set;
+        }
     }
 
     [Fact]
