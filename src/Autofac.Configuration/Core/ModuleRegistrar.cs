@@ -73,7 +73,7 @@ public class ModuleRegistrar : IModuleRegistrar
 
         var constructor = GetConstructorMatchingParameterNames(publicConstructors, parameterNames) ?? GetMostParametersConstructor(publicConstructors);
         var parameters = constructor.GetParameters()
-                                    .Select(p => parametersElement.GetSection(p.Name).Get(p.ParameterType))
+                                    .Select(p => parametersElement.GetSection(p.Name!).Get(p.ParameterType))
                                     .ToArray();
 
         var module = (IModule)constructor.Invoke(parameters);
@@ -85,10 +85,10 @@ public class ModuleRegistrar : IModuleRegistrar
         return module;
     }
 
-    private static ConstructorInfo GetConstructorMatchingParameterNames(ConstructorInfo[] constructors, IEnumerable<string> parameterNames)
+    private static ConstructorInfo? GetConstructorMatchingParameterNames(ConstructorInfo[] constructors, IEnumerable<string> parameterNames)
     {
         return constructors.Where(constructorInfo => constructorInfo.GetParameters()
-                                                                    .Select(pInfo => pInfo.Name)
+                                                                    .Select(pInfo => pInfo.Name!)
                                                                     .OrderBy(name => name)
                                                                     .SequenceEqual(parameterNames.OrderBy(s => s), StringComparer.OrdinalIgnoreCase))
                                                                     .FirstOrDefault();

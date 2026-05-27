@@ -132,7 +132,7 @@ internal class TypeManipulation
             if (parser != null)
             {
                 var parameters = new[] { value, null };
-                if ((bool)parser.Invoke(null, parameters))
+                if ((bool)parser.Invoke(null, parameters)!)
                 {
                     return parameters[1];
                 }
@@ -157,7 +157,7 @@ internal class TypeManipulation
     /// </exception>
     private static TypeConverter GetTypeConverterFromName(string converterTypeName)
     {
-        var converterType = Type.GetType(converterTypeName, true);
+        var converterType = Type.GetType(converterTypeName, true)!;
         return Activator.CreateInstance(converterType) is not TypeConverter converter
             ? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConverterAttributeTypeNotConverter, converterTypeName))
             : converter;

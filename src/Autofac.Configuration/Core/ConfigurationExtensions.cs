@@ -200,7 +200,8 @@ public static class ConfigurationExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        var typeName = configuration[key];
+        var typeName = configuration[key] ?? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, key));
+
         var type = Type.GetType(typeName);
 
         if (type == null && defaultAssembly != null)
@@ -231,7 +232,7 @@ public static class ConfigurationExtensions
         {
             yield return int.TryParse(section.Key, out var _)
                 ? section
-                : throw new InvalidOperationException(string.Format(ConfigurationResources.CollectionMustBeOrderedByName, key, configurationSection.Path));
+                : throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, ConfigurationResources.CollectionMustBeOrderedByName, key, configurationSection.Path));
         }
     }
 
@@ -261,8 +262,11 @@ public static class ConfigurationExtensions
         var subKeys = value.GetChildren().Select(sk => new Tuple<string, string?>(GetKeyName(sk.Key), sk.Value)).ToArray();
         if (subKeys.Length == 0)
         {
-            // No sub-keys indicates a scalar value.
-            return value.Value;
+            // No sub-keys indicates a scalar value. In M.E.Configuration 10+,
+            // empty JSON arrays produce Value="" with 0 children (previously
+            // Value=null). Treat null/empty as null to maintain backward
+            // compatibility for empty collections.
+            return string.IsNullOrEmpty(value.Value) ? null : value.Value;
         }
 
         if (subKeys.All(sk => int.TryParse(sk.Item1, out var parsed)))

@@ -22,14 +22,14 @@ internal class ConfiguredListParameter
 
     private class ListTypeConverter : TypeConverter
     {
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             return GetInstantiableListType(destinationType) != null ||
                     GetInstantiableDictionaryType(destinationType) != null ||
                     base.CanConvertTo(context, destinationType);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        public override object? ConvertTo(ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object? value, Type destinationType)
         {
             if (value is ConfiguredListParameter castValue)
             {
@@ -38,7 +38,7 @@ internal class ConfiguredListParameter
                 var instantiableType = GetInstantiableListType(destinationType);
                 if (instantiableType != null)
                 {
-                    var collection = (IList)Activator.CreateInstance(instantiableType);
+                    var collection = (IList)Activator.CreateInstance(instantiableType)!;
                     if (castValue.List != null)
                     {
                         var generics = instantiableType.GetGenericArguments();
@@ -59,13 +59,13 @@ internal class ConfiguredListParameter
                 instantiableType = GetInstantiableDictionaryType(destinationType);
                 if (instantiableType != null)
                 {
-                    var dictionary = (IDictionary)Activator.CreateInstance(instantiableType);
+                    var dictionary = (IDictionary)Activator.CreateInstance(instantiableType)!;
                     if (castValue.List != null)
                     {
                         var generics = instantiableType.GetGenericArguments();
                         for (var i = 0; i < castValue.List.Length; i++)
                         {
-                            var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0]);
+                            var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0])!;
                             var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);
 
                             dictionary.Add(convertedKey, convertedValue);
@@ -89,10 +89,11 @@ internal class ConfiguredListParameter
         /// <returns>
         /// A dictionary type where the key can be numeric.
         /// </returns>
-        private static Type? GetInstantiableDictionaryType(Type destinationType)
+        private static Type? GetInstantiableDictionaryType(Type? destinationType)
         {
-            if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
-                (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
+            if (destinationType is not null &&
+                (typeof(IDictionary).IsAssignableFrom(destinationType) ||
+                (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition()))))
             {
                 var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(int), typeof(object) };
                 if (generics.Length != 2)
@@ -119,9 +120,9 @@ internal class ConfiguredListParameter
         /// <returns>
         /// A list type compatible with the data values.
         /// </returns>
-        private static Type? GetInstantiableListType(Type destinationType)
+        private static Type? GetInstantiableListType(Type? destinationType)
         {
-            if (typeof(IEnumerable).IsAssignableFrom(destinationType))
+            if (destinationType is not null && typeof(IEnumerable).IsAssignableFrom(destinationType))
             {
                 var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(object) };
                 if (generics.Length != 1)

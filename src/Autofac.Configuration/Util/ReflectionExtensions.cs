@@ -21,8 +21,8 @@ internal static class ReflectionExtensions
         var mi = pi.Member as MethodInfo;
         if (mi != null && mi.IsSpecialName && mi.Name.StartsWith("set_", StringComparison.Ordinal))
         {
-            prop = mi.DeclaringType.GetProperty(mi.Name.Substring(4));
-            return true;
+            prop = mi.DeclaringType?.GetProperty(mi.Name.Substring(4));
+            return prop != null;
         }
 
         prop = null;
