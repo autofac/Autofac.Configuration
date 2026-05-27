@@ -23,13 +23,13 @@ internal class ConfiguredDictionaryParameter
 
     private class DictionaryTypeConverter : TypeConverter
     {
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
         {
             var instantiableType = GetInstantiableType(destinationType);
 
             if (value is ConfiguredDictionaryParameter castValue && instantiableType != null)
             {
-                var dictionary = (IDictionary)Activator.CreateInstance(instantiableType);
+                var dictionary = (IDictionary)Activator.CreateInstance(instantiableType)!;
                 var generics = instantiableType.GetGenericArguments();
 
                 if (castValue.Dictionary != null)
@@ -41,7 +41,7 @@ internal class ConfiguredDictionaryParameter
                             throw new FormatException(ConfigurationResources.DictionaryKeyMayNotBeNullOrEmpty);
                         }
 
-                        var convertedKey = TypeManipulation.ChangeToCompatibleType(item.Key, generics[0]);
+                        var convertedKey = TypeManipulation.ChangeToCompatibleType(item.Key, generics[0])!;
                         var convertedValue = TypeManipulation.ChangeToCompatibleType(item.Value, generics[1]);
 
                         dictionary.Add(convertedKey, convertedValue);
@@ -54,15 +54,16 @@ internal class ConfiguredDictionaryParameter
             return base.ConvertTo(context, culture, value, destinationType);
         }
 
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             return GetInstantiableType(destinationType) != null || base.CanConvertTo(context, destinationType);
         }
 
-        private static Type? GetInstantiableType(Type destinationType)
+        private static Type? GetInstantiableType(Type? destinationType)
         {
-            if (typeof(IDictionary).IsAssignableFrom(destinationType) ||
-                (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition())))
+            if (destinationType is not null &&
+                (typeof(IDictionary).IsAssignableFrom(destinationType) ||
+                (destinationType.IsConstructedGenericType && typeof(IDictionary<,>).IsAssignableFrom(destinationType.GetGenericTypeDefinition()))))
             {
                 var generics = destinationType.IsConstructedGenericType ? destinationType.GetGenericArguments() : new[] { typeof(string), typeof(object) };
                 if (generics.Length != 2)

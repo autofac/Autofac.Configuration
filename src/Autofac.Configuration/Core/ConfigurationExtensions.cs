@@ -200,7 +200,8 @@ public static class ConfigurationExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        var typeName = configuration[key];
+        var typeName = configuration[key] ?? throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeNotFound, key));
+
         var type = Type.GetType(typeName);
 
         if (type == null && defaultAssembly != null)
@@ -231,7 +232,7 @@ public static class ConfigurationExtensions
         {
             yield return int.TryParse(section.Key, out var _)
                 ? section
-                : throw new InvalidOperationException(string.Format(ConfigurationResources.CollectionMustBeOrderedByName, key, configurationSection.Path));
+                : throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, ConfigurationResources.CollectionMustBeOrderedByName, key, configurationSection.Path));
         }
     }
 
