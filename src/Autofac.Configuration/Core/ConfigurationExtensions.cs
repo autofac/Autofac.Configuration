@@ -262,8 +262,11 @@ public static class ConfigurationExtensions
         var subKeys = value.GetChildren().Select(sk => new Tuple<string, string?>(GetKeyName(sk.Key), sk.Value)).ToArray();
         if (subKeys.Length == 0)
         {
-            // No sub-keys indicates a scalar value.
-            return value.Value;
+            // No sub-keys indicates a scalar value. In M.E.Configuration 10+,
+            // empty JSON arrays produce Value="" with 0 children (previously
+            // Value=null). Treat null/empty as null to maintain backward
+            // compatibility for empty collections.
+            return string.IsNullOrEmpty(value.Value) ? null : value.Value;
         }
 
         if (subKeys.All(sk => int.TryParse(sk.Item1, out var parsed)))
