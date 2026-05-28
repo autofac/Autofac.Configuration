@@ -269,7 +269,7 @@ public static class ConfigurationExtensions
             return string.IsNullOrEmpty(value.Value) ? null : value.Value;
         }
 
-        if (subKeys.All(sk => int.TryParse(sk.Item1, out var parsed)))
+        if (subKeys.All(sk => int.TryParse(sk.Item1, out var _)))
         {
             var i = 0;
             var isList = true;
