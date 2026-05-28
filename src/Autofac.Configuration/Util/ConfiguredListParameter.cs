@@ -20,7 +20,7 @@ internal class ConfiguredListParameter
         get; set;
     }
 
-    private class ListTypeConverter : TypeConverter
+    private sealed class ListTypeConverter : TypeConverter
     {
         public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
