@@ -10,6 +10,7 @@ namespace Autofac.Configuration.Test.Core;
 public class ComponentRegistrarFixture
 {
     [Fact]
+    [SuppressMessage("S1244", "S1244", Justification = "Exact equality is intentional for parsed configuration values.")]
     public void RegisterConfiguredComponents_AllowsMultipleRegistrationsOfSameType()
     {
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_SameTypeRegisteredMultipleTimes.json");
