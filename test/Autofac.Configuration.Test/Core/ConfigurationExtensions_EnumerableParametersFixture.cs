@@ -310,7 +310,8 @@ public class ConfigurationExtensions_EnumerableParametersFixture
         var poco = container.Resolve<M>();
 
         // Val2 is dropped from the configuration when it's parsed.
-        Assert.Collection(poco.List, v => Assert.Equal("Val1", v));
+        var item = Assert.Single(poco.List);
+        Assert.Equal("Val1", item);
     }
 
     public static IEnumerable<object[]> ParsingCultures()
