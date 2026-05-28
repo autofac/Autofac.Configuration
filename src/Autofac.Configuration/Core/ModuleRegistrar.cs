@@ -87,11 +87,10 @@ public class ModuleRegistrar : IModuleRegistrar
 
     private static ConstructorInfo? GetConstructorMatchingParameterNames(ConstructorInfo[] constructors, IEnumerable<string> parameterNames)
     {
-        return constructors.Where(constructorInfo => constructorInfo.GetParameters()
+        return constructors.FirstOrDefault(constructorInfo => constructorInfo.GetParameters()
                                                                     .Select(pInfo => pInfo.Name!)
                                                                     .OrderBy(name => name)
-                                                                    .SequenceEqual(parameterNames.OrderBy(s => s), StringComparer.OrdinalIgnoreCase))
-                                                                    .FirstOrDefault();
+                                                                    .SequenceEqual(parameterNames.OrderBy(s => s), StringComparer.OrdinalIgnoreCase));
     }
 
     private static ConstructorInfo GetMostParametersConstructor(ConstructorInfo[] constructors)
