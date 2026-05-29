@@ -264,7 +264,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
             List = new List<string>();
         }
 
-        public L(IList<string> list = null)
+        public L(IList<string> list)
         {
             List = list;
         }

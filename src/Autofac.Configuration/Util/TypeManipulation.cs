@@ -10,7 +10,7 @@ namespace Autofac.Configuration.Util;
 /// <summary>
 /// Utilities for converting string configuration values into strongly-typed objects.
 /// </summary>
-internal class TypeManipulation
+internal static class TypeManipulation
 {
     /// <summary>
     /// Converts an object to a type compatible with a given parameter.
@@ -97,49 +97,105 @@ internal class TypeManipulation
             return value;
         }
 
-        TypeConverter converter;
-
-        // Try to get custom type converter information.
-        if (converterAttribute != null && !string.IsNullOrEmpty(converterAttribute.ConverterTypeName))
+        if (TryConvertWithKnownStrategies(value, destinationType, converterAttribute, out var converted))
         {
-            converter = GetTypeConverterFromName(converterAttribute.ConverterTypeName);
-            if (converter.CanConvertFrom(value.GetType()))
-            {
-                return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-            }
-        }
-
-        // If there's not a custom converter specified via attribute, try for a default.
-        converter = TypeDescriptor.GetConverter(value.GetType());
-        if (converter.CanConvertTo(destinationType))
-        {
-            return converter.ConvertTo(null, CultureInfo.InvariantCulture, value, destinationType);
-        }
-
-        // Try explicit opposite conversion.
-        converter = TypeDescriptor.GetConverter(destinationType);
-        if (converter.CanConvertFrom(value.GetType()))
-        {
-            return converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-        }
-
-        // Try a TryParse method.
-        if (value is string)
-        {
-            // Some types in later frameworks have string TryParse and ReadOnlySpan<char> TryParse
-            // so they result in an AmbiguousMatchException unless we specify.
-            var parser = destinationType.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public, null, CallingConventions.Standard, new Type[] { typeof(string), destinationType.MakeByRefType() }, null);
-            if (parser != null)
-            {
-                var parameters = new[] { value, null };
-                if ((bool)parser.Invoke(null, parameters)!)
-                {
-                    return parameters[1];
-                }
-            }
+            return converted;
         }
 
         throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, ConfigurationResources.TypeConversionUnsupported, value.GetType(), destinationType));
+    }
+
+    private static bool TryConvertWithKnownStrategies(object value, Type destinationType, TypeConverterAttribute? converterAttribute, out object? converted)
+    {
+        if (TryConvertWithCustomConverter(value, converterAttribute, out converted))
+        {
+            return true;
+        }
+
+        if (TryConvertWithSourceConverter(value, destinationType, out converted))
+        {
+            return true;
+        }
+
+        if (TryConvertWithDestinationConverter(value, destinationType, out converted))
+        {
+            return true;
+        }
+
+        return TryConvertWithTryParse(value, destinationType, out converted);
+    }
+
+    private static bool TryConvertWithCustomConverter(object value, TypeConverterAttribute? converterAttribute, out object? converted)
+    {
+        converted = null;
+
+        if (converterAttribute == null || string.IsNullOrEmpty(converterAttribute.ConverterTypeName))
+        {
+            return false;
+        }
+
+        var converter = GetTypeConverterFromName(converterAttribute.ConverterTypeName);
+        if (!converter.CanConvertFrom(value.GetType()))
+        {
+            return false;
+        }
+
+        converted = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
+        return true;
+    }
+
+    private static bool TryConvertWithSourceConverter(object value, Type destinationType, out object? converted)
+    {
+        converted = null;
+
+        var converter = TypeDescriptor.GetConverter(value.GetType());
+        if (!converter.CanConvertTo(destinationType))
+        {
+            return false;
+        }
+
+        converted = converter.ConvertTo(null, CultureInfo.InvariantCulture, value, destinationType);
+        return true;
+    }
+
+    private static bool TryConvertWithDestinationConverter(object value, Type destinationType, out object? converted)
+    {
+        converted = null;
+
+        var converter = TypeDescriptor.GetConverter(destinationType);
+        if (!converter.CanConvertFrom(value.GetType()))
+        {
+            return false;
+        }
+
+        converted = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
+        return true;
+    }
+
+    private static bool TryConvertWithTryParse(object value, Type destinationType, out object? converted)
+    {
+        converted = null;
+        if (value is not string)
+        {
+            return false;
+        }
+
+        // Some types in later frameworks have string TryParse and ReadOnlySpan<char> TryParse
+        // so they result in an AmbiguousMatchException unless we specify.
+        var parser = destinationType.GetMethod("TryParse", BindingFlags.Static | BindingFlags.Public, null, CallingConventions.Standard, new Type[] { typeof(string), destinationType.MakeByRefType() }, null);
+        if (parser == null)
+        {
+            return false;
+        }
+
+        var parameters = new[] { value, null };
+        if (!(bool)parser.Invoke(null, parameters)!)
+        {
+            return false;
+        }
+
+        converted = parameters[1];
+        return true;
     }
 
     /// <summary>

@@ -31,52 +31,68 @@ internal class ConfiguredListParameter
 
         public override object? ConvertTo(ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object? value, Type destinationType)
         {
-            if (value is ConfiguredListParameter castValue)
+            if (value is not ConfiguredListParameter castValue)
             {
-                // 99% of the time this type of parameter will be associated
-                // with an ordinal list - List<T> or T[] sort of thing...
-                var instantiableType = GetInstantiableListType(destinationType);
-                if (instantiableType != null)
-                {
-                    var collection = (IList)Activator.CreateInstance(instantiableType)!;
-                    if (castValue.List != null)
-                    {
-                        var generics = instantiableType.GetGenericArguments();
-                        foreach (var item in castValue.List)
-                        {
-                            collection.Add(TypeManipulation.ChangeToCompatibleType(item, generics[0]));
-                        }
-                    }
-
-                    return collection;
-                }
-
-                // ...but there is a very small chance this is a Dictionary<int, T> where
-                // the keys are all 0-based and ordinal. This clause checks for
-                // that one edge case. We should only have gotten here if
-                // ConfigurationExtensions.GetConfiguredParameterValue saw
-                // a 0-based configuration dictionary.
-                instantiableType = GetInstantiableDictionaryType(destinationType);
-                if (instantiableType != null)
-                {
-                    var dictionary = (IDictionary)Activator.CreateInstance(instantiableType)!;
-                    if (castValue.List != null)
-                    {
-                        var generics = instantiableType.GetGenericArguments();
-                        for (var i = 0; i < castValue.List.Length; i++)
-                        {
-                            var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0])!;
-                            var convertedValue = TypeManipulation.ChangeToCompatibleType(castValue.List[i], generics[1]);
-
-                            dictionary.Add(convertedKey, convertedValue);
-                        }
-                    }
-
-                    return dictionary;
-                }
+                return base.ConvertTo(context, culture, value, destinationType);
             }
 
-            return base.ConvertTo(context, culture, value, destinationType);
+            return ConvertConfiguredList(castValue, destinationType) ?? base.ConvertTo(context, culture, value, destinationType);
+        }
+
+        private static object? ConvertConfiguredList(ConfiguredListParameter configuredList, Type destinationType)
+        {
+            return ConvertToInstantiableList(configuredList, destinationType) ?? ConvertToInstantiableDictionary(configuredList, destinationType);
+        }
+
+        private static object? ConvertToInstantiableList(ConfiguredListParameter configuredList, Type destinationType)
+        {
+            // 99% of the time this type of parameter will be associated
+            // with an ordinal list - List<T> or T[] sort of thing.
+            var instantiableType = GetInstantiableListType(destinationType);
+            if (instantiableType == null)
+            {
+                return null;
+            }
+
+            var collection = (IList)Activator.CreateInstance(instantiableType)!;
+            if (configuredList.List == null)
+            {
+                return collection;
+            }
+
+            var elementType = instantiableType.GetGenericArguments()[0];
+            foreach (var item in configuredList.List)
+            {
+                collection.Add(TypeManipulation.ChangeToCompatibleType(item, elementType));
+            }
+
+            return collection;
+        }
+
+        private static object? ConvertToInstantiableDictionary(ConfiguredListParameter configuredList, Type destinationType)
+        {
+            // Rare edge case for Dictionary<int, T>-style ordinal keys.
+            var instantiableType = GetInstantiableDictionaryType(destinationType);
+            if (instantiableType == null)
+            {
+                return null;
+            }
+
+            var dictionary = (IDictionary)Activator.CreateInstance(instantiableType)!;
+            if (configuredList.List == null)
+            {
+                return dictionary;
+            }
+
+            var generics = instantiableType.GetGenericArguments();
+            for (var i = 0; i < configuredList.List.Length; i++)
+            {
+                var convertedKey = TypeManipulation.ChangeToCompatibleType(i, generics[0])!;
+                var convertedValue = TypeManipulation.ChangeToCompatibleType(configuredList.List[i], generics[1]);
+                dictionary.Add(convertedKey, convertedValue);
+            }
+
+            return dictionary;
         }
 
         /// <summary>
