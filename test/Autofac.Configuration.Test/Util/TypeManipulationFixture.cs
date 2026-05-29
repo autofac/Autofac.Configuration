@@ -22,7 +22,7 @@ public class TypeManipulationFixture
     public void ChangeToCompatibleType_UsesTypeConverterOnParameter()
     {
         var ctor = typeof(HasTypeConverterAttributes).GetConstructor(new Type[] { typeof(Convertible) });
-        var member = ctor.GetParameters().First();
+        var member = ctor.GetParameters()[0];
         var actual = TypeManipulation.ChangeToCompatibleType("25", typeof(Convertible), member) as Convertible;
         Assert.NotNull(actual);
         Assert.Equal(25, actual.Value);

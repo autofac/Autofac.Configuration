@@ -99,7 +99,7 @@ public class ComponentRegistrar : IComponentRegistrar
         {
             // "name" is a special reserved key in the XML configuration source
             // that enables ordinal collections. To support both JSON and XML
-            // sources, we can't use "name" as the keyed service identifier;
+            // sources, we can't use "name" as the keyed service identifier -
             // instead, it must be "key."
             var serviceType = serviceDefinition.GetType("type", defaultAssembly);
             var serviceKey = serviceDefinition["key"];

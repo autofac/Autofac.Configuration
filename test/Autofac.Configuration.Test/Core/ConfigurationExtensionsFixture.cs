@@ -101,8 +101,8 @@ public class ConfigurationExtensionsFixture
     public void GetParameters_ListParameterPopulated()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasEnumerableParameter).FullName).First();
-        var objectParameter = typeof(HasEnumerableParameter).GetConstructors().First().GetParameters().First(pi => pi.Name == "list");
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasEnumerableParameter).FullName);
+        var objectParameter = typeof(HasEnumerableParameter).GetConstructors()[0].GetParameters().First(pi => pi.Name == "list");
         var provider = (Func<object>)null;
         var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
@@ -137,8 +137,8 @@ public class ConfigurationExtensionsFixture
     public void GetParameters_SimpleParameters(string parameterName, object expectedValue)
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasSimpleParametersAndProperties).FullName).First();
-        var objectParameter = typeof(HasSimpleParametersAndProperties).GetConstructors().First().GetParameters().First(pi => pi.Name == parameterName);
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasSimpleParametersAndProperties).FullName);
+        var objectParameter = typeof(HasSimpleParametersAndProperties).GetConstructors()[0].GetParameters().First(pi => pi.Name == parameterName);
         var provider = (Func<object>)null;
         var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
@@ -150,10 +150,10 @@ public class ConfigurationExtensionsFixture
     public void GetProperties_DictionaryPropertyEmpty()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasDictionaryProperty).FullName).First();
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasDictionaryProperty).FullName);
         var property = typeof(HasDictionaryProperty).GetProperty("Empty");
         var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
 
         // In older .NET there was a gotcha in ConfigurationModel - if the
         // list/dictionary was empty then configuration wouldn't see it or add
@@ -166,10 +166,10 @@ public class ConfigurationExtensionsFixture
     public void GetProperties_DictionaryPropertyPopulated()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasDictionaryProperty).FullName).First();
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasDictionaryProperty).FullName);
         var property = typeof(HasDictionaryProperty).GetProperty("Populated");
         var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         var value = provider();
@@ -215,10 +215,10 @@ public class ConfigurationExtensionsFixture
     public void GetProperties_ListPropertyEmpty()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasEnumerableProperty).FullName).First();
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasEnumerableProperty).FullName);
         var property = typeof(HasEnumerableProperty).GetProperty("Empty");
         var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
 
         // In older .NET there was a gotcha in ConfigurationModel - if the
         // list/dictionary was empty then configuration wouldn't see it or add
@@ -231,10 +231,10 @@ public class ConfigurationExtensionsFixture
     public void GetProperties_ListPropertyPopulated()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasEnumerableProperty).FullName).First();
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasEnumerableProperty).FullName);
         var property = typeof(HasEnumerableProperty).GetProperty("Populated");
         var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<double> { 1.234, 2.345 }, provider());
@@ -267,10 +267,10 @@ public class ConfigurationExtensionsFixture
     public void GetProperties_SimpleProperties(string propertyName, object expectedValue)
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        var component = config.GetSection("components").GetChildren().Where(kvp => kvp["type"] == typeof(HasSimpleParametersAndProperties).FullName).First();
+        var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasSimpleParametersAndProperties).FullName);
         var property = typeof(HasSimpleParametersAndProperties).GetProperties().First(pi => pi.Name == propertyName);
         var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters().First(), new ContainerBuilder().Build(), out provider));
+        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(expectedValue, provider());
