@@ -49,6 +49,6 @@ public static class EmbeddedConfiguration
 
     private static Stream GetEmbeddedFileStream(string configFile)
     {
-        return typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile);
+        return typeof(EmbeddedConfiguration).GetTypeInfo().Assembly.GetManifestResourceStream("Autofac.Configuration.Test.Files." + configFile) ?? throw new FileNotFoundException("Embedded configuration file not found.", configFile);
     }
 }

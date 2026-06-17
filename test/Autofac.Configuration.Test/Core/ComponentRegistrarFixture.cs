@@ -94,7 +94,7 @@ public class ComponentRegistrarFixture
     {
         var registrar = new ComponentRegistrar();
         var builder = new ContainerBuilder();
-        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguredComponents(builder, null));
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguredComponents(builder, null!));
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public class ComponentRegistrarFixture
     {
         var registrar = new ComponentRegistrar();
         var config = new ConfigurationBuilder().Build();
-        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguredComponents(null, config));
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguredComponents(null!, config));
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class ComponentRegistrarFixture
         var builder = EmbeddedConfiguration.ConfigureContainerWithJson("ComponentRegistrar_ComponentWithMetadata.json");
         var container = builder.Build();
         Assert.True(container.ComponentRegistry.TryGetRegistration(new KeyedService("a", typeof(object)), out var registration), "The expected service wasn't registered.");
-        Assert.Equal(42.42, (double)registration.Metadata["answer"]);
+        Assert.Equal(42.42, (double)registration.Metadata["answer"]!);
     }
 
     [Fact]
@@ -164,19 +164,13 @@ public class ComponentRegistrarFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComponentConsumer : BaseComponentConsumer
     {
-        public ITestComponent Component
-        {
-            get; set;
-        }
+        public ITestComponent Component { get; set; } = null!;
     }
 
     private class BaseComponentConsumer
     {
         // Issue #2 - Ensure properties in base classes can be set by config.
-        public string Message
-        {
-            get; set;
-        }
+        public string Message { get; set; } = null!;
     }
 
     private interface ITestComponent
@@ -209,9 +203,6 @@ public class ComponentRegistrarFixture
     private class BaseComponent
     {
         // Issue #2 - Ensure properties in base classes can be set by config.
-        public string Message
-        {
-            get; set;
-        }
+        public string Message { get; set; } = null!;
     }
 }

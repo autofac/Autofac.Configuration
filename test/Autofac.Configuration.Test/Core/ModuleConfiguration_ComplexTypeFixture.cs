@@ -34,14 +34,14 @@ public class ModuleConfiguration_ComplexTypeFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComplexParameterTypeModule : Module
     {
-        public ComplexType ComplexType
-        {
-            get; set;
-        }
-
         public ComplexParameterTypeModule(ComplexType complexType)
         {
             ComplexType = complexType;
+        }
+
+        public ComplexType ComplexType
+        {
+            get; set;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -53,10 +53,7 @@ public class ModuleConfiguration_ComplexTypeFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComplexPropertyTypeModule : Module
     {
-        public ComplexType ComplexType
-        {
-            get; set;
-        }
+        public ComplexType ComplexType { get; set; } = null!;
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -67,27 +64,18 @@ public class ModuleConfiguration_ComplexTypeFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComplexType
     {
-        public IList<string> List
-        {
-            get; set;
-        }
+        public IList<string> List { get; set; } = null!;
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComplexParameterComponent
     {
-        public IList<string> List
-        {
-            get; set;
-        }
+        public IList<string> List { get; set; } = null!;
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ComplexPropertyComponent
     {
-        public IList<string> List
-        {
-            get; set;
-        }
+        public IList<string> List { get; set; } = null!;
     }
 }

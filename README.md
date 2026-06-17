@@ -2,7 +2,7 @@
 
 Configuration support for [Autofac](https://autofac.org).
 
-[![Build status](https://ci.appveyor.com/api/projects/status/u6ujehy60pw4vyi2?svg=true)](https://ci.appveyor.com/project/Autofac/autofac-configuration)
+[![Build status](https://github.com/autofac/Autofac.Configuration/actions/workflows/main.yml/badge.svg)](https://github.com/autofac/Autofac.Configuration/actions/workflows/main.yml)  [![codecov](https://codecov.io/gh/Autofac/Autofac.Configuration/branch/develop/graph/badge.svg)](https://codecov.io/gh/Autofac/Autofac.Configuration) [![NuGet](https://img.shields.io/nuget/v/Autofac.Configuration.svg)](https://nuget.org/packages/Autofac.Configuration)
 
 Please file issues and pull requests for this package [in this repository](https://github.com/autofac/Autofac.Configuration/issues) rather than in the Autofac core repo.
 

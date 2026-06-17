@@ -13,7 +13,7 @@ public class ConfigurationRegistrarFixture
     {
         var configuration = new ConfigurationBuilder().Build();
         var registrar = new ConfigurationRegistrar();
-        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(null, configuration));
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(null!, configuration));
     }
 
     [Fact]
@@ -21,6 +21,6 @@ public class ConfigurationRegistrarFixture
     {
         var builder = new ContainerBuilder();
         var registrar = new ConfigurationRegistrar();
-        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(builder, null));
+        Assert.Throws<ArgumentNullException>(() => registrar.RegisterConfiguration(builder, null!));
     }
 }

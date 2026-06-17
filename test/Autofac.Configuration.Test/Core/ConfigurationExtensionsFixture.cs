@@ -18,7 +18,7 @@ public class ConfigurationExtensionsFixture
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void DefaultAssembly_AssemblyNameEmpty(string value)
+    public void DefaultAssembly_AssemblyNameEmpty(string? value)
     {
         var config = SetUpDefaultAssembly(value);
         Assert.Null(config.DefaultAssembly());
@@ -49,7 +49,7 @@ public class ConfigurationExtensionsFixture
     [Fact]
     public void DefaultAssembly_NullConfiguration()
     {
-        var config = (IConfiguration)null;
+        var config = (IConfiguration)null!;
         Assert.Throws<ArgumentNullException>(() => config.DefaultAssembly());
     }
 
@@ -60,7 +60,7 @@ public class ConfigurationExtensionsFixture
         // target framework. We have to calculate it and truncate
         // the full assembly name at the first comma.
         var expected = typeof(string).GetTypeInfo().Assembly;
-        var fullName = expected.FullName.Substring(0, expected.FullName.IndexOf(',', StringComparison.Ordinal));
+        var fullName = expected.FullName!.Substring(0, expected.FullName.IndexOf(',', StringComparison.Ordinal));
         var config = SetUpDefaultAssembly(fullName);
         Assert.Equal(expected, config.DefaultAssembly());
     }
@@ -77,7 +77,7 @@ public class ConfigurationExtensionsFixture
     [Fact]
     public void GetAssembly_NullConfiguration()
     {
-        var config = (IConfiguration)null;
+        var config = (IConfiguration)null!;
         Assert.Throws<ArgumentNullException>(() => config.GetAssembly("defaultAssembly"));
     }
 
@@ -85,7 +85,7 @@ public class ConfigurationExtensionsFixture
     public void GetAssembly_NullKey()
     {
         var config = new ConfigurationBuilder().Build();
-        Assert.Throws<ArgumentNullException>(() => config.GetAssembly(null));
+        Assert.Throws<ArgumentNullException>(() => config.GetAssembly(null!));
     }
 
     [Theory]
@@ -103,8 +103,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasEnumerableParameter).FullName);
         var objectParameter = typeof(HasEnumerableParameter).GetConstructors()[0].GetParameters().First(pi => pi.Name == "list");
-        var provider = (Func<object>)null;
-        var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetParameters("parameters").FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<string> { "a", "b" }, provider());
@@ -113,14 +113,14 @@ public class ConfigurationExtensionsFixture
     [Fact]
     public void GetParameters_NullConfiguration()
     {
-        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null).GetParameters("parameters").ToList());
+        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null!).GetParameters("parameters").ToList());
     }
 
     [Fact]
     public void GetParameters_NullKey()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        Assert.Throws<ArgumentNullException>(() => config.GetParameters(null).ToList());
+        Assert.Throws<ArgumentNullException>(() => config.GetParameters(null!).ToList());
     }
 
     [Fact]
@@ -139,8 +139,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasSimpleParametersAndProperties).FullName);
         var objectParameter = typeof(HasSimpleParametersAndProperties).GetConstructors()[0].GetParameters().First(pi => pi.Name == parameterName);
-        var provider = (Func<object>)null;
-        var parameter = component.GetParameters("parameters").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetParameters("parameters").FirstOrDefault(rp => rp.CanSupplyValue(objectParameter, new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(expectedValue, provider());
@@ -152,8 +152,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasDictionaryProperty).FullName);
         var property = typeof(HasDictionaryProperty).GetProperty("Empty");
-        var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetProperties("properties").FirstOrDefault(rp => rp.CanSupplyValue(property!.SetMethod!.GetParameters()[0], new ContainerBuilder().Build(), out provider));
 
         // In older .NET there was a gotcha in ConfigurationModel - if the
         // list/dictionary was empty then configuration wouldn't see it or add
@@ -168,8 +168,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasDictionaryProperty).FullName);
         var property = typeof(HasDictionaryProperty).GetProperty("Populated");
-        var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetProperties("properties").FirstOrDefault(rp => rp.CanSupplyValue(property!.SetMethod!.GetParameters()[0], new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         var value = provider();
@@ -217,8 +217,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasEnumerableProperty).FullName);
         var property = typeof(HasEnumerableProperty).GetProperty("Empty");
-        var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetProperties("properties").FirstOrDefault(rp => rp.CanSupplyValue(property!.SetMethod!.GetParameters()[0], new ContainerBuilder().Build(), out provider));
 
         // In older .NET there was a gotcha in ConfigurationModel - if the
         // list/dictionary was empty then configuration wouldn't see it or add
@@ -233,8 +233,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasEnumerableProperty).FullName);
         var property = typeof(HasEnumerableProperty).GetProperty("Populated");
-        var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetProperties("properties").FirstOrDefault(rp => rp.CanSupplyValue(property!.SetMethod!.GetParameters()[0], new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(new List<double> { 1.234, 2.345 }, provider());
@@ -243,14 +243,14 @@ public class ConfigurationExtensionsFixture
     [Fact]
     public void GetProperties_NullConfiguration()
     {
-        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null).GetProperties("parameters").ToList());
+        Assert.Throws<ArgumentNullException>(() => ((IConfiguration)null!).GetProperties("parameters").ToList());
     }
 
     [Fact]
     public void GetProperties_NullKey()
     {
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
-        Assert.Throws<ArgumentNullException>(() => config.GetProperties(null).ToList());
+        Assert.Throws<ArgumentNullException>(() => config.GetProperties(null!).ToList());
     }
 
     [Fact]
@@ -269,8 +269,8 @@ public class ConfigurationExtensionsFixture
         var config = EmbeddedConfiguration.LoadJson("ConfigurationExtensions_Parameters.json");
         var component = config.GetSection("components").GetChildren().First(kvp => kvp["type"] == typeof(HasSimpleParametersAndProperties).FullName);
         var property = typeof(HasSimpleParametersAndProperties).GetProperties().First(pi => pi.Name == propertyName);
-        var provider = (Func<object>)null;
-        var parameter = component.GetProperties("properties").Cast<Parameter>().FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod.GetParameters()[0], new ContainerBuilder().Build(), out provider));
+        Func<object?>? provider = null;
+        var parameter = component.GetProperties("properties").FirstOrDefault(rp => rp.CanSupplyValue(property.SetMethod!.GetParameters()[0], new ContainerBuilder().Build(), out provider));
         Assert.NotNull(parameter);
         Assert.NotNull(provider);
         Assert.Equal(expectedValue, provider());
@@ -289,9 +289,9 @@ public class ConfigurationExtensionsFixture
         yield return new object[] { "Url", new Uri("http://localhost") };
     }
 
-    private static IConfiguration SetUpDefaultAssembly(string assemblyName)
+    private static IConfiguration SetUpDefaultAssembly(string? assemblyName)
     {
-        var data = new Dictionary<string, string>
+        var data = new Dictionary<string, string?>
         {
             { "defaultAssembly", assemblyName },
         };
@@ -302,10 +302,7 @@ public class ConfigurationExtensionsFixture
     private class BaseSimpleParametersAndProperties
     {
         // Issue #2 - Ensure properties in base classes can be set by config.
-        public string Text
-        {
-            get; set;
-        }
+        public string Text { get; set; } = null!;
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -320,12 +317,12 @@ public class ConfigurationExtensionsFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ConvertibleConverter : TypeConverter
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {
@@ -338,19 +335,19 @@ public class ConfigurationExtensionsFixture
             }
 
             var converter = TypeDescriptor.GetConverter(typeof(double));
-            return new Convertible { Value = (double)converter.ConvertFromString(context, culture, str) };
+            return new Convertible { Value = (double)converter.ConvertFromString(context, culture, str)! };
         }
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ConvertibleDictionaryConverter : TypeConverter
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(ConfiguredDictionaryParameter) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {
@@ -364,9 +361,9 @@ public class ConfigurationExtensionsFixture
 
             var dict = new Dictionary<string, Convertible>();
             var converter = new ConvertibleConverter();
-            foreach (var item in castValue.Dictionary)
+            foreach (var item in castValue.Dictionary ?? new Dictionary<string, string>())
             {
-                dict[item.Key] = (Convertible)converter.ConvertFrom(item.Value);
+                dict[item.Key] = (Convertible)converter.ConvertFrom(item.Value)!;
             }
 
             return dict;
@@ -376,12 +373,12 @@ public class ConfigurationExtensionsFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ConvertibleListConverter : TypeConverter
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(ConfiguredListParameter) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {
@@ -395,9 +392,9 @@ public class ConfigurationExtensionsFixture
 
             var list = new List<Convertible>();
             var converter = new ConvertibleConverter();
-            foreach (var item in castValue.List)
+            foreach (var item in castValue.List ?? Array.Empty<string>())
             {
-                list.Add((Convertible)converter.ConvertFrom(item));
+                list.Add((Convertible)converter.ConvertFrom(item)!);
             }
 
             return list;
@@ -418,30 +415,18 @@ public class ConfigurationExtensionsFixture
         }
 
         [TypeConverter(typeof(ConvertibleConverter))]
-        public Convertible Property
-        {
-            get; set;
-        }
+        public Convertible Property { get; set; } = null!;
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class HasDictionaryProperty
     {
         [TypeConverter(typeof(ConvertibleDictionaryConverter))]
-        public IDictionary<string, Convertible> Convertible
-        {
-            get; set;
-        }
+        public IDictionary<string, Convertible> Convertible { get; set; } = null!;
 
-        public Dictionary<string, double> Empty
-        {
-            get; set;
-        }
+        public Dictionary<string, double> Empty { get; set; } = null!;
 
-        public Dictionary<string, double> Populated
-        {
-            get; set;
-        }
+        public Dictionary<string, double> Populated { get; set; } = null!;
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -462,20 +447,11 @@ public class ConfigurationExtensionsFixture
     private class HasEnumerableProperty
     {
         [TypeConverter(typeof(ConvertibleListConverter))]
-        public IEnumerable<Convertible> Convertible
-        {
-            get; set;
-        }
+        public IEnumerable<Convertible> Convertible { get; set; } = null!;
 
-        public IEnumerable<double> Empty
-        {
-            get; set;
-        }
+        public IEnumerable<double> Empty { get; set; } = null!;
 
-        public IEnumerable<double> Populated
-        {
-            get; set;
-        }
+        public IEnumerable<double> Populated { get; set; } = null!;
     }
 
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
@@ -497,9 +473,6 @@ public class ConfigurationExtensionsFixture
             get; private set;
         }
 
-        public Uri Url
-        {
-            get; set;
-        }
+        public Uri Url { get; set; } = null!;
     }
 }

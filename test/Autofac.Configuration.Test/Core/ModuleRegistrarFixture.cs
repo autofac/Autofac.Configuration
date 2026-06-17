@@ -101,7 +101,7 @@ public class ModuleRegistrarFixture
             get; set;
         }
 
-        public string Message
+        public string? Message
         {
             get; set;
         }
@@ -145,7 +145,7 @@ public class ModuleRegistrarFixture
             Input = input;
         }
 
-        public bool ABool
+        public bool? ABool
         {
             get; set;
         }
@@ -155,7 +155,7 @@ public class ModuleRegistrarFixture
             get; set;
         }
 
-        public string Message
+        public string? Message
         {
             get; set;
         }
@@ -178,7 +178,7 @@ public class ModuleRegistrarFixture
             get; set;
         }
 
-        public string Message
+        public string? Message
         {
             get; set;
         }

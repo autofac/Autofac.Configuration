@@ -22,7 +22,7 @@ public class TypeManipulationFixture
     public void ChangeToCompatibleType_UsesTypeConverterOnParameter()
     {
         var ctor = typeof(HasTypeConverterAttributes).GetConstructor(new Type[] { typeof(Convertible) });
-        var member = ctor.GetParameters()[0];
+        var member = ctor!.GetParameters()[0];
         var actual = TypeManipulation.ChangeToCompatibleType("25", typeof(Convertible), member) as Convertible;
         Assert.NotNull(actual);
         Assert.Equal(25, actual.Value);
@@ -32,7 +32,7 @@ public class TypeManipulationFixture
     public void ChangeToCompatibleType_UsesTypeConverterOnProperty()
     {
         var member = typeof(HasTypeConverterAttributes).GetProperty("Property");
-        var actual = TypeManipulation.ChangeToCompatibleType("25", typeof(Convertible), member) as Convertible;
+        var actual = TypeManipulation.ChangeToCompatibleType("25", typeof(Convertible), member!) as Convertible;
         Assert.NotNull(actual);
         Assert.Equal(25, actual.Value);
     }
@@ -91,12 +91,12 @@ public class TypeManipulationFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class ConvertibleConverter : TypeConverter
     {
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {
@@ -109,7 +109,7 @@ public class TypeManipulationFixture
             }
 
             var converter = TypeDescriptor.GetConverter(typeof(int));
-            return new Convertible { Value = (int)converter.ConvertFromString(context, culture, str) };
+            return new Convertible { Value = (int)converter.ConvertFromString(context, culture, str)! };
         }
     }
 

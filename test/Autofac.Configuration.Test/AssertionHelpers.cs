@@ -6,11 +6,13 @@ namespace Autofac.Configuration.Test;
 internal static class AssertionHelpers
 {
     public static void AssertRegistered<TService>(this IComponentContext context, string message = "Expected component was not registered.")
+        where TService : notnull
     {
         Assert.True(context.IsRegistered<TService>(), message);
     }
 
     public static void AssertNotRegistered<TService>(this IComponentContext context, string message = "Component was registered unexpectedly.")
+        where TService : notnull
     {
         Assert.False(context.IsRegistered<TService>(), message);
     }

@@ -12,8 +12,8 @@ public class ReflectionExtensionsFixture
     public void TryGetDeclaringProperty_FindsPropertyFromSetterParameter()
     {
         var expected = typeof(HasProperty).GetProperty("Property");
-        var setter = expected.GetSetMethod();
-        var valueParameter = setter.GetParameters()[0];
+        var setter = expected!.GetSetMethod();
+        var valueParameter = setter!.GetParameters()[0];
         Assert.True(valueParameter.TryGetDeclaringProperty(out var actual));
         Assert.Equal(expected, actual);
     }
@@ -21,7 +21,7 @@ public class ReflectionExtensionsFixture
     [Fact]
     public void TryGetDeclaringProperty_FailsToFindProperty()
     {
-        var valueParameter = typeof(HasProperty).GetMethod("NotSetter").GetParameters()[0];
+        var valueParameter = typeof(HasProperty).GetMethod("NotSetter")!.GetParameters()[0];
         Assert.False(valueParameter.TryGetDeclaringProperty(out var actual));
         Assert.Null(actual);
     }
@@ -34,9 +34,6 @@ public class ReflectionExtensionsFixture
             return value;
         }
 
-        public string Property
-        {
-            get; set;
-        }
+        public string Property { get; set; } = null!;
     }
 }

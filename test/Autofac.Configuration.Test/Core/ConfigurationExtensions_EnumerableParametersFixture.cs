@@ -11,10 +11,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class A
     {
-        public IList<string> List
-        {
-            get; set;
-        }
+        public IList<string> List { get; set; } = null!;
     }
 
     [Fact]
@@ -32,10 +29,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class B
     {
-        public IList<double> List
-        {
-            get; set;
-        }
+        public IList<double> List { get; set; } = null!;
     }
 
     [Fact]
@@ -53,10 +47,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class C
     {
-        public IList List
-        {
-            get; set;
-        }
+        public IList List { get; set; } = null!;
     }
 
     [Fact]
@@ -139,10 +130,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class G
     {
-        public IEnumerable Enumerable
-        {
-            get; set;
-        }
+        public IEnumerable Enumerable { get; set; } = null!;
     }
 
     [Fact]
@@ -162,10 +150,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class H
     {
-        public IEnumerable<double> Enumerable
-        {
-            get; set;
-        }
+        public IEnumerable<double> Enumerable { get; set; } = null!;
     }
 
     [Fact]
@@ -185,10 +170,7 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class I
     {
-        public ICollection<double> Collection
-        {
-            get; set;
-        }
+        public ICollection<double> Collection { get; set; } = null!;
     }
 
     [Fact]
@@ -233,9 +215,9 @@ public class ConfigurationExtensions_EnumerableParametersFixture
     [SuppressMessage("CA1812", "CA1812", Justification = "Class instantiated through configuration.")]
     private class K
     {
-        public K(IList<string> list = null)
+        public K(IList<string>? list = null)
         {
-            List = list;
+            List = list!;
         }
 
         public IList<string> List
